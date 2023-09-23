@@ -1,0 +1,167 @@
+﻿@model PFL.Models.ViewModels.PlayerStatisticsViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int rowNumber = 0;
+    string avatarLogo = "/assets/images/avatar.jpg";
+}
+
+<script type="text/javascript" src="/assets/js/pages/user_pages_team.js"></script>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">&nbsp;</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/Players" type="button" style="width: 100%" class="btn bg-teal-400 btn-labeled"><b><i class="icon-backward2"></i></b> <span>Futbolçuların siyahısı</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-heading">
+
+        <div class="media">
+            <div class="media-left">
+                <a href="#" data-popup="lightbox">
+                    <img src="@(string.IsNullOrEmpty(Model.PlayerInfo.PhotoUrl) ? avatarLogo : Model.PlayerInfo.PhotoUrl)" style="width: 70px; height: 70px;" class="img-preview" alt="">
+                </a>
+            </div>
+
+            <div class="media-body">
+                <h6 class="media-heading">@Model.PlayerInfo.FirstName @Model.PlayerInfo.LastName</h6>
+                <p class="text-muted">@Model.PlayerInfo.Position</p>
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mövsüm</th>
+                <th>Turnir</th>
+                <th>Komanda</th>
+                <th class="text-center"><img src="/assets/images/stat_matches.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/stat_lineup.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/stat_subst_in.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/stat_subst_out.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/stat_subst_bench.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/ball.png" style="width: 21px;" /></th>
+                <th class="text-center"><img src="/assets/images/yellow.png" style="width: 20px;" /></th>
+                <th class="text-center"><img src="/assets/images/yellow_red.png" style="width: 25px;" /></th>
+                <th class="text-center"><img src="/assets/images/red.png" style="width: 20px;" /></th>
+                <th class="text-center"><img src="/assets/images/stat_other.png" style="width: 25px;" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PlayerStatistics)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td class="text-left">@item.Season</td>
+                    <td class="text-left">@item.TournamentName</td>
+                    <td class="text-left">@item.ClubName</td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatMatches?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.MatchCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatMainStaff?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.MainStaffMatchCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatSecondStaffIn?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.ShiftInCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatOut?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.ShiftOutCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatSecondStaff?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.SecondaryStaffMatchCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatGoals?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)" data-toggle="modal" data-target="#stat-modal" data-whatever="mdo">
+                            @item.Goals
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatCards?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)&penaltyCardType=1" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.YellowCardCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatCards?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)&penaltyCardType=2" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.Yellow2CardCount
+                        </a>
+                    </td>
+                    <td>
+                        <a href="#" class="stat-modal-trigger" data-href="/Players/StatCards?playerId=@(Model.PlayerInfo.Id)&tournamentId=@(item.TournamentId)&penaltyCardType=3" data-toggle="modal" data-target="#stat-modal" data-backdrop="static" data-keyboard="false">
+                            @item.RedCardCount
+                        </a>
+                    </td>
+                    <td></td>
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="stat-modal" tabindex="-1" role="dialog" aria-labelledby="club-card-modal-label" aria-hidden="true">
+    <div class="modal-dialog" style="width: 85%" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="club-card-modal-label">Statistika</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="stat-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Bağla</button>*@
+                @*<button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(".stat-modal-trigger").click("click",
+
+        function () {
+
+            var url = $(this).data("href");
+
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (data) {
+                    $("#stat-modal-body").html(data);
+                }
+            });
+
+        });
+
+</script>

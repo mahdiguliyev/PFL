@@ -1,0 +1,205 @@
+﻿@model IEnumerable<PFL.Models.DTO.ClubPlayerOrderListDto>
+@{
+    /**/
+
+    Layout = "";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+    DateTime currentDate = DateTime.Now;
+}
+
+<style>
+    .order-row {
+        background-color: #ffa5a5;
+    }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Sifarişlər</h5>
+        <div class="heading-elements">
+
+            @*<ul class="icons-list">
+                <li>
+                    <label for="ActiveOrders">Aktiv sifarişlər</label>
+                    <input type="radio" name="PlayerOrderListType" id="ActiveOrders" value="1" checked="checked" />
+                </li>
+                <li>
+                    <label for="TerminatedOrders">Xitam edilmiş sifarişlər</label>
+                    <input type="radio" name="PlayerOrderListType" id="TerminatedOrders" value="1" />
+                </li>
+            </ul>*@
+        </div>
+    </div>
+
+    <table class="table table-bordered" id="cpo-tbl">
+        <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-1">
+                    Oyunçunun nömrəsi
+                </th>
+                <th>
+                    A.S.A.
+                </th>
+                <th>
+                    Sağlamlıq arayışı
+                </th>
+                <th>
+                    Xitam tarixi
+                </th>
+
+                <th>Status</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr id="cpo-row-@(item.Id)" class="@(item.TerminationDate.HasValue && item.TerminationDate<currentDate ? "order-row" : "")">
+                    <td>@rowNumber</td>
+                    <td><span class="text-primary-700">@item.PlayerNumber</span></td>
+                    <td>@item.FirstName @item.LastName @item.FatherName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.HealthFile))
+                        {
+                            <a href="@item.HealthFile" target="_blank">Sağlamlıq arayışı</a>
+                        }
+                    </td>
+                    <td>
+                        @(item.TerminationDate?.ToString("dd.MM.yyyy"))
+                    </td>
+
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <td><span class="label label-danger">İmtina edilib</span></td>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <td><span class="label label-success">Təsdiqlənib</span></td>
+                    }
+                    else if (item.ClubConfirm)
+                    {
+                        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                    }
+
+                    <td class="text-center">
+                        @if (item.ClubConfirm && !item.Rejected && !item.OperatorConfirm)
+                        {
+
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="col-md-6">
+                                    <button type="button" data-href="/PlayerOrders/Confirmation?id=@(item.Id)&confirm=false" class="btn btn-danger btn-icon player-order-confirm" title="İmtina"><b><i class="icon-cross"></i></b>&nbsp;</button>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <button type="button" data-href="/PlayerOrders/Confirmation?id=@(item.Id)&confirm=true" class="btn btn-primary btn-icon player-order-confirm" title="Təsdiqlə"><b><i class="icon-check2"></i></b>&nbsp;</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {<div class="col-md-8 col-md-offset-2">
+                                <div class="col-md-6">
+
+                                    <a data-player-order-id="@(item.Id)" class="edit-after-confirm" data-toggle="modal" data-target="#edit-player-order-modal" data-backdrop="static" data-keyboard="false" title="Oyunçu nömrəsinin redaktəsi"><b><i class="icon-pencil3"></i></b>&nbsp;</a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a data-player-order-id="@(item.Id)" class="terminate-order" data-toggle="modal" data-target="#termination-order-modal" data-backdrop="static" data-keyboard="false" title="Xitam"><b><i class="icon-move-right text-danger-600"></i></b>&nbsp;</a>
+                                </div>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+
+    $(".edit-after-confirm").click(function () {
+
+        $.ajax({
+            url: "/PlayerOrders/EditAfterConfirm?id=" + $(this).data('player-order-id'),
+            method: "GET",
+            success: function (data) {
+                $("#edit-player-order-modal-body").html(data);
+                $('#edit-player-order-modal').modal();
+            }
+        });
+    });
+
+    $("#player-order-form-save").on('click',
+        function () {
+
+            $.ajax({
+                url: "/PlayerOrders/EditAfterConfirm",
+                data: $("#player-order-form").serialize(),
+                method: "POST",
+                success: function (response) {
+                    if (response.ok) {
+                        $("#edit-player-order-modal").modal('toggle');
+                        playerOrderEditRow(response.Id);
+                    }
+                }
+            });
+
+        });
+
+
+
+    $(".terminate-order").click(function () {
+
+        $.ajax({
+            url: "/PlayerOrders/TerminateOrder?id=" + $(this).data('player-order-id'),
+            method: "GET",
+            success: function (data) {
+                $("#termination-order-modal-body").html(data);
+                $('#termination-order-modal').modal();
+            }
+        });
+    });
+
+
+
+
+
+
+
+    function playerOrderEditRow(id) {
+        $.ajax({
+            type: "GET",
+            url: "/PlayerOrders/Row?id=" + id,
+            success: function (response) {
+                if ($("#cpo-row-" + id)) {
+                    ($("#cpo-row-" + id).replaceWith(response));
+                } else {
+                    $("#cpo-tbl tbody").appendTo(response);
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+
+
+    $(".player-order-confirm").click(function () {
+
+        $.ajax({
+            url: $(this).data('href'),
+            method: "GET",
+            success: function (data) {
+                $("#player-order-confirm-body").html(data);
+                $('#player-order-confirm-modal').modal();
+            }
+        });
+    });
+</script>

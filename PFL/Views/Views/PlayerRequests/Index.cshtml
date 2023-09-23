@@ -1,0 +1,140 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.ClubPlayerRequest>
+@{
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Futbolçular</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/PlayerRequests/Create" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-user-plus"></i></b> <span>Yeni müraciət</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <hr />
+    @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th>Şəkil</th>
+                <th>
+                    <input type="text" id="player-name" class="form-control input-xlg" placeholder="Nömrə - A.S.A." value="@(ViewBag.PlayerNameSearchText)">
+                </th>
+                <th>Hansı klubdan</th>
+                <th>Status</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>
+                        <div class="media-left media-middle">
+                            <a href="#"><img src="@(item.PlayerPhotoUrl)" class="img-circle img-xs" alt=""></a>
+                        </div>
+                    </td>
+                    <td>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName</td>
+                    <td>@(item.FromClub != null ? item.FromClub.Name : item.FromClubName)</td>
+
+
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <td><span class="label label-danger">İmtina edilib</span></td>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <td><span class="label label-success">Təsdiqlənib</span></td>
+                    }
+                    else if (item.ClubConfirm)
+                    {
+                        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                    }
+
+
+                    @if (!item.ClubConfirm || item.Rejected)
+                    {
+                        <td class="text-center">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="col-md-6">
+                                    <a href="/@(baseUrl)/Edit?Id=@item.Id"><i class="icon-pencil7 text-primary-600"></i></a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a data-href="/@(baseUrl)/Delete?Id=@item.Id" class="delete-player-request"><i class="icon-trash text-danger-600"></i></a>
+                                </div>
+
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="text-center">
+                            <a type="button" href="/PlayerRequests/Details?id=@(item.Id)" class="btn btn-primary btn-icon"><i class="icon-info3"></i></a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.SeasonId }))
+        </div>
+    </div>
+</div>
+
+@section footer
+{
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <script>
+        $("body").on('click', ".delete-player-request", function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            swal({
+                title: "Silinsin?",
+                text: "",
+                icon: "warning",
+                buttons: ["İmtina", "Təsdiq"],
+                dangerMode: false,
+
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+
+                        window.location.href = $(this).data('href');
+
+                    } else {
+                        //swal("");
+                    }
+                });
+        });
+
+        $('#player-name').keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                window.location.href = "/PlayerRequests?playerName=" + $(this).val();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,50 @@
+﻿@model List<PFL.Entities.EntityModels.Views.VTournamentTable>
+@{
+    Layout = null;
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    int rowCount = 0;
+}
+
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Klub</th>
+                <th>O</th>
+                <th>Q</th>
+                <th>H</th>
+                <th>M</th>
+                <th>VT</th>
+                <th>BT</th>
+                <th>TF</th>
+                <th>X</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowCount++;
+
+                <tr id="@item.ClubId">
+                    <td>@rowCount</td>
+                    <td>@item.ClubName</td>
+                    <td>@item.PlayedGame</td>
+                    <td>@item.WinCount</td>
+                    <td>@item.ScorelessCount</td>
+                    <td>@item.DefeatCount</td>
+                    <td>@item.GoalCountTo</td>
+                    <td>@item.GoalCountFrom</td>
+                    <td>@(item.GoalCountTo - item.GoalCountFrom)</td>
+                    <td>@(item.WinCount*3+item.ScorelessCount)</td>
+                    @*<td>@item.GoalDifference</td>
+                    <td>@item.Score</td>*@
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

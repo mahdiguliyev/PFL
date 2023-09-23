@@ -1,0 +1,15 @@
+﻿@model PFL.Models.ViewModels.RefereePlayerShiftViewModel
+   
+@{
+    Layout = null;
+}
+
+<tr id="player-shift-row-@(Model.Id)">
+    <td></td>
+    <td>@Model.ClubName</td>
+    <td>@Model.PlayerOutNumber - @Model.PlayerOutFirstName @Model.PlayerOutLastName @Model.PlayerOutFatherName</td>
+    <td>@Model.PlayerInNumber - @Model.PlayerInFirstName @Model.PlayerInLastName @Model.PlayerInFatherName</td>
+    <td>@Model.MinuteIn @(Model.MinuteInPlus != null && Model.MinuteInPlus != 0 ? " + " + Model.MinuteInPlus : "")</td>
+
+    @TableHelper.OperationButtonDelete("Referee", Model.Id, "remove-shift", "DeleteShift")
+</tr>

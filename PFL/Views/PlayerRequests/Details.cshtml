@@ -1,0 +1,129 @@
+﻿@using PFL.Entities.EntityModels
+@model PFL.Entities.EntityModels.ClubPlayerRequest
+
+@{
+    ViewBag.Title = "Yeni oyunçu sifarişi";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    List<ClubPlayerRequestRejection> requestRejections = ViewBag.RequestRejections;
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Yeni oyunçu qeydiyyatı</h5>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/PlayerRequests" type="button" class="btn bg-teal-400 btn-labeled"><b><i class="icon-backward2"></i></b> <span>Siyahıya qayıt</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <code>Yeni oyunçu qeydiyyatı</code> üçün klub tərəfindən göndərilmiş oyunçu məlumatları.
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-lg">
+            <tr>
+                <th colspan="2" class="active">Əsas məlumatlar</th>
+            </tr>
+            <tr>
+                <td>Futbolçunun şəkli</td>
+                <td>
+                    <div class="thumbnail no-padding" style="width: 200px;">
+                        <div class="thumb">
+                            <a href="@Model.PlayerPhotoUrl" target="_blank">
+                                <img src="@Model.PlayerPhotoUrl">
+                            </a>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 20%;">Ad</td>
+                <td>@Model.PlayerFirstName</td>
+            </tr>
+            <tr>
+                <td>Soyad</td>
+                <td>@Model.PlayerLastName</td>
+            </tr>
+            <tr>
+                <td>Ata adı</td>
+                <td>@Model.PlayerFatherName</td>
+            </tr>
+            <tr>
+                <td>Doğum tarixi</td>
+                <td>@Model.BirthDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            <tr>
+                <td>Vətəndaşlığı</td>
+                <td>@Model.Country.Name</td>
+            </tr>
+            <tr>
+                <td>Oyunçunun statusu</td>
+                <td>@Model.ContractType.Name</td>
+            </tr>
+            <tr>
+                <td>Hansı klubdan</td>
+                <td>@(Model.FromClubId != null ? Model.FromClub.Name : Model.FromClubName)</td>
+            </tr>
+            <tr>
+                <td>Hansı kluba</td>
+                <td>@Model.RequestClub.Name</td>
+            </tr>
+            <tr>
+                <td>Müqavilənin başlama tarixi</td>
+                <td>@Model.ContractBeginDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            <tr>
+                <td>Müqavilənin bitmə tarixi</td>
+                <td>@Model.ContractEndDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            @*<tr>
+                <td>Nömrəsi</td>
+                <td>@Model.PlayerNumber</td>
+            </tr>*@
+            <tr>
+                <td>Mövqeyi</td>
+                <td>@Model.Position.Name</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="active">Sənəd məlumatları</th>
+            </tr>
+            <tr>
+                <td>Pasport</td>
+                <td><a href="@Model.PlayerPasportUrl" target="_blank">@Model.PlayerPasportUrl</a></td>
+            </tr>
+            <tr>
+                <td>Müqavilə</td>
+                <td><a href="@Model.PlayerContractUrl" target="_blank">@Model.PlayerContractUrl</a></td>
+            </tr>
+            <tr>
+                <td>İTC və ya oyunçu pasportu </td>
+                <td><a href="@Model.PlayerOtkripleniyaUrl" target="_blank">@Model.PlayerOtkripleniyaUrl</a></td>
+            </tr>
+            <tr>
+                <td>İcarə və ya azadedilmə sənədi</td>
+                <td><a href="@Model.PlayerTmsUrl" target="_blank">@Model.PlayerTmsUrl</a></td>
+            </tr>
+
+            <tr>
+                <td>Operatorun təsdiqi</td>
+                <td>
+                    <span class="label label-info">
+                        @(Model.OperatorConfirm ? "Təsdiqlənib" : "Təsdiqlənməyib")
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>

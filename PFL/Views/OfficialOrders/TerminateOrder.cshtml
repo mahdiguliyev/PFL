@@ -1,0 +1,55 @@
+﻿@model PFL.Models.DTO.OfficialTerminationDto
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("TerminateOrder", "OfficialOrders", FormMethod.Post,
+    new { @class = "form-horizontal", Id = "termination-official-order-form" }))
+{
+    <fieldset class="content-group">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="OfficialOrderId" value="@(Model.OfficialOrderId)" />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        
+        
+        <div class="form-group">
+            <label class="control-label col-md-3">Klub</label>
+            <div class="col-md-6">
+                @Model.ClubName
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label col-md-3">Rəsmi</label>
+            <div class="col-md-6">
+                @Model.FirstName @Model.LastName @Model.FatherName
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(model => model.TerminationDate, "Xitamın verilmə tarixi", htmlAttributes: new { @class = "control-label col-md-3 termination-date" })
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-calendar3"></i></span>
+                    @Html.TextBoxFor(model => model.TerminationDate, Model.TerminationDate?.ToString("dd MMM, yyyy"), new { @class = "form-control official-termination-date" })
+                </div>
+
+                @Html.ValidationMessageFor(model => model.TerminationDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.official-termination-date').pickadate({
+            selectYears: true,
+            selectMonths: true
+        });
+    });
+</script>

@@ -1,0 +1,55 @@
+﻿@model PFL.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+}
+
+<!-- Advanced login -->
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-body login-form">
+        <div class="text-center">
+            <div class="icon-object border-success text-success"><i class="icon-plus3"></i></div>
+            <h5 class="content-group">Hesab yarat <small class="display-block">Bütün sahələr vacibdir!</small></h5>
+        </div>
+
+        @Html.AntiForgeryToken()
+
+        <div class="content-divider text-muted form-group"><span>Məlumatları daxil edin</span></div>
+
+        <div class="form-group has-feedback has-feedback-left">
+            @Html.TextBoxFor(model=>model.UserName, new { @class="form-control", placeholder= "İstifadəçi adı" })
+            <div class="form-control-feedback">
+                <i class="icon-user-check text-muted"></i>
+            </div>
+            @*<span class="help-block text-danger"><i class="icon-cancel-circle2 position-left"></i> İstifadəçi adı istifadə edilir.</span>*@
+        </div>
+
+        <div class="form-group has-feedback has-feedback-left">
+            @Html.TextBoxFor(model=>model.Password, new { @class="form-control", placeholder= "Şifrə" })
+            <div class="form-control-feedback">
+                <i class="icon-user-lock text-muted"></i>
+            </div>
+        </div>
+
+        <div class="content-divider text-muted form-group"><span>Şəxsi məlumatlar</span></div>
+
+        <div class="form-group has-feedback has-feedback-left">
+            @Html.TextBoxFor(model => model.Email, new { @class = "form-control", placeholder = "Email" })
+            <div class="form-control-feedback">
+                <i class="icon-mention text-muted"></i>
+            </div>
+        </div>
+
+        <div class="form-group has-feedback has-feedback-left">
+            <input type="text" class="form-control" placeholder="Email təkrar">
+            <div class="form-control-feedback">
+                <i class="icon-mention text-muted"></i>
+            </div>
+        </div>
+
+        <button type="submit" class="btn bg-teal btn-block btn-lg">Qeydiyyat <i class="icon-circle-right2 position-right"></i></button>
+    </div>
+}
+<!-- /advanced login -->

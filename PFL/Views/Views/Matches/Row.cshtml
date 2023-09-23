@@ -1,0 +1,82 @@
+﻿@model PFL.Models.DTO.AdminMatchListDto
+@{
+    Layout = null;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+<tr id="match-row-@(Model.Id)">
+    <td></td>
+    <td>@(Model?.HomeClubName)</td>
+    <td>
+        @{
+            if (Model.HomeClubConfirmedDate.HasValue)
+            {
+                if (Model.HomeClubConfirmedDate.Value > Model.HomeClubConfirmedDate.Value.AddMinutes(-75))
+                {
+                    <span style="color:red"><b>@(Model?.HomeClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                }
+                else
+                {
+                    @(Model?.HomeClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                }
+            }
+
+            if (Model.HomeClubConfirm != null && Model.HomeClubConfirm.Value)
+            {
+                <a href="" data-match-id="@Model.Id" data-club-id="@Model.HomeClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+            }
+        }
+    </td>
+    <td>@(Model?.HomeClubScore)</td>
+    <td>@(Model?.GuestClubScore)</td>
+    <td>
+        @{
+            if (Model.GuestClubConfirmedDate.HasValue)
+            {
+                if (Model.GuestClubConfirmedDate.Value > Model.GuestClubConfirmedDate.Value.AddMinutes(-75))
+                {
+                    <span style="color:red"><b>@(Model?.GuestClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                }
+                else
+                {
+                    @(Model?.GuestClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                }
+            }
+
+            if (Model.GuestClubConfirm != null && Model.GuestClubConfirm.Value)
+            {
+                <a href="" data-match-id="@Model.Id" data-club-id="@Model.GuestClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+            }
+        }
+
+    </td>
+    <td>@(Model?.GuestClubName)</td>
+    <td>@(Model?.MatchDate?.ToString("dd.MM.yyyy HH:mm"))</td>
+    <td>
+        @{
+            if (Model.RefereeConfirmedDate.HasValue)
+            {
+                if (Model.RefereeConfirmedDate.Value > Model.RefereeConfirmedDate.Value.AddMinutes(-75))
+                {
+                    <span style="color:red"><b>@(Model?.RefereeConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                }
+                else
+                {
+                    @(Model?.RefereeConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                }
+            }
+
+            if (Model.RefereeConfirm)
+            {
+                <a href="" data-match-id="@Model.Id" class="btn btn-primary access-referee-edit">Redaktə</a>
+            }
+        }
+    </td>
+    <td class="text-center">
+        <a class="document-modal-trigger" data-match-id="@(Model?.Id)" href="#" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><i class="fas fa-2x fa-file-alt fa-document-color"></i></a>
+
+    </td>
+    <td class="text-center">
+        <a class="match-modal-trigger" data-match-id="@(Model?.Id)" href="#" data-toggle="modal" data-target="#match-modal" data-backdrop="static" data-keyboard="false"><i class="icon-pencil7 text-primary-600"></i></a>
+    </td>
+</tr>

@@ -1,0 +1,85 @@
+﻿@helper Create(string modalName, string headerText, string contentGetUrl, string contentPostUrl, string[] getParameters = null)
+{
+
+    <!-- Modal -->
+    <div class="modal fade" id="@modalName-modal" tabindex="-1" role="dialog" aria-labelledby="@modalName-modal-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="@modalName-modal-label">@headerText</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body" id="@modalName-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                    <button type="button" class="btn btn-primary" id="@modalName-form-save">Yadda saxla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#@(modalName)-modal').on('show.bs.modal',
+            function (event) {
+                $(document).off('focusin.modal');
+                
+                @{
+                    string queryString ="";
+                    if (getParameters != null)
+                    {
+                        queryString = "?";
+                        foreach (var item in getParameters)
+                        {
+                            queryString += queryString.Length > 1 ? "+\"&" : "";
+                            queryString += item.Replace("-", "")+"=" + "\"+$('#" + item + "').val()";
+                        }
+                    }
+                }
+
+
+                var _url = "@(contentGetUrl)@(new HtmlString(queryString));
+
+
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function(data) {
+                        $(".modal-body").html(data);
+                    }
+                });
+            });
+
+
+        $('#@modalName-form-save').on('click', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "@(contentPostUrl)",
+                data: $('#@(modalName)-form').serialize(),
+                success: function(response) {
+                    if (response.ok) {
+                    
+                        $("#@(modalName)-modal").modal('toggle');
+                        //window.location.reload();
+                    } else {
+                        //write validations
+                        $("#validation-message").html(response.error);
+                    }
+                },
+                error: function() {
+                    alert('Error');
+                }
+            });
+            return false;
+        });
+    </script>
+
+}
+
+

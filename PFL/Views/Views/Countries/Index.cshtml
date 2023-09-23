@@ -1,0 +1,48 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Country>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Rayon və şəhərlər</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>@Html.ActionLink("Yeni", "Create")</li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Adı</th>
+                <th>Status</th>
+                <th class="text-center col-md-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@(rowNumber)</td>
+                    <td>@item.Name</td>
+                    <td><span class="label label-@(!item.IsDeleted?"success":"danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>
+                    @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>

@@ -1,0 +1,133 @@
+﻿@model PFL.Models.DTO.DClubDocumentDto
+@{
+    Layout = null;
+}
+
+
+<div class="panel panel-flat" style="border: none;">
+    <div class="panel-heading">
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/ClubDocuments/Edit?clubType=d" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-pencil3"></i></b> <span>Düzəliş et</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <br />
+    <div class="table-responsive">
+        <table class="table table-lg">
+            <tr>
+                <td>Stadionun müqaviləsi</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DStadiumContractUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DStadiumContractUrl" target="_blank">@Model.DStadiumContractUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadion sxemi</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DStadiumSchemeUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DStadiumSchemeUrl" target="_blank">@Model.DStadiumSchemeUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Klubun strukturu</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DClubStructureUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DClubStructureUrl" target="_blank">@Model.DClubStructureUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Rəsmi Dövlət Reyesterindən çıxarış</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DRegisterExtractUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DRegisterExtractUrl" target="_blank">@Model.DRegisterExtractUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>VÖEN</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DVoenUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DVoenUrl" target="_blank">@Model.DVoenUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Nizamnamə</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DCharterUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DCharterUrl" target="_blank">@Model.DCharterUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>DİN məktubu</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DDinLetterUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DDinLetterUrl" target="_blank">@Model.DDinLetterUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Təcili Tibbi yardım Məktubu</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.DAmbulanceUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.DAmbulanceUrl" target="_blank">@Model.DAmbulanceUrl</a>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+</div>

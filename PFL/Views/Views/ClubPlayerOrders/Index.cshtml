@@ -1,0 +1,403 @@
+﻿@model  PFL.Entities.EntityModels.Club
+@{
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    DateTime currentDate = DateTime.Now;
+    int clubTournamentTypeId = ViewBag.ClubTournamentTypeId;
+
+    int seasonStartYear = currentDate.Year;
+    int seasonEndYear = currentDate.Year;
+
+    if (currentDate.Month < 7)
+    {
+        seasonStartYear = seasonStartYear - 1;
+    }
+    else
+    {
+        seasonEndYear = seasonEndYear + 1;
+    }
+
+
+
+}
+
+<script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+<script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+
+
+<div class="col-md-12">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h6 class="panel-title">@Model.Name</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    @*<li><a data-action="collapse"></a></li>
+                        <li><a data-action="reload"></a></li>
+                        <li><a data-action="close"></a></li>*@
+                </ul>
+            </div>
+        </div>
+
+        @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+
+        <div class="panel-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight nav-justified" id="panel-links">
+                    @if (clubTournamentTypeId != 3)
+                    {
+                        <li class="active">
+                            <a href="#club-player-a" data-toggle="tab" onclick="getContent('club-player-a')">
+                                A komandası
+                            </a>
+                        </li>
+                    }
+
+                    <li class="@(clubTournamentTypeId == 3 ? "active" : "")">
+                        <a href="#club-player-b" data-toggle="tab" onclick="getContent('club-player-b')">
+                            @(clubTournamentTypeId == 3 ? "Futbolçular" : "B komandası")
+                        </a>
+                    </li>
+
+
+                    @if (clubTournamentTypeId != 3)
+                    {
+                        <li>
+                            <a href="#club-official-a" data-toggle="tab" onclick="getContent('club-official-a')">
+                                A komandasının rəsmi şəxsləri
+                            </a>
+                        </li>
+                    }
+
+
+                    <li>
+                        <a href="#club-official-b" data-toggle="tab" onclick="getContent('club-official-b')">
+                            @(clubTournamentTypeId == 3 ? "Rəsmi şəxslər" : "B komandasının rəsmi şəxsləri")
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane @(clubTournamentTypeId != 3 ? "active" : "")" id="club-player-a">
+
+                    </div>
+
+                    <div class="tab-pane @(clubTournamentTypeId == 3 ? "active" : "")" id="club-player-b">
+
+                    </div>
+                    <div class="tab-pane" id="club-official-a">
+
+                    </div>
+                    <div class="tab-pane" id="club-official-b">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="club-id" value="@Model.Id" />
+<input type="hidden" id="club-type-id" value="1" />
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <script>
+
+        var clubId = @Model.Id;
+        var clubTypeId;
+
+        function getContent(label) {
+
+            var _url;
+            var seasonId = $("#season-id").val();
+
+            switch (label) {
+            case 'club-player-a':
+                    _url = "/ClubPlayerOrders/Players?clubTypeId=1&"+"seasonId="+seasonId+"&clubId=" + clubId;
+                    clubTypeId = 1;
+                break;
+            case 'club-player-b':
+                    _url = "/ClubPlayerOrders/Players?clubTypeId=2&" + "seasonId=" + seasonId +"&clubId=" + clubId;
+                    clubTypeId = 2;
+                break;
+            case 'club-official-a':
+                    _url = "/ClubOfficialOrders/Officials?clubTypeId=1&" + "seasonId=" + seasonId +"&clubId=" + clubId;
+                    clubTypeId = 1;
+                break;
+            case 'club-official-b':
+                    _url = "/ClubOfficialOrders/Officials?clubTypeId=2&" + "seasonId=" + seasonId +"&clubId=" + clubId;
+                    clubTypeId = 2;
+                break;
+            default:
+                return;
+            }
+            $("#club-type-id").val(clubTypeId);
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        $(document).ready(function() {
+            $("#panel-links li.active a").click();
+        });
+
+
+        //$("#tournament-id").on("change",
+        //    function() {
+
+        //        tournamentId = $("#tournament-id").val();
+
+        //    });
+
+
+    </script>
+
+
+
+}
+
+<div class="modal fade" id="cpo-modal" tabindex="-1" role="dialog" aria-labelledby="cpo-modal-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cpo-modal-label">Sifarişin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="cpo-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="cpo-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $('#cpo-modal').on('show.bs.modal',
+            function (event) {
+                $(document).off('focusin.modal');
+
+                var playerOrderId = $(event.relatedTarget).data('id');
+
+                var _url = "";
+
+                if (playerOrderId) {
+                    _url = "/ClubPlayerOrders/Edit?playerOrderId=" + playerOrderId;
+                } else {
+                    _url = "/ClubPlayerOrders/Create?clubTypeId=" + $("#club-type-id").val();
+                }
+
+
+
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#cpo-modal-body").html(data);
+                    }
+                });
+            });
+
+
+        $('#cpo-form-save').on('click',
+            function (event) {
+                event.preventDefault();
+
+                var frm = $('#cpo-form');
+
+                var playerOrderId = frm.find('#Id').val();
+
+                var _url = "";
+
+                if (playerOrderId) {
+                    _url = "/ClubPlayerOrders/Edit";
+                } else {
+                    _url = "/ClubPlayerOrders/Create";
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: _url,
+
+                    data: new FormData(frm[0]), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        if (response.ok) {
+                            $("#cpo-modal").modal('toggle');
+
+                            playerOrderRow(response.Id);
+                        } else {
+                            //write validations
+                            $("#validation-message").html(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+                return false;
+            });
+
+
+        function playerOrderRow(id) {
+            $.ajax({
+                type: "GET",
+                url: "/ClubPlayerOrders/Row?playerOrderId=" + id,
+                success: function (response) {
+
+                    if ($("#cpo-row-" + id).length > 0) {
+                        ($("#cpo-row-" + id).replaceWith(response));
+                    } else {
+                        if ($("#cpo-tbl tbody tr").length === 0) {
+                            $("#cpo-tbl tbody").html(response);
+                        }
+                        else {
+                            $("#cpo-tbl tbody tr:first").before(response);
+                        }
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+    })
+
+</script>
+
+
+<div class="modal fade" id="coo-modal" tabindex="-1" role="dialog" aria-labelledby="coo-modal-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="coo-modal-label">Sifarişin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="coo-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="coo-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $('#coo-modal').on('show.bs.modal',
+            function (event) {
+                $(document).off('focusin.modal');
+
+                var officialOrderId = $(event.relatedTarget).data('id');
+
+                var _url = "";
+
+                if (officialOrderId) {
+                    _url = "/ClubOfficialOrders/Edit?officialOrderId=" + officialOrderId;
+                } else {
+                    _url = "/ClubOfficialOrders/Create?clubTypeId=" + $("#club-type-id").val();
+                }
+
+
+
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#coo-modal-body").html(data);
+                    }
+                });
+            });
+
+
+        $('#coo-form-save').on('click',
+            function (event) {
+                event.preventDefault();
+
+                var frm = $('#coo-form');
+
+                var officialOrderId = frm.find('#Id').val();
+
+                var _url = "";
+
+                if (officialOrderId) {
+                    _url = "/ClubOfficialOrders/Edit";
+                } else {
+                    _url = "/ClubOfficialOrders/Create";
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: _url,
+
+                    data: new FormData(frm[0]), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        if (response.ok) {
+                            $("#coo-modal").modal('toggle');
+
+                            officialOrderRow(response.Id);
+                        } else {
+                            //write validations
+                            $("#validation-message").html(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+                return false;
+            });
+
+
+        function officialOrderRow(id) {
+            $.ajax({
+                type: "GET",
+                url: "/ClubOfficialOrders/Row?officialOrderId=" + id,
+                success: function (response) {
+                    if ($("#cpo-row-" + id).length > 0) {
+                        ($("#cpo-row-" + id).replaceWith(response));
+                    } else {
+                        $("#cpo-tbl tbody tr:first").before(response);
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+    })
+
+</script>

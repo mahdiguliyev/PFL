@@ -1,0 +1,136 @@
+﻿@using PFL.Membership
+@using PFL.Utils
+@{
+    var user = (CustomPrincipal)System.Web.HttpContext.Current.User;
+
+    bool hasAdminRole = user.IsInRole("admin");
+    bool hasRefereeRole = user.IsInRole("referee");
+    bool hasClubAdminRole = user.IsInRole("club-admin");
+    var controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+    var actionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+}
+
+
+<div class="sidebar sidebar-main">
+    <div class="sidebar-content">
+
+        <!-- User menu -->
+        @*<div class="sidebar-user">
+                <div class="category-content">
+                    <div class="media">
+                        <a href="#" class="media-left"><img src="~/assets/images/placeholder.jpg" class="img-circle img-sm" alt=""></a>
+                        <div class="media-body">
+                            <span class="media-heading text-semibold">Admin</span>
+                            <div class="text-size-mini text-muted">
+                                <i class="icon-pin text-size-small"></i> &nbsp; Bakı
+                            </div>
+                        </div>
+
+                        <div class="media-right media-middle">
+                            <ul class="icons-list">
+                                <li>
+                                    <a href="#"><i class="icon-cog3"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+        <!-- /user menu -->
+        <!-- Main navigation -->
+        <div class="sidebar-category sidebar-category-visible">
+            <div class="category-content no-padding">
+                <ul class="navigation navigation-main navigation-accordion">
+
+                    <li><a href="/"><i class="icon-home4"></i><span style="border-bottom: 1px solid white;">@(Request.Cookies["ClubName"]?.DecodedValue().ToUpper())</span></a></li>
+
+
+
+
+                    @if (hasAdminRole)
+                    {
+                        @*<li class="navigation-header"><span>Turnirlər</span> <i class="icon-menu" title="Forms"></i></li>*@
+                        <li class="@MenuHelper.IsActive("Tournaments", controllerName, actionName)">
+                            <a href="/Tournaments"><i class="icon-trophy3"></i> <span>Turnirlər</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("CardPenalties", controllerName, actionName)">
+                            <a href="/CardPenalties"><i class="icon-copy4"></i> <span>Kart cərimələri</span></a>
+                        </li>
+                        @*<li><a href="/Players/PlayerRequests"><i class="icon-envelop5"></i> <span>Yeni oyunçu sifarişləri</span></a></li>*@
+
+
+                        @*<li class="navigation-header"><span>Kulublar</span> <i class="icon-menu" title="Forms"></i></li>*@
+                        <li class="@MenuHelper.IsActive("Clubs", controllerName, actionName)">
+                            <a href="/Clubs"><i class="icon-users4"></i><span>Klublar</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("Players", controllerName, actionName)">
+                            <a href="/Players"><i class="icon-people"></i><span>Futbolçular</span></a>
+                        </li>
+                        @*<li><a href="/ClubOfficials"><i class="icon-user-tie"></i><span>Klub rəsmiləri</span></a></li>*@
+
+
+
+
+
+                        @*<li class="navigation-header"><span>Siyahılar</span> <i class="icon-menu" title="Forms"></i></li>*@
+                        @*<li><a href="/CardReasons"><i class="icon-list-unordered"></i> <span>Cərimə səbəbləri</span></a></li>*@
+                        @*<li><a href="/Countries"><i class="icon-list-unordered"></i> <span>Ölkələr</span></a></li>*@
+                        @*<li><a href="/Districts"><i class="icon-list-unordered"></i> <span>Rayon və şəhərlər</span></a></li>*@
+                        @*<li><a href="/ContractTypes"><i class="icon-list-unordered"></i> <span>Müqavilə tipləri</span></a></li>*@
+                        @*<li><a href="/TournamentTypes"><i class="icon-list-unordered"></i> <span>Turnir tipləri</span></a></li>*@
+                        @*<li><a href="/OfficialPositions"><i class="icon-list-unordered"></i> <span>Klubun rəsmi vəzifələri</span></a></li>*@
+
+
+                        <li class="navigation-header"><span>ADMİN</span> <i class="icon-menu" title="ADMİN"></i></li>
+                        <li class="@MenuHelper.IsActive("CardReasons", controllerName, actionName)">
+                            <a href="/CardReasons"><i class="icon-list-unordered"></i> <span>Cərimə səbəbləri</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("Users", controllerName, actionName)">
+                            <a href="/Users"><i class="icon-user"></i> <span>İstifadəçilər</span></a>
+                        </li>
+                        @*<li><a href="/Roles"><i class="icon-list-unordered"></i> <span>Rollar</span></a></li>*@
+                        @*<li><a href="#"><i class="icon-list-unordered"></i> <span>Loqlar</span></a></li>*@
+
+                    }
+
+
+
+
+                    @if (hasClubAdminRole)
+                    {
+                        @*<li class="navigation-header"><span>Əsas məlumatlar</span> <i class="icon-menu" title="Forms"></i></li>*@
+                        <li class="@MenuHelper.IsActive("Club/Details", controllerName, actionName)">
+                            <a href="/Club/Details"><i class="icon-info22"></i> <span>Əsas məlumatlar</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("ClubDocumentsOld", controllerName, actionName)">
+                            <a href="/ClubDocuments"><i class="icon-file-text2"></i> <span>Sənədlər</span></a>
+                        </li>
+                        @*<li><a href="/Player"><i class="icon-list-unordered"></i> <span>Komandanın heyyəti</span></a></li>*@
+                        <li class="@MenuHelper.IsActive("Club/Matches", controllerName, actionName)">
+                            <a href="/Club/Matches"><i class="icon-dribbble"></i> <span>Matçlar</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("PlayerRequests", controllerName, actionName)">
+                            <a href="/PlayerRequests"><i class="icon-user"></i> <span>Oyunçu qeydiyyatı</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("ClubOfficial", controllerName, actionName)">
+                            <a href="/ClubOfficial"><i class="icon-user-tie"></i> <span>Rəsmilərin qeydiyyatı</span></a>
+                        </li>
+                        <li class="@MenuHelper.IsActive("ClubPlayerOrders", controllerName, actionName)">
+                            <a href="/ClubPlayerOrders/Index?clubId=2"><i class="icon-list-unordered"></i> <span>Sifariş vərəqi</span></a>
+                        </li>
+                    }
+
+                    @if (hasRefereeRole)
+                    {
+                        <li class="navigation-header"><span>#</span> <i class="icon-menu"></i></li>
+                        <li class="@MenuHelper.IsActive("Referee/Matches", controllerName, actionName)">
+                            <a href="/Referee/Matches"><i class="icon-list-unordered"></i> <span>Matçlar</span></a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- /main navigation -->
+
+    </div>
+</div>

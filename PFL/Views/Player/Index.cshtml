@@ -1,0 +1,76 @@
+﻿@using PFL.Membership
+@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Player>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+
+    var user = (CustomPrincipal)System.Web.HttpContext.Current.User;
+
+    bool hasClubAdminRole = user.IsInRole("club-admin");
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Futbolçular</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>@Html.ActionLink("Yeni", "Create")</li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Şəkil</th>
+            <th>Adı</th>
+            <th>Yaş</th>
+            <th>Mövqe</th>
+            @if (!hasClubAdminRole)
+            {
+                <th>Cari klub</th>
+                <th>Əvvəlki komandası</th>
+            }
+            <th>Vətəndaşlığı</th>
+            <th>Müqavilənin tipi</th>
+            @*<th>Müqavilənin bitmə tarixi</th>*@
+            <th>Status</th>
+            <th class="text-center col-md-2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{ rowNumber++;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@rowNumber</td>
+                <td>
+                    <div class="media-left media-middle">
+                        <a href="#"><img src="@item.PhotoUrl" class="img-circle img-xs" alt=""></a>
+                    </div>
+                </td>
+                <td>@item.FirstName @item.LastName</td>
+                <td>@(item.BirthDate?.ToString("dd.MM.yyyy"))</td>
+                <td>@item.Position.Name</td>
+                <td>@item.Country.Name</td>
+                <td>@(item.ContractType?.Name)</td>
+                @*<td>@(item.ContractEndDate?.ToString("dd.MM.yyyy"))</td>*@
+                <td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>
+                @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+            </tr>
+            rowNumber++;
+        }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+

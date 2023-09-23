@@ -1,0 +1,95 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Views.VClubNotification>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+
+    int seasonId = ViewBag.SeasonId ?? 22;
+}
+
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Klublar</h5>
+            <div class="heading-elements">
+
+                <ul class="icons-list">
+                    <li>
+                        <div class="btn-group" style="width: 100%">
+                            <a href="/Clubs/Create" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-user-plus"></i></b> <span>Yeni klub</span></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th class="col-md-2">
+                        <input type="text" id="club-name" class="form-control" placeholder="Klubun adı..." value="@ViewBag.SearchKeyClubName">
+                    </th>
+                    <th class="text-center col-md-2">Klubun sənədləri</th>
+                    <th class="text-center col-md-2">Sifariş</th>
+                    <th class="text-center col-md-2">Yeni oyunçu qeydiyyatı</th>
+                    <th class="text-center col-md-2">Rəsmi şəxslərin qeydiyyatı</th>
+                    @*<th>Turnir məlumatları</th>*@
+                    @*<th>Status</th>*@
+                    <th class="text-center col-md-2">Əməliyyatlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    rowNumber++;
+                    <tr>
+                        <td>@rowNumber</td>
+                        <td><a href="/PlayerOrders/Index?clubId=@(item.Id)&seasonId=@(seasonId)">@item.ClubName</a></td>
+                        <td><a href="/Clubs/Documents?clubId=@(item.Id)&seasonId=@(seasonId)">Sənədlər @(item.ClubNewDocumentCount == 0 ? "" : " - " + item.ClubNewDocumentCount + " yeni")</a></td>
+                        <td><a href="/PlayerOrders/Index?clubId=@(item.Id)&seasonId=@(seasonId)">Klubun sifarişləri @(item.NewOrderCount == 0 ? "" : " - " + @item.NewOrderCount + " yeni")</a></td>
+                        <td class="text-center">
+                            <a href="/Players/PlayerRequests?clubId=@(item.Id)&seasonId=@(seasonId)">
+                                Oyunçu qeydiyyatı
+                                @if (item.ClubPlayerRequestCount > 0)
+                                {
+                                    <text>+</text> @item.ClubPlayerRequestCount
+
+                                }
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="/ClubOfficials/Index?clubId=@(item.Id)&seasonId=@(seasonId)">
+                                Rəsmi şəxslərin qeydiyyatı
+                                @if (item.ClubOfficialRequestCount > 0)
+                                {
+                                    <text>+</text> @item.ClubOfficialRequestCount
+                                }
+                            </a>
+                        </td>
+                        @*<td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>*@
+                        @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="datatable-footer">
+            <div class="dataTables_paginate">
+                @Html.PagedListPager(Model, page => Url.Action("Notifications", new { page, seasonId }))
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    $('#club-name').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            window.location.href = "/Clubs/Notifications?clubName=" + $(this).val();
+        }
+    });
+</script>
+
+
+

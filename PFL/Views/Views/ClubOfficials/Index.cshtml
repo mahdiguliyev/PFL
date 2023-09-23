@@ -1,0 +1,62 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.ClubOfficial>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klubların rəsmiləri</h5>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Klub</th>
+            <th>Rəsminin A.S.A</th>
+            <th>Vəzifəsi</th>
+            <th>Status</th>
+            <th class="text-center col-md-2">Əməliyyatlar</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            rowNumber++;
+            <tr>
+                <td>@rowNumber</td>
+                <td>@item.Club.Name</td>
+                <td>@item.FirstName @item.LastName @item.FatherName</td>
+                <td>@(item.Position?.Name)</td>
+                <td>
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <span class="label label-danger">İmtina edilmiş</span>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <span class="label label-success">Təsdiqlənmiş</span>
+                    }
+                    else
+                    {
+                        <span class="label label-danger">Təsdiq gözləyən</span>   
+                    }
+                </td>
+                <td class="text-center">
+                    <a type="button" href="/ClubOfficials/Edit?id=@(item.Id)" class="btn btn-primary btn-icon"><i class="icon-database-edit2"></i></a>
+                    <a type="button" href="/ClubOfficials/Detail?id=@(item.Id)" class="btn btn-primary btn-icon"><i class="icon-info3"></i></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { clubId = ViewBag.ClubId, page, ViewBag.SeasonId }))
+        </div>
+    </div>
+</div>

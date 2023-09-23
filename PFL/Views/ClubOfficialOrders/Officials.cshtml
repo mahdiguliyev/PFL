@@ -1,0 +1,103 @@
+﻿@model  IEnumerable<PFL.Models.DTO.ClubOfficialOrderListDto>
+@{
+    Layout = "";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+    DateTime currentDate = DateTime.Now;
+}
+
+<style>
+    .order-row {
+        background-color: #ffa5a5;
+    }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klubun rəsmiləri</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <button type="button" class="btn btn-primary alpaca-float-right" data-toggle="modal" data-target="#coo-modal" data-backdrop="static" data-keyboard="false">+ Əlavə et</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table table-bordered" id="coo-tbl">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th>A.S.A.</th>
+                <th>Vəzifəsi</th>
+                <th>
+                    Xitam tarixi
+                </th>
+                <th>Status</th>
+                <th>Sifariş tarixi</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr id="coo-row-@item.Id" class="@(item.TerminationDate.HasValue && item.TerminationDate<currentDate ? "order-row" : "")">
+                    <td>@rowNumber</td>
+                    <td>
+                        @item.FirstName @item.LastName @item.FatherName
+                    </td>
+                    <td>
+                        @(item.PositionName)
+                    </td>
+                    <td>
+                        @(item.TerminationDate?.ToString("dd.MM.yyyy"))
+                    </td>
+
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <td><span class="label label-danger">İmtina edilib</span></td>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <td><span class="label label-success">Təsdiqlənib</span></td>
+                    }
+                    else if (item.ClubConfirm)
+                    {
+                        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                    }
+                    <td>@(item.OperatorConfirmDate?.ToString("dd.MM.yyyy"))</td>
+
+
+                    @*@if (!item.ClubConfirm || item.Rejected)*@
+                    @if (!item.OperatorConfirm || item.Rejected)
+                    {
+                        @*@TableHelper.OperationButtonDelete(baseUrl, item.Id, "remove-official")*@
+                        <td class="text-center">
+                            <div class="col-md-8 col-md-offset-2">
+                                @*<div class="col-md-6">
+                                        <a data-toggle="modal" data-target="#coo-modal" data-backdrop="static" data-keyboard="false" data-id="@item.Id"><i class="icon-pencil7 text-primary-600"></i></a>
+                                    </div>*@
+
+                                <div class="col-md-6">
+                                    <a class="remove-official" data-href="/ClubOfficialOrders/Delete?Id=@item.Id" href="#"><i class="icon-trash text-danger-600"></i></a>
+                                </div>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Swal.DeleteWithClass("remove-official", "Silinsin?", "", "/ClubOfficialOrders/Delete", null, "coo-row-")

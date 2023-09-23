@@ -1,0 +1,153 @@
+﻿@using PFL.Membership
+@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Views.VPlayer>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+
+    var user = (CustomPrincipal)System.Web.HttpContext.Current.User;
+
+    bool hasClubAdminRole = user.IsInRole("club-admin");
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Futbolçular</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/Players/Create" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-user-plus"></i></b> <span>Yeni futbolçu</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-3" style="margin: 10px 0 20px 10px;">
+        <div class="input-group content-group">
+            <div class="has-feedback has-feedback-left">
+                <input type="text" id="player-name" class="form-control input-xlg" placeholder="Axtarış" value="@(ViewBag.PlayerNameSearchText)">
+                <div class="form-control-feedback">
+                    <i class="icon-search4 text-muted text-size-base"></i>
+                </div>
+            </div>
+            <div class="input-group-btn">
+                <button type="submit" id="btn-search" class="btn btn-primary btn-xlg">Axtar</button>
+            </div>
+            @*<div class="input-group-btn">
+                    <button type="submit" id="btn-reset-search" class="btn btn-default btn-xlg"><i class="icon-cross"></i></button>
+                </div>*@
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Şəkil</th>
+                <th>
+                    Nömrə - A.S.A.
+                </th>
+                <th>Doğum tarixi</th>
+                <th>Mövqe</th>
+                @if (!hasClubAdminRole)
+                {
+                    <th>Cari klub</th>
+                    <th>Əvvəlki komandası</th>
+                }
+                <th>Vətəndaşlığı</th>
+                <th>Müqavilənin tipi</th>
+                <th>Müqavilənin bitmə tarixi</th>
+                <th>Status</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr id="row-player-@(item.Id)">
+                    <td>@rowNumber</td>
+                    <td>
+                        <div class="media-left media-middle">
+                            <a href="#"><img src="@item.PhotoUrl" class="img-circle img-xs" alt=""></a>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/Players/Statistics?playerId=@(item.Id)">
+                            <span class="text-primary-700">@item.PlayerNumber</span> - @item.FirstName @item.LastName
+                        </a>
+                    </td>
+                    <td>@(item.BirthDate?.ToString("dd.MM.yyyy"))</td>
+                    <td>@item.PositionName</td>
+                    @if (!hasClubAdminRole)
+                    {
+                        <td>@(item.CurrentClub)</td>
+                        <td>@(item.PreviousClub)</td>
+                    }
+
+                    <td>@item.Citizenship</td>
+                    <td>@item.ContractTypeName</td>
+                    <td>@(item.ContractEndDate?.ToString("dd.MM.yyyy"))</td>
+                    <td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>
+
+
+                    <td class="text-center">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-4">
+                                <a href="/@(baseUrl)/Transfers?playerId=@item.Id" title="Transfer"><i class="icon-transmission text-primary-600"></i></a>
+                            </div>
+
+                            <div class="col-md-4">
+                                <a href="/@(baseUrl)/Edit?Id=@item.Id" title="Redaktə et"><i class="icon-pencil7 text-primary-600"></i></a>
+                            </div>
+
+                            @if (item.IsDeleted)
+                            {
+                                <div class="col-md-4"><a href="/@(baseUrl)/Undo?Id=@item.Id" title="Geri qaytar"><i class="fas fa-undo-alt"></i></a></div>
+                            }
+                            else
+                            {
+                                <div class="col-md-4">
+                                    <a href="" data-href="/@(baseUrl)/Delete?Id=@item.Id" class="player-delete" title="Sil"><i class="icon-trash text-danger-600"></i></a>
+                                </div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+
+
+
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+
+    <script>
+        $('#player-name').keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                window.location.href = "/Players/Index?playerName=" + $(this).val();
+            }
+        });
+
+        $("#btn-search").on('click',
+            function () {
+                window.location.href = "/Players/Index?playerName=" + $('#player-name').val();
+            });
+    </script>
+
+    @Swal.DeleteWithClass("player-delete", "Silinsin?", "", "/Players/Delete", null, "row-player-")
+}

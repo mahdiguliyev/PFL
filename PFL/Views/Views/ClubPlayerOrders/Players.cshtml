@@ -1,0 +1,117 @@
+﻿@model IEnumerable<PFL.Models.DTO.ClubPlayerOrderListDto>
+@{
+    /**/
+
+    Layout = "";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+    DateTime currentDate = DateTime.Now;
+}
+
+    <style>
+
+        .order-row {
+            background-color: #ffa5a5;
+        }
+    </style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Oyunçular</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <button type="button" class="btn btn-primary alpaca-float-right" data-toggle="modal" data-target="#cpo-modal" data-backdrop="static" data-keyboard="false">+ Əlavə et</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table table-bordered" id="cpo-tbl">
+        <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-1">
+                    Oyunçunun nömrəsi
+                </th>
+                <th>
+                    A.S.A.
+                </th>
+                <th>
+                    Sağlamlıq arayışı
+                </th>
+                <th>
+                    Xitam tarixi
+                </th>
+
+                <th>Status</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr id="cpo-row-@item.Id" class="@(item.TerminationDate.HasValue && item.TerminationDate<currentDate ? "order-row" : "")">
+                    <td>@rowNumber</td>
+                    <td><span class="text-primary-700">@item.PlayerNumber</span></td>
+                    <td>@item.FirstName @item.LastName @item.FatherName</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.HealthFile))
+                        {
+                            <a href="@item.HealthFile">Sağlamlıq arayışı</a>
+                        }
+                    </td>
+                    <td>
+                        @(item.TerminationDate?.ToString("dd.MM.yyyy"))
+                    </td>
+
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <td><span class="label label-danger">İmtina edilib</span></td>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <td><span class="label label-success">Təsdiqlənib</span></td>
+                    }
+                    else if (item.ClubConfirm)
+                    {
+                        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                    }
+
+
+                    @if (!item.ClubConfirm || item.Rejected)
+                    {
+                        @*@TableHelper.OperationButtonDelete(baseUrl, item.Id, "remove-player")*@
+                        <td class="text-center">
+                            <div class="col-md-8 col-md-offset-2">
+                                <div class="col-md-6">
+                                    <a data-toggle="modal" data-target="#cpo-modal" data-id="@item.Id" data-backdrop="static" data-keyboard="false"><i class="icon-pencil7 text-primary-600"></i></a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a class="remove-player" data-href="/ClubPlayerOrders/Delete?Id=@item.Id" style="cursor: pointer;"><i class="icon-trash text-danger-600"></i></a>
+                                </div>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Swal.DeleteWithClass("remove-player", "Silinsin?", "", "/ClubPlayerOrders/Delete", null, "cpo-row-")
+
+
+
+

@@ -1,0 +1,54 @@
+﻿@model PFL.Entities.EntityModels.ClubPlayerOrder
+@{
+    Layout = null;
+}
+
+<tr id="cpo-row-@Model.Id">
+    <td></td>
+    <td><span class="text-primary-700">@Model.PlayerNumber</span></td>
+    <td>@Model.Player.FirstName @Model.Player.LastName @Model.Player.FatherName</td>
+    <td>
+        @if (!string.IsNullOrEmpty(Model.HealthFile))
+        {
+            <a href="@Model.HealthFile" target="_blank">Sağlamlıq arayışı</a>
+        }
+    </td>
+
+    @if (Model.Rejected && !Model.ClubConfirm)
+    {
+        <td><span class="label label-danger">İmtina edilib</span></td>
+    }
+    else if (Model.OperatorConfirm)
+    {
+        <td><span class="label label-success">Təsdiqlənib</span></td>
+    }
+    else if (Model.ClubConfirm)
+    {
+        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+    }
+    else
+    {
+        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+    }
+
+
+    @if (!Model.ClubConfirm || Model.Rejected)
+    {
+        @*@TableHelper.OperationButtonDelete(baseUrl, Model.Id, "remove-player")*@
+        <td class="text-center">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6">
+                    <a data-toggle="modal" data-target="#cpo-modal" data-id="@Model.Id" data-backdrop="static" data-keyboard="false"><i class="icon-pencil7 text-primary-600"></i></a>
+                </div>
+
+                <div class="col-md-6">
+                    <a class="remove-player" data-href="/ClubPlayerOrders/Delete?Id=@Model.Id" href="#"><i class="icon-trash text-danger-600"></i></a>
+                </div>
+            </div>
+        </td>
+    }
+    else
+    {
+        <td></td>
+    }
+</tr>

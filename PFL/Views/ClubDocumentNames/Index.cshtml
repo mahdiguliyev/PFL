@@ -1,0 +1,57 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.ClubDocumentName>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Kluba təqdim ediləcək sənəd tipləri</h5>
+        <div class="heading-elements">
+            <div class="btn-group">
+                <a href="/@(baseUrl)/Create" type="button" class="btn bg-primary-400 btn-labeled"><b><i class="icon-add"></i></b> <span>Yeni sənəd tipi</span></a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>#</td>
+            <th>Label</th>
+            <th>Adı</th>
+            <th>Tipi</th>
+            <th>Fayl tipi</th>
+            <th>Seçim sayı</th>
+            <th>Ardıcıllıq</th>
+            <th>Status</th>
+            <th class="text-center col-md-2">Əməliyyatlar</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            rowNumber++;
+            <tr>
+                <td>@rowNumber</td>
+                <td>@item.Label</td>
+                <td>@item.Name</td>
+                <td>@(item?.ClubDocumentType?.Name)</td>
+                <td>@(item.DocumentExtentions)</td>
+                <td>@(item.IsMultipleFile ? "bir neçə sənəd" : "tək sənəd")</td>
+                <td>@item.Sort</td>
+                <td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>
+                @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>

@@ -1,0 +1,91 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Views.VClub>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klublar</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/Clubs/Create" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-user-plus"></i></b> <span>Yeni klub</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th>
+                    <input type="text" id="club-name" class="form-control" placeholder="Klubun adı..." value="@ViewBag.SearchKeyClubName">
+                </th>
+
+                @*<th class="text-center col-md-2">Klubun sənədləri</th>
+                <th class="text-center col-md-2">Sifariş</th>
+                <th class="text-center col-md-2">Yeni oyunçu qeydiyyatı</th>
+                <th class="text-center col-md-2">Rəsmi şəxslərin qeydiyyatı</th>*@
+                @*<th>Turnir məlumatları</th>*@
+                @*<th>Status</th>*@
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td><a href="/PlayerOrders/Index?clubId=@(item.Id)">@item.ClubName</a></td>
+                    @*<td><a href="/Clubs/Documents?clubId=@(item.Id)">Sənədlər</a></td>
+                    <td><a href="/PlayerOrders/Index?clubId=@(item.Id)">Klubun sifarişləri @(item.NewOrderCount == 0 ? "" : " - " + @item.NewOrderCount + " yeni")</a></td>
+                    <td class="text-center">
+                        <a href="/Players/PlayerRequests?clubId=@item.Id">Oyunçu qeydiyyatı
+                            @if (item.ClubPlayerRequestCount > 0)
+                            {
+                                <text>+</text> @item.ClubPlayerRequestCount
+
+                            }
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a href="/ClubOfficials/Index?clubId=@item.Id">Rəsmi şəxslərin qeydiyyatı
+                            @if (item.ClubOfficialRequestCount > 0)
+                            {
+                                <text>+</text> @item.ClubOfficialRequestCount
+                            }
+                        </a>
+                    </td>*@
+                    @*<td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>*@
+                    @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $('#club-name').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            window.location.href = "/Clubs/Index?clubName=" + $(this).val();
+        }
+    });
+</script>
+
+
+

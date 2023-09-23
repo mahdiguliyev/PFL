@@ -1,0 +1,83 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.TournamentTour>
+@{
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+<style>
+
+    .match-list tbody tr {
+        cursor: pointer;
+    }
+
+        .match-list tbody tr td:last-child {
+            color: #1E88E5;
+        }
+
+        .match-list tbody tr:hover td {
+            cursor: pointer;
+            background-color: #26A69A;
+            color: white;
+        }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Futbolçular</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list"></ul>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+    <table class="table table-bordered match-list">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Mövsüm</th>
+                <th>Turnir</th>
+                <th>Tur</th>
+                <th>Rəqib klub</th>
+                <th>Matçın tarixi</th>
+                @*<th>Heyyətin statusu</th>*@
+                <th class="text-center col-md-2">#</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr class="match-detail" data-match-id="@item.MatchId">
+                    <td>@rowNumber</td>
+                    <td>@item.Tournament.SeasonStartYear - @item.Tournament.SeasonEndYear</td>
+                    <td>@item.Tournament.Name</td>
+                    <td>@item.TourNumber</td>
+                    <td>@(ViewBag.ClubId != item.Match.HomeClubId ? item.Match.HomeClub.Name : item.Match.GuestClub.Name)</td>
+                    <td>@(item.Match.MatchDate?.ToString("dd.MM.yyyy HH:mm"))</td>
+                    @* <td>[Daxil edilməyib]</td> *@
+                    <td class="text-center">
+                        <i class="icon-info22"></i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Matches", new { page, ViewBag.SeasonId }))
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $(".match-detail").on('click',
+            function () {
+                window.location = "/Club/MatchParticipants?matchId=" + $(this).data('match-id');
+            });
+    });
+</script>

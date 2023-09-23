@@ -1,0 +1,165 @@
+﻿@model IEnumerable<PFL.Models.ViewModels.RefereePlayerShiftViewModel>
+@{
+    ViewBag.Title = "Əvəzetmələr";
+    Layout = "";
+    int rowNumber = 0;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <button type="button" class="btn btn-primary alpaca-float-right player-shift-form-modal">+ Əlavə et</button>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered" id="tbl-player-shifts">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Klub</th>
+                <th>Meydanı tərk edən oyunçu</th>
+                <th>Meydana daxil olan oyunçu</th>
+                <th>Dəqiqə</th>
+                <th>Əməliyyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr id="player-shift-row-@(item.Id)">
+                    <td>@rowNumber</td>
+                    <td>@item.ClubName</td>
+                    <td>@item.PlayerOutNumber - @item.PlayerOutFirstName @item.PlayerOutLastName @item.PlayerOutFatherName</td>
+                    <td>@item.PlayerInNumber - @item.PlayerInFirstName @item.PlayerInLastName @item.PlayerInFatherName</td>
+                    <td>@item.MinuteIn @(item.MinuteInPlus != null && item.MinuteInPlus != 0 ? " + " + item.MinuteInPlus : "")</td>
+
+                    @*@TableHelper.OperationButtonDelete("Referee", item.Id, "remove-shift", "DeleteShift")*@
+                    <td class="text-center">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-6">
+                                <a data-href="/@(baseUrl)/EditPlayerShift?Id=@(item.Id)&matchId=@(item.MatchId)" class="player-shift-form-modal"><i class="icon-pencil7 text-primary-600"></i></a>
+                            </div>
+                            <div class="col-md-6">
+                                <a data-href="/@(baseUrl)/DeleteShift?Id=@(item.Id)&matchId=@(item.MatchId)" class="remove-shift"><i class="icon-trash text-danger-600"></i></a>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Swal.DeleteWithClass("remove-shift", "Silinsin?", "Əvəzetmələr bölməsində bir əvəzetmənin silinməsi oyunun digər bütün əvəzetmələrini silir!", "/Referee/DeleteShift", null)
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="player-shift-modal" tabindex="-1" role="dialog" aria-labelledby="player-shift-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="player-shift-modal-label">Yeni əvəzetmənin əlavə edilməsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="player-shift-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="player-shift-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/js/sweetalert.min.js"></script>
+
+<script>
+    $('#player-shift-form-save').on('click', function (e) {
+        e.preventDefault();
+
+        var _url = "/Referee/AddPlayerShift";
+
+        if ($('#player-shift-form').find('#Id').val() != null) {
+            _url = "/Referee/EditPlayerShift";
+        }
+
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: $('#player-shift-form').serialize(),
+            success: function (response) {
+                if (response.ok) {
+                    $("#card-modal").modal('toggle');
+                    window.location.reload();
+                } else {
+                    $("#validation-message").html(response.error);
+                }
+
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+
+    $("body").on('click', ".remove-shift", function (e) {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        swal({
+                title: "Silinsin?",
+                text: "",
+                icon: "warning",
+                buttons: ["İmtina", "Təsdiq"],
+                dangerMode: false,
+
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                        type: 'Delete',
+                        url: $(this).data('href'),
+                        success: function (data) {
+                            if (data.ok) {
+                                swal("Əməliyyat uğurlu!",
+                                    {
+                                        icon: "success",
+                                    });
+                                setTimeout(function() {
+                                    window.location.reload();
+                                }, 500);
+                            } else {
+                                swal(data.error,
+                                    {
+                                        icon: "error",
+                                    });
+                            }
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+
+                            swal('Əməliyyatda səhvlik!');
+
+                        }
+                    });
+
+
+                } else {
+                    //swal("Your imaginary file is safe!");
+                }
+            });
+    });
+
+</script>

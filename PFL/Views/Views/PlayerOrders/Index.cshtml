@@ -1,0 +1,447 @@
+﻿@model  PFL.Entities.EntityModels.Club
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int clubTournamentTypeId = ViewBag.ClubTournamentTypeId;
+
+    int seasonId = ViewBag.SeasonId ?? 22;
+}
+
+<script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+<script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>
+
+@section before_app_scripts
+{
+    <script type="text/javascript" src="/assets/js/plugins/notifications/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/moment/moment.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/daterangepicker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/anytime.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.date.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.time.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/legacy.js"></script>
+}
+
+@section after_app_scripts{
+    <script type="text/javascript" src="/assets/js/pages/picker_date.js?5"></script>
+}
+
+
+<div class="col-md-12">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h6 class="panel-title">@Model.Name</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <label for="ActiveOrders">Aktiv sifarişlər</label>
+                        <input type="radio" name="PlayerOrderListType" id="ActiveOrders" value="1" checked="checked" />
+                    </li>
+                    <li>
+                        <label for="TerminatedOrders">Xitam edilmiş sifarişlər</label>
+                        <input type="radio" name="PlayerOrderListType" id="TerminatedOrders" value="1" />
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        @*<div class="col-md-8 col-md-offset-2">
+            @Select2.Create("tournament-id", "Tournaments", "Select2", "Turniri seçin")
+        </div>*@
+        <hr/>
+
+        @*@Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")*@
+
+
+        <div class="panel-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight nav-justified" id="panel-links">
+
+                    @if (clubTournamentTypeId != 3)
+                    {
+                        <li class="active">
+                            <a href="#club-player-a" data-toggle="tab" onclick="getContent('club-player-a')">
+                                A komandası
+                            </a>
+                        </li>
+                    }
+
+                    <li class="@(clubTournamentTypeId == 3 ? "active" : "")">
+                        <a href="#club-player-b" data-toggle="tab" onclick="getContent('club-player-b')">
+                            @(clubTournamentTypeId == 3 ? "Futbolçular" : "B komandası")
+                        </a>
+                    </li>
+
+
+                    @if (clubTournamentTypeId != 3)
+                    {
+                        <li>
+                            <a href="#club-official-a" data-toggle="tab" onclick="getContent('club-official-a')">
+                                A komandasının rəsmi şəxsləri
+                            </a>
+                        </li>
+                    }
+
+
+                    <li>
+                        <a href="#club-official-b" data-toggle="tab" onclick="getContent('club-official-b')">
+                            @(clubTournamentTypeId == 3 ? "Rəsmi şəxslər" : "B komandasının rəsmi şəxsləri")
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane @(clubTournamentTypeId != 3 ? "active" : "")" id="club-player-a">
+
+                    </div>
+
+                    <div class="tab-pane @(clubTournamentTypeId == 3 ? "active" : "")" id="club-player-b">
+
+                    </div>
+                    <div class="tab-pane" id="club-official-a">
+
+                    </div>
+                    <div class="tab-pane" id="club-official-b">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="club-id" value="@Model.Id" />
+<input type="hidden" id="club-type-id" value="1" />
+<input type="hidden" id="season-id" value="@(seasonId)" />
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <script>
+
+        var clubId = @Model.Id;
+        var tournamentId;
+        var clubTypeId;
+
+        function getContent(label) {
+
+            var _url;
+            var seasonId = $("#season-id").val();
+            switch (label) {
+            case 'club-player-a':
+                _url = "/PlayerOrders/Players?clubTypeId=1&clubId=" + clubId + "&seasonId=" + seasonId;
+                    clubTypeId = 1;
+                break;
+            case 'club-player-b':
+                    _url = "/PlayerOrders/Players?clubTypeId=2&clubId=" + clubId + "&seasonId=" + seasonId;
+                    clubTypeId = 2;
+                break;
+            case 'club-official-a':
+                    _url = "/OfficialOrders/Officials?clubTypeId=1&clubId=" + clubId + "&seasonId=" + seasonId;
+                    clubTypeId = 1;
+                break;
+            case 'club-official-b':
+                    _url = "/OfficialOrders/Officials?clubTypeId=2&clubId=" + clubId + "&seasonId=" + seasonId;
+                    clubTypeId = 2;
+                break;
+            default:
+                return;
+            }
+            $("#club-type-id").val(clubTypeId);
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        $(document).ready(function() {
+            $("#panel-links li.active a").click();
+        });
+
+        //$("#tournament-id").on("change",
+        //    function() {
+        //        tournamentId = $("#tournament-id").val();
+        //    });
+
+
+    </script>
+}
+
+
+<div class="modal fade" id="player-order-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="player-order-confirm-modal-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="player-order-confirm-modal-label">Sifarişin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="player-order-confirm-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary col-md-12" id="player-order-confirm-form-save">Təsdiqlə</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    $(document).ready(function () {
+
+        $('#player-order-confirm-form-save').on('click',
+            function (event) {
+                event.preventDefault();
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "/PlayerOrders/Confirmation",
+                    data: new FormData($('#player-order-confirm-form')[0]),
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        if (response.ok) {
+                            $("#player-order-confirm-modal").modal('toggle');
+                            //window.location.reload();
+                            playerOrderRow(response.Id);
+
+                        } else {
+                            //write validations
+                            $("#validation-message").html(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+                return false;
+            });
+
+        function playerOrderRow(id) {
+            $.ajax({
+                type: "GET",
+                url: "/PlayerOrders/Row?id=" + id,
+                success: function (response) {
+                    if ($("#cpo-row-" + id)) {
+                        ($("#cpo-row-" + id).replaceWith(response));
+                    } else {
+                        $("#cpo-tbl tbody").appendTo(response);
+                    }
+                },
+                error: function () {
+                    alert('Error');
+                }
+            });
+        }
+    })
+
+</script>
+
+
+
+<div class="modal fade" id="official-order-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="official-order-confirm-modal-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="official-order-confirm-modal-label">Sifarişin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="official-order-confirm-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary col-md-12" id="official-order-confirm-form-save">Təsdiqlə</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    $(document).ready(function () {
+
+        $('#official-order-confirm-form-save').on('click',
+            function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/OfficialOrders/Confirmation",
+                    data: new FormData($('#official-order-confirm-form')[0]),
+                    dataType: "json",
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+
+                        if (response.ok) {
+                            $("#official-order-confirm-modal").modal('toggle');
+                            //window.location.reload();
+                            officialOrderRow(response.Id);
+
+                        } else {
+                            //write validations
+                            $("#validation-message").html(response.error);
+                        }
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+                return false;
+            });
+    })
+
+
+    function officialOrderRow(id) {
+        $.ajax({
+            type: "GET",
+            url: "/OfficialOrders/Row?id=" + id,
+            success: function (response) {
+                if ($("#coo-row-" + id)) {
+                    ($("#coo-row-" + id).replaceWith(response));
+                } else {
+                    $("#coo-tbl tbody").appendTo(response);
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+
+
+
+
+
+
+    $(document).on("click", "#termination-order-form-save", function () {
+        $.ajax({
+            url: "/PlayerOrders/TerminateOrder",
+            data: $("#termination-order-form").serialize(),
+            method: "POST",
+            success: function (response) {
+                if (response.ok) {
+                    $("#termination-order-modal").modal('toggle');
+
+                    $($("#cpo-row-" + response.Id).children().get(4)).html(response.TerminationDateStr);
+                    //$("#cpo-row-" + response.Id).childList[3].html(response.TerminationDate);
+                    if (response.Terminated) {
+                        $("#cpo-row-" + response.Id).addClass('order-row');
+                    } else {
+                        $("#cpo-row-" + response.Id).removeClass('order-row');
+                    }
+                    //$("#cpo-row-" + response.Id).remove();
+                }
+            }
+        });
+    });
+
+
+    $(document).on("click", "#termination-official-order-form-save", function () {
+        $.ajax({
+            url: "/OfficialOrders/TerminateOrder",
+            data: $("#termination-official-order-form").serialize(),
+            method: "POST",
+            success: function (response) {
+                if (response.ok) {
+                    $("#termination-official-order-modal").modal('toggle');
+
+                    $($("#coo-row-" + response.Id).children().get(3)).html(response.TerminationDateStr);
+                    //$("#cpo-row-" + response.Id).childList[3].html(response.TerminationDate);
+                    if (response.Terminated) {
+                        $("#coo-row-" + response.Id).addClass('order-row');
+                    } else {
+                        $("#coo-row-" + response.Id).removeClass('order-row');
+                    }
+                    //$("#cpo-row-" + response.Id).remove();
+                }
+            }
+        });
+    });
+</script>
+
+
+
+<!-- Player Number Edit Modal -->
+<div class="modal fade" id="edit-player-order-modal" tabindex="-1" role="dialog" aria-labelledby="edit-player-order-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="edit-player-order-modal-label">Futbolçunun siyahıdan çıxarılması</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="edit-player-order-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="player-order-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Player Termination Modal -->
+<div class="modal fade" id="termination-order-modal" tabindex="-1" role="dialog" aria-labelledby="edit-player-order-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termination-order-modal-label">Oyunçu nömrəsinin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="termination-order-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="termination-order-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Official Termination Modal -->
+<div class="modal fade" id="termination-official-order-modal" tabindex="-1" role="dialog" aria-labelledby="edit-player-order-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termination-official-order-modal-label">Rəsminin siyahıdan çıxarılması</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="termination-official-order-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="termination-official-order-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

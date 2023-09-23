@@ -1,0 +1,58 @@
+﻿@model PFL.Models.DTO.PenaltyEditAfterConfirmDto
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Cərimənin təyini")
+
+    <div class="panel-body">
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal" }))
+        {
+            <fieldset class="content-group col-md-8 col-md-offset-2">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model.Id)" />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="PassMatchCount">Buraxılacaq oyun sayı</label>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.PassMatchCount, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.ValidationMessageFor(model => model.PassMatchCount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="PenaltyPriceAmount">Cərimə məbləği</label>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.PenaltyPriceAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-4">
+                        @Html.ValidationMessageFor(model => model.PenaltyPriceAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>

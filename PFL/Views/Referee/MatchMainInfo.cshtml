@@ -1,0 +1,370 @@
+﻿@model PFL.Models.ViewModels.RefereeMatchMainInfoViewModel
+@{
+    ViewBag.Title = "Əsas məlumatlar";
+    Layout = "";
+}
+
+
+
+
+        <div class="panel-body">
+            
+            @*<p class="content-group-lg">Extend form controls by adding text or buttons before, after, or on both sides of any text-based <code>&lt;input></code>. Use <code>.input-group</code> with an <code>.input-group-addon</code> to prepend or append elements to a single <code>.form-control</code>. Place one add-on or button on either side of an input. You may also place one on both sides of an input. Multiple add-ons on a single side and multiple form-controls in a single input group aren't supported.</p>*@
+
+            <div class="form-horizontal" action="#">
+                <fieldset class="content-group">
+                    <legend class="text-bold">Hakimlər</legend>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">Baş hakim</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.RefereeFullName" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">B/h köməkçisi</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.RefereeAssistant1FullName" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">B/h köməkçisi</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.RefereeAssistant2FullName" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">4-cü hakim</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.FourthRefereeFullName" readonly="readonly">
+                        </div>
+                    </div>
+
+
+                    @*<div class="form-group">
+                        <label class="control-label col-lg-2">ƏKH</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.AdditionalReferee1FullName" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">ƏKH</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.AdditionalReferee2FullName" readonly="readonly">
+                        </div>
+                    </div>*@
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">AFFA nümayəndəsi</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.AffaRepresentative" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">Hakim-inspektor</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" value="@Model.RefereeInspector" readonly="readonly">
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="content-group">
+                    <legend class="text-bold">Hesab</legend>
+
+                    <div class="form-group">
+                        <div class="col-lg-8 col-lg-offset-2">
+                            <label class="control-label col-lg-3 col-lg-offset-1">@Model.HomeClubName</label>
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fas fa-futbol"></i></span>
+                                    <input type="text" class="form-control text-center" value="@Model.HomeClubScore" readonly="readonly">
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control text-center" value="@Model.GuestClubScore" readonly="readonly">
+                                    <span class="input-group-addon"><i class="fas fa-futbol"></i></span>
+                                </div>
+                            </div>
+                            <label class="control-label col-lg-3 col-lg-offset-1">@Model.GuestClubName</label>
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="content-group">
+                    <legend class="text-bold">Artırılmış vaxt</legend>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">1-ci hissə</label>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.HalfExtraTime" id="half-extra-time" readonly="readonly">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success" id="btn-half-time-extra" data-edit="false"><i class="far fa-edit"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">2-ci hissə</label>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.FullExtraTime" id="full-extra-time" readonly="readonly">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success" id="btn-full-time-extra" data-edit="false"><i class="far fa-edit"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">Əlavə vaxta artırılmış vaxt (1-ci hissə)</label>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.Half2ExtraTime" id="half2-extra-time" readonly="readonly">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success" id="btn-half2-time-extra" data-edit="false"><i class="far fa-edit"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">Əlavə vaxta artırılmış vaxt (2-ci hissə)</label>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.Full2ExtraTime" id="full2-extra-time" readonly="readonly">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success" id="btn-full2-time-extra" data-edit="false"><i class="far fa-edit"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <fieldset class="content-group">
+                    <legend class="text-bold">STADİON</legend>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2"><b>@Model.Stadium</b></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-lg-2">Tamaşaçı sayı</label>
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="@Model.AudienceCount" id="audience-count" readonly="readonly">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-success" id="btn-audience-count" data-edit="false"><i class="far fa-edit"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+        </div>
+  
+
+<script>
+    $("#btn-half-time-extra").on("click",
+        function () {
+
+            var btnHalf = $("#btn-half-time-extra");
+            
+            if (btnHalf.data('edit') === false) {
+
+                btnHalf.data('edit',true);
+
+                $("#half-extra-time").prop("readonly", false);
+                btnHalf.removeClass('btn-success').addClass('btn-primary');
+                btnHalf.html('<i class="far fa-save"></i>');
+            } else {
+                
+                $.ajax({
+                    url: '/Referee/SaveHalfExtra?matchId='+$("#match-id").val()+'&halfExtra=' + $("#half-extra-time").val(),
+                    method: "POST",
+                    success: function(data) {
+                        if (data.ok) {
+
+                            btnHalf.data('edit', false);
+
+                            $("#half-extra-time").prop("readonly", true);
+                            btnHalf.removeClass('btn-primary').addClass('btn-success');
+                            btnHalf.html('<i class="far fa-edit"></i>');
+                        } else {
+                            swal({
+                                title: data.error,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+    $("#btn-full-time-extra").on("click",
+        function () {
+
+            var btnFull = $("#btn-full-time-extra");
+
+            if (btnFull.data('edit') === false) {
+
+                btnFull.data('edit',true);
+
+                $("#full-extra-time").prop("readonly", false);
+                btnFull.removeClass('btn-success').addClass('btn-primary');
+                btnFull.html('<i class="far fa-save"></i>');
+            } else {
+                
+                $.ajax({
+                    url: '/Referee/SaveFullExtra?matchId=' + $("#match-id").val() +'&fullExtra=' + $("#full-extra-time").val(),
+                    method: "POST",
+                    success: function(data) {
+                        if (data.ok) {
+
+                            btnFull.data('edit', false);
+
+                            $("#full-extra-time").prop("readonly", true);
+                            btnFull.removeClass('btn-primary').addClass('btn-success');
+                            btnFull.html('<i class="far fa-edit"></i>');
+                        } else {
+                            swal({
+                                title: data.error,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+
+
+    $("#btn-half2-time-extra").on("click",
+        function () {
+
+            var btnHalf = $("#btn-half2-time-extra");
+
+            if (btnHalf.data('edit') === false) {
+
+                btnHalf.data('edit', true);
+
+                $("#half2-extra-time").prop("readonly", false);
+                btnHalf.removeClass('btn-success').addClass('btn-primary');
+                btnHalf.html('<i class="far fa-save"></i>');
+            } else {
+
+                $.ajax({
+                    url: '/Referee/SaveHalf2Extra?matchId=' + $("#match-id").val() + '&halfExtra=' + $("#half2-extra-time").val(),
+                    method: "POST",
+                    success: function (data) {
+                        if (data.ok) {
+
+                            btnHalf.data('edit', false);
+
+                            $("#half2-extra-time").prop("readonly", true);
+                            btnHalf.removeClass('btn-primary').addClass('btn-success');
+                            btnHalf.html('<i class="far fa-edit"></i>');
+                        } else {
+                            swal({
+                                title: data.error,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+    $("#btn-full2-time-extra").on("click",
+        function () {
+
+            var btnFull = $("#btn-full2-time-extra");
+
+            if (btnFull.data('edit') === false) {
+
+                btnFull.data('edit', true);
+
+                $("#full2-extra-time").prop("readonly", false);
+                btnFull.removeClass('btn-success').addClass('btn-primary');
+                btnFull.html('<i class="far fa-save"></i>');
+            } else {
+
+                $.ajax({
+                    url: '/Referee/SaveFull2Extra?matchId=' + $("#match-id").val() + '&fullExtra=' + $("#full2-extra-time").val(),
+                    method: "POST",
+                    success: function (data) {
+                        if (data.ok) {
+
+                            btnFull.data('edit', false);
+
+                            $("#full2-extra-time").prop("readonly", true);
+                            btnFull.removeClass('btn-primary').addClass('btn-success');
+                            btnFull.html('<i class="far fa-edit"></i>');
+                        } else {
+                            swal({
+                                title: data.error,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+
+    $("#btn-audience-count").on("click",
+        function () {
+
+            var btnAudienceCount = $("#btn-audience-count");
+
+            if (btnAudienceCount.data('edit') === false) {
+
+                btnAudienceCount.data('edit', true);
+
+                $("#audience-count").prop("readonly", false);
+                btnAudienceCount.removeClass('btn-success').addClass('btn-primary');
+                btnAudienceCount.html('<i class="far fa-save"></i>');
+            } else {
+
+                $.ajax({
+                    url: '/Referee/SaveAudienceCount?matchId=' + $("#match-id").val() + '&audienceCount=' + $("#audience-count").val(),
+                    method: "POST",
+                    success: function (data) {
+                        if (data.ok) {
+
+                            btnAudienceCount.data('edit', false);
+
+                            $("#audience-count").prop("readonly", true);
+                            btnAudienceCount.removeClass('btn-primary').addClass('btn-success');
+                            btnAudienceCount.html('<i class="far fa-edit"></i>');
+                        } else {
+                            swal({
+                                title: data.error,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+
+</script>

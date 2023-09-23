@@ -1,0 +1,108 @@
+﻿@model PFL.Entities.EntityModels.Club
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    int ClubTournamentTypeId = ViewBag.ClubTournamentTypeId;
+}
+
+
+
+
+
+
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klubun sənədləri - <b>@Model.Name</b></h5>
+
+    </div>
+
+    <div class="panel-body">
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                @if (ClubTournamentTypeId == 1)
+                {
+                    <li><a href="#a-club" data-toggle="tab" data-tab-id="a-club" onclick="getContent('a-club')">A komandasının sənədləri</a></li>
+                    <li><a href="#b-club" data-toggle="tab" data-tab-id="b-club" onclick="getContent('b-club')">B komandasının sənədləri</a></li>
+                }
+
+                @if (ClubTournamentTypeId == 3)
+                {
+                    <li><a href="#d-club" data-toggle="tab" data-tab-id="d-club" onclick="getContent('d-club')">I Divizion sənədləri</a></li>
+                }
+            </ul>
+
+            <div class="tab-content">
+                @if (ClubTournamentTypeId == 1)
+                {
+                    <div class="tab-pane" id="a-club"></div>
+
+                    <div class="tab-pane" id="b-club"></div>
+                }
+
+                @if (ClubTournamentTypeId == 3)
+                {
+                    <div class="tab-pane" id="d-club"></div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section footer{
+
+    <script>
+
+        var clubId = @Model.Id;
+
+        function getContent(label) {
+
+            var _url;
+            switch(label) {
+            case 'a-club':
+                _url = "/ClubDocuments/List?clubType=2";
+                break;
+            case 'b-club':
+                    _url = "/ClubDocuments/List?clubType=3";
+                break;
+            case 'd-club':
+                    _url = "/ClubDocuments/List?clubType=4";
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        var activeTab = window.location.href.split('#')[1];
+        var tab;
+        if (activeTab) {
+            tab = $("li").find("[data-tab-id='" + activeTab + "']");
+
+            if (tab.length === 0) {
+                tab = $("li").find("[data-tab-id='a-club']");
+            }
+        } else {
+            tab = $("li").find("[data-tab-id='a-club']");
+            if (tab.length === 0) {
+                tab = $("li").find("[data-tab-id='d-club']");
+            }
+        }
+
+        tab.click();
+
+    </script>
+}

@@ -1,0 +1,184 @@
+﻿@model PFL.Entities.EntityModels.Club
+
+@{
+    ViewBag.Title = "Əsas məlumatlar";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Əsas məlumatlar</h5>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/Club/Edit" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-pencil3"></i></b> <span>Düzəliş et</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    @*<div class="panel-body">
+            <code>Yeni oyunçu sifarişi</code> üçün klub tərəfindən göndərilmiş oyunçu məlumatları.
+        </div>*@
+
+    <div class="table-responsive">
+        <table class="table table-lg">
+            <tr>
+                <td style="width: 20%;">Ad</td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td>Loqo</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.LogoUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <div class="thumbnail no-padding" style="width: 100px;">
+                            <div class="thumb">
+                                <a href="@Model.LogoUrl" target="_blank">
+                                    <img src="@Model.LogoUrl">
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Şəhər/qəsəbə</td>
+                <td>
+                    @if (Model.District == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.District.Name
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Yaranma ili</td>
+                <td>
+                    @Model.CreationYear
+
+                </td>
+            </tr>
+            <tr>
+                <td>Stadion</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.Stadium))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.Stadium
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadionun tutumu</td>
+                <td>
+                    @if (Model.StadiumCapacity == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.StadiumCapacity
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadionun şəkli</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.StadiumPhotoUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <div class="thumbnail no-padding" style="width: 100px;">
+                            <div class="thumb">
+                                <a href="@Model.StadiumPhotoUrl" target="_blank">
+                                    <img src="@Model.StadiumPhotoUrl">
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Ünvan</td>
+                <td>
+                    @if (Model.Address == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.Address
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Telefon</td>
+                <td>
+                    @if (Model.Fax == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.Fax
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Veb sayt</td>
+                <td>
+                    @if (Model.WebSite == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.WebSite
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    @if (Model.Email == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.Email
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Klubun prezidenti</td>
+                <td>
+                    @if (Model.ClubPresident == null)
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        @Model.ClubPresident
+                    }
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</div>

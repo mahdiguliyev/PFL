@@ -1,0 +1,187 @@
+﻿@using PFL.Entities.EntityModels
+@model PFL.Entities.EntityModels.ClubPlayerRequest
+
+@{
+    ViewBag.Title = "Yeni oyunçu sifarişi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ClubPlayerRequestRejection> requestRejections = ViewBag.RequestRejections;
+}
+
+<div class="panel panel-flat">
+    
+
+    @FormHelper.CreateFormHeader("Yeni oyunçu qeydiyyatı", "/Players/PlayerRequests?clubId="+Model.RequestClubId)
+
+    <div class="panel-body">
+        <code>Yeni oyunçu qeydiyyatı</code> üçün klub tərəfindən göndərilmiş oyunçu məlumatları.
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-lg">
+            <tr>
+                <th colspan="2" class="active">Əsas məlumatlar</th>
+            </tr>
+            <tr>
+                <td>Futbolçunun şəkli</td>
+                <td>
+                    <div class="thumbnail no-padding" style="width: 200px;">
+                        <div class="thumb">
+                            <a href="@Model.PlayerPhotoUrl" target="_blank">
+                                <img src="@Model.PlayerPhotoUrl">
+                            </a>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 20%;">Ad</td>
+                <td>@Model.PlayerFirstName</td>
+            </tr>
+            <tr>
+                <td>Soyad</td>
+                <td>@Model.PlayerLastName</td>
+            </tr>
+            <tr>
+                <td>Ata adı</td>
+                <td>@Model.PlayerFatherName</td>
+            </tr>
+            <tr>
+                <td>Doğum tarixi</td>
+                <td>@Model.BirthDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            <tr>
+                <td>Vətəndaşlığı</td>
+                <td>@Model.Country.Name</td>
+            </tr>
+            <tr>
+                <td>Oyunçunun statusu</td>
+                <td>@Model.ContractType.Name</td>
+            </tr>
+            <tr>
+                <td>Hansı klubdan</td>
+                <td>@(Model.FromClubId != null ? Model.FromClub.Name : Model.FromClubName)</td>
+            </tr>
+            <tr>
+                <td>Hansı kluba</td>
+                <td>@Model.RequestClub.Name</td>
+            </tr>
+            <tr>
+                <td>Müqavilənin başlama tarixi</td>
+                <td>@Model.ContractBeginDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            <tr>
+                <td>Müqavilənin bitmə tarixi</td>
+                <td>@Model.ContractEndDate.ToString("dd.MM.yyyy")</td>
+            </tr>
+            @*<tr>
+                <td>Nömrəsi</td>
+                <td>@Model.PlayerNumber</td>
+            </tr>*@
+            <tr>
+                <td>Mövqeyi</td>
+                <td>@Model.Position.Name</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="active">Sənəd məlumatları</th>
+            </tr>
+            <tr>
+                <td>Pasport</td>
+                <td><a href="@Model.PlayerPasportUrl" target="_blank">@Model.PlayerPasportUrl</a></td>
+            </tr>
+            <tr>
+                <td>Müqavilə</td>
+                <td><a href="@Model.PlayerContractUrl" target="_blank">@Model.PlayerContractUrl</a></td>
+            </tr>
+            <tr>
+                <td>İTC və ya oyunçu pasportu </td>
+                <td><a href="@Model.PlayerOtkripleniyaUrl" target="_blank">@Model.PlayerOtkripleniyaUrl</a></td>
+            </tr>
+            <tr>
+                <td>İcarə və ya azadedilmə sənədi</td>
+                <td><a href="@Model.PlayerTmsUrl" target="_blank">@Model.PlayerTmsUrl</a></td>
+            </tr>
+
+            <tr>
+                <td>Operatorun təsdiqi</td>
+                <td>
+                    <span class="label label-info">
+                        @(Model.OperatorConfirm ? "Təsdiqlənib" : "Təsdiqlənməyib")
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td>
+                    <div class="row">
+                        <div class="col-md-2">
+
+                            <button type="button" class="btn btn-danger btn-labeled" data-toggle="modal" data-target="#modal_request_rejection"><b><i class=" icon-cross"></i></b>İmtina et</button>
+
+
+                        </div>
+                        <div class="col-md-2">
+                            <form action="/Players/PlayerRequestConfirmation" method="POST">
+                                @Html.HiddenFor(model => model.Id)
+                                @Html.Hidden("OperatorConfirm", true)
+                                <button type="submit" class="btn btn-primary btn-labeled"><b><i class="icon-check2"></i></b>Təsdiqlə</button>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+
+
+<div id="modal_request_rejection" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Yeni oyunçu sifarişinin imtinası</h5>
+            </div>
+
+            <form action="/Players/PlayerRequestConfirmation" method="POST" class="form-horizontal">
+                @Html.HiddenFor(model => model.Id)
+                @Html.Hidden("OperatorConfirm", false)
+
+                <div class="modal-body">
+
+                    @if (requestRejections.Count > 0)
+                    {
+                        <h6 class="text-semibold">Əvvəlki imtinalar</h6>
+                        foreach (var item in requestRejections)
+                        {
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <code>@(item.CreationDate.ToString("dd.MM.yyyy"))</code>
+                                </div>
+                                <div class="col-md-9">
+                                    <p>@item.RejectionNote</p>
+                                </div>
+                            </div>
+                            <hr>
+                        }
+                    }
+
+
+
+                    <div class="form-group">
+                        <label for="RejectionNote" class="text-semibold">İmtina səbəbi</label>
+                        <textarea class="form-control" rows="5" id="RejectionNote" name="RejectionNote"></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Bağla</button>
+                    <button type="submit" class="btn btn-primary">Təsdiqlə</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@using PFL.Models.DTO
+@using PFL.Models.ViewModels
+@model List<PFL.Models.ViewModels.PlayerCardStatisticViewModel>
+@{
+    Layout = null;
+    List<ClubPlayerOrderByTournament> players = (List<ClubPlayerOrderByTournament>)ViewBag.TournamentPlayers;
+    int matchCount = Model.Select(x => x.MatchDate).Distinct().Count();
+    List<TourMatchViewModel> tournamentTours = (List<TourMatchViewModel>)ViewBag.TournamentTours;
+}
+
+<style>
+    .match-date {
+        -moz-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        -webkit-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        width: 5px;
+        margin-top: 40px;
+        margin-left: 5px;
+    }
+
+        .match-date span {
+            font-size: 12px;
+        }
+
+    .card-column-th {
+        width: auto;
+        padding: 0 !important;
+        text-align: center
+    }
+    .custom-table tr td {
+        text-align: center;
+    }
+</style>
+
+
+<div class="col-md-12">
+    <div class="table-responsive">
+        <table class="table table-bordered custom-table">
+            <thead>
+
+                <tr style="height: 100px;">
+                    <th style="width: 3%">#</th>
+                    <th style="width: 17%">Futbolçu</th>
+                    @*@foreach (var item in Model.Select(x => new {x.MatchDate, x.TourNumber}).Distinct())
+                        {
+                            <th class="card-column-th" style="width:auto">
+                                <div class="match-date">
+                                    <span>@(item.MatchDate?.ToString("dd.MM.yyyy"))</span>
+                                </div>
+                                <span><b>-@(item.TourNumber)-</b></span>
+                            </th>
+                        }*@
+
+                    @foreach (var item in tournamentTours)
+                    {
+                        <th class="card-column-th" style="width:auto">
+                            <div class="match-date">
+                                <span>@(item?.MatchDate?.ToString("dd.MM.yyyy"))</span>
+                            </div>
+                            <span><b>-@(item?.TourNumber)-</b></span>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var player in players)
+                {
+                    <tr>
+                        <td>@player.PlayerNumber</td>
+                        <td>@player.FirstName @player.LastName @player.FatherName</td>
+
+                        @foreach (var tour in tournamentTours)
+                        {
+                            bool redWithYellow = false;
+
+                            if (tour.MatchId != null)
+                            {
+                                var item2 = Model.FirstOrDefault(x => x.MatchId == tour.MatchId && x.PlayerId == player.PlayerId);
+
+                                if (item2 != null)
+                                {
+                                    string cardImg = "";
+
+                                    if (item2.YellowMinute != null || item2.YellowOffgameTypeId != null)
+                                    {
+                                        cardImg = "yellow.png";
+                                    }
+                                    if (item2.Yellow2Minute != null || item2.Yellow2OffgameTypeId != null)
+                                    {
+                                        cardImg = "yellow_red.png";
+                                    }
+                                    if (item2.RedMinute != null || item2.RedOffgameTypeId != null)
+                                    {
+                                        cardImg = "red.png";
+
+                                        if (item2.YellowMinute != null || item2.YellowOffgameTypeId != null)
+                                        {
+                                            redWithYellow = true;
+                                        }
+                                    }
+
+                                    <td style="padding: 3px;">
+                                        @{
+                                            if (!string.IsNullOrEmpty(cardImg))
+                                            {
+                                                if (redWithYellow)
+                                                {
+                                                    <img src="/assets/images/yellow.png" style="float: left" />
+                                                }
+
+                                                <img src="/assets/images/@(cardImg)" style="@(redWithYellow ? "float:right" : "")" />
+                                            }
+                                        }
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+
+
+                        }
+
+
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+</div>

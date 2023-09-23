@@ -1,0 +1,60 @@
+﻿@model IEnumerable<PFL.Entities.EntityModels.Player>
+@{
+    Layout = null;
+    int rowNumber = 0;
+}
+
+
+
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Şəkil</th>
+            <th>Adı</th>
+            <th>Yaş</th>
+            <th>Mövqe</th>
+            <th>Vətəndaşlığı</th>
+            <th class="text-center col-md-2">@*Oyunda iştirakı*@</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ rowNumber++;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@rowNumber</td>
+                <td>
+                    <div class="media-left media-middle">
+                        <a href="#"><img src="@item.PhotoUrl" class="img-circle img-xs" alt=""></a>
+                    </div>
+                </td>
+                <td>@item.FirstName @item.LastName</td>
+                <td>@(item.BirthDate?.ToString("dd.MM.yyyy"))</td>
+                <td>@(item?.Position?.Name)</td>
+                <td>@(item?.Country?.Name)</td>
+                <td class="text-center">
+
+
+                    @*<div class="checkbox checkbox-switchery switchery-lg switchery-double">
+                            <label>
+                                Passiv
+                                <input type="checkbox" name="Status" class="switchery" checked="checked">
+                                Aktiv
+                            </label>
+                        </div>*@
+
+
+                </td>
+            </tr>
+            rowNumber++;
+        }
+    </tbody>
+</table>
+
+
+
+<input type="hidden" id="match-id" name="match-id" value="@ViewBag.MatchId" />
+

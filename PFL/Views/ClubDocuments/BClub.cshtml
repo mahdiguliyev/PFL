@@ -1,0 +1,108 @@
+﻿@model PFL.Models.DTO.BClubDocumentDto
+@{
+    Layout = null;
+}
+
+<div class="panel panel-flat" style="border: none;">
+    <div class="panel-heading">
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group" style="width: 100%">
+                        <a href="/ClubDocuments/Edit?clubType=b" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-pencil3"></i></b> <span>Düzəliş et</span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="panel-body">
+        <br />
+        <div class="table-responsive">
+            <table class="table table-lg">
+                <tr>
+                    <td>Stadionun müqaviləsi</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BStadiumContractUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BStadiumContractUrl" target="_blank">@Model.BStadiumContractUrl</a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Stadion sxemi</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BStadiumSchemeUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BStadiumSchemeUrl" target="_blank">@Model.BStadiumSchemeUrl</a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Klubun strukturu</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BClubStructureUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BClubStructureUrl" target="_blank">@Model.BClubStructureUrl</a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>DİN məktubu</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BDinLetterUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BDinLetterUrl" target="_blank">@Model.BDinLetterUrl</a>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>Təcili Tibbi yardım Məktubu</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BAmbulanceUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BAmbulanceUrl" target="_blank">@Model.BAmbulanceUrl</a>
+                        }
+                    </td>
+                </tr>
+                @*<tr>
+                    <td>AFFA lisenziyası</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(Model.BAffaLicenseUrl))
+                        {
+                            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                        }
+                        else
+                        {
+                            <a href="@Model.BAffaLicenseUrl" target="_blank">@Model.BAffaLicenseUrl</a>
+                        }
+                    </td>
+                </tr>*@
+            </table>
+        </div>
+
+
+    </div>
+</div>

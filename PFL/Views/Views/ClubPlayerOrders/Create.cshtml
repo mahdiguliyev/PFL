@@ -1,0 +1,180 @@
+﻿@using PFL.Entities.EntityModels
+@model PFL.Models.DTO.ClubPlayerOrderDto
+
+@{
+    Layout = "";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+
+    List<ClubPlayerOrderRejection> rejections = ViewBag.PlayerOrderRejections;
+    
+}
+
+<style>
+    .apply-info {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        font-size: 12px;
+        width: 100%;
+        word-break: break-word;
+        white-space: normal;
+        text-align: left;
+    }
+</style>
+
+
+@if (rejections != null && rejections.Count > 0)
+{
+    <h6 class="text-semibold">İmtina səbəb(lər)i</h6>
+    foreach (var item in rejections)
+    {
+        <div class="row">
+            <div class="col-md-3">
+                <code>@(item.CreationDate.ToString("dd.MM.yyyy"))</code>
+            </div>
+            <div class="col-md-9">
+                <p>@item.RejectionNote</p>
+            </div>
+        </div>
+
+    }<hr>
+}
+
+
+@using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+    new { @class = "form-horizontal", enctype = "multipart/form-data", id = "cpo-form" }))
+{
+    <label class="label label-danger col-md-12" style="font-size: 14px;" id="validation-message"></label>
+    <br />
+    <br />
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+    <input type="hidden" id="Id" name="Id" value="@(Model?.Id)" />
+    <input type="hidden" id="ClubTypeId" name="ClubTypeId" value="@(Model?.ClubTypeId ?? ViewBag.ClubTypeId)" />
+
+    <div class="form-group">
+        <label class="control-label col-md-3" for="PlayerId">Futbolçu seçimi</label>
+
+        <div class="col-md-9">
+            <select class="border-warning" id="PlayerId" name="PlayerId">
+                @if (Model != null)
+                {
+                    <option value="@Model.PlayerId">@Model.PlayerNumber - @Model.PlayerFirstName @Model.PlayerLastName @Model.PlayerFatherName</option>
+                }
+                else
+                {
+                    <option value="0">Seçim edin</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PlayerNumber, "Nömrəsi", htmlAttributes: new { @class = "control-label col-md-3" })
+        <div class="col-md-9">
+            @Html.EditorFor(model => model.PlayerNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PlayerNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.HealthFileUpload, "Sağlamlıq arayışı", new { @class = "control-label col-md-3" })
+        <div class="col-lg-9">
+            @Html.TextBoxFor(m => m.HealthFileUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+            @Html.ValidationMessageFor(model => model.HealthFileUpload, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @Html.Hidden("ClubConfirm","True")
+
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.ClubConfirm, "Təsdiqlə", new { @class = "control-label col-md-3" })
+        <div class="col-md-1">
+            @Html.CheckBoxFor(model => model.ClubConfirm, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ClubConfirm, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-8">
+            <span class="label label-info apply-info">Məlumatlar təsdiqləndikdən sonra dəyişiklik aparılmasına icazə verilmir.</span>
+        </div>
+    </div>*@
+}
+
+
+
+<script>
+
+    $('#PlayerId').select2({
+        dropdownParent: $('#cpo-modal'),
+        dropdownCssClass: 'border-primary',
+        containerCssClass: 'border-primary text-primary-700',
+        ajax: {
+            url: "/Select2/ClubPlayers?clubId=@(ViewBag.ClubId ?? @Model.ClubId)",
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    searchText: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+
+                params.page = params.page || 1;
+
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        }
+    });
+
+
+
+    @{
+        string healthFileJS = "";
+
+        if (Model != null)
+        {
+            if (!string.IsNullOrEmpty(Model.HealthFile))
+            {
+                healthFileJS = "initialPreview: \"<img src='" + Model.HealthFile + "' class='file-preview-image' style='width: 100%; height: 160px;'>\", deleteUrl: \"#\", overwriteInitial: true, maxFileSize: 100,";
+            }
+        }
+    }
+
+
+
+    $(document).ready(function() {
+
+
+        $("#HealthFileUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib",
+            @Html.Raw(healthFileJS)
+
+        });
+
+
+
+
+        
+
+    });
+
+</script>

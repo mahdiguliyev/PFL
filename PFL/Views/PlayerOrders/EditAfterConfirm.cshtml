@@ -1,0 +1,24 @@
+﻿@model PFL.Models.DTO.EditAfterConfirmDto
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("EditAfterConfirm", "PlayerOrders", FormMethod.Post,
+    new { @class = "form-horizontal", Id = "player-order-form" }))
+{
+    <fieldset class="content-group">
+
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="PlayerOrderId" value="@(Model.PlayerOrderId)" />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlayerNumber, "Oyunçu nömrəsi", htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.PlayerNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PlayerNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </fieldset>
+}

@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+        @using (Html.BeginForm("AddClub","Tournaments", FormMethod.Post, new { id = "add-club-form"}))
+        {
+
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="TournamentId" value="@(ViewBag.TournamentId)" />
+
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="ClubId">Klub seçimi</label>
+                    
+                    <div class="col-md-10">
+                        @Html.DropDownList("ClubId", null, new {@class = "form-control select-size-lg", data_placeholder = "Seçim edin"})
+                    </div>
+                </div>
+                
+
+
+        }
+<br/>
+<br/>
+<br/>

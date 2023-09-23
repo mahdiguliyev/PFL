@@ -1,0 +1,63 @@
+﻿@helper DeleteWithClass(string onClickClassName, string title, string text, string deleteUrl, string[] getParameters = null, string rowIdPrefix="")
+{
+    <script>
+
+        var _url = "@(deleteUrl)";
+
+
+        $("body").on('click', ".@(onClickClassName)", function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+            
+                    swal({
+                            title: "@title",
+                            text: "@text",
+                            icon: "warning",
+                            buttons: ["İmtina", "Təsdiq"],
+                            dangerMode: false,
+
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+
+                                $.ajax({
+                                    type: 'Delete',
+                                    url: $(this).data('href'),
+                                    success: function (data) {
+                                        if (data.ok) {
+                                            swal("Əməliyyat uğurlu!",
+                                                {
+                                                    icon: "success",
+                                                });
+                                            if (data.Id) {
+                                                $("#@rowIdPrefix" + data.Id).remove();
+                                            }
+                                        } else {
+                                            swal(data.error,
+                                                {
+                                                    icon: "error",
+                                                });
+                                        }
+                                        
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                       
+                                            swal('Əməliyyatda səhvlik!');
+                                        
+                                    }
+                                });
+
+
+                            } else {
+                                //swal("Your imaginary file is safe!");
+                            }
+                        });
+                });
+
+
+    </script>
+
+}
+
+

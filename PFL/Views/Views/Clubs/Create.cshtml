@@ -1,0 +1,184 @@
+﻿@model PFL.Models.ViewModels.ClubViewModel
+
+@{
+    ViewBag.Title = "Yeni klub";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+@section before_app_scripts
+{
+    <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+}
+@section after_app_scripts
+{
+    @*<script type="text/javascript" src="/assets/js/pages/editor_ckeditor.js"></script>*@
+    <script>
+        $(function() {
+
+            // Full featured editor
+            CKEDITOR.replace('Note',
+                {
+                    height: '400px',
+                    extraPlugins: 'forms'
+                });
+        });
+    </script>
+}
+
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Klub")
+
+    <div class="panel-body">
+        <p class="content-group-lg">Yeni klubun əlavə edilməsi</p>
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal", encType = "multipart/form-data" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model?.Id??0)" />
+
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LogoUpload, new { @class = "control-label col-md-2" })
+                    <div class="col-lg-10">
+                        @Html.TextBoxFor(m => m.LogoUpload, new { @class = "file-input", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+
+                        @Html.ValidationMessageFor(model => model.LogoUpload, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DistrictId, "DistrictId", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("DistrictId", null, new { @class = "form-control select-size-lg", data_placeholder = "Seçim edin" })
+
+                        @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CreationYear, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CreationYear, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CreationYear, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Stadium, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Stadium, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Stadium, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StadiumCapacity, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.StadiumCapacity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StadiumCapacity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StadiumPhotoUrl, new { @class = "control-label col-md-2" })
+                    <div class="col-lg-10">
+                        @Html.TextBoxFor(m => m.StadiumPhotoUrl, new { @class = "file-input", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.StadiumPhotoUrl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Fax, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Fax, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Fax, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WebSite, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group input-group-xlg">
+                            <span class="input-group-addon">http://</span>
+                            @Html.TextBoxFor(model => model.WebSite, new { @class = "form-control", placeholder = "www.example.com" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.WebSite, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ClubPresident, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ClubPresident, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ClubPresident, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                    @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+
+                        <div class="checkbox checkbox-switchery switchery-lg switchery-double">
+                            <label>
+                                Passiv
+                                <input type="checkbox" name="Status" class="switchery" checked="checked">
+                                Aktiv
+                            </label>
+                        </div>
+
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+
+
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Note, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Note, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>

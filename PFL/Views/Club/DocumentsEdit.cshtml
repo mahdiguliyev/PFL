@@ -1,0 +1,274 @@
+﻿@model PFL.Models.DTO.ClubDocumentDto
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+<div class="panel panel-flat">
+
+    <div class="panel-heading">
+        <h5 class="panel-title">@Model.ClubName klubunun sənədləri</h5>
+        @*<div class="heading-elements">
+            <ul class="icons-list">
+                <li><a href="/Club/Documents">Sənədlər</a></li>
+            </ul>
+        </div>*@
+    </div>
+
+    <div class="panel-body">
+        @{
+            if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <slan class="label label-danger">@(ViewBag.ErrorMessage)</slan>
+            }
+        }
+
+
+        @using (Html.BeginForm("DocumentsEdit", baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal", encType = "multipart/form-data" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LogoUpload, "Klubun loqosu", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(m => m.LogoUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.LogoUpload, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StadiumPhotoUpload, "Stadionun şəkli", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(m => m.StadiumPhotoUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.StadiumPhotoUpload, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StadiumDocumentUpload, "Stadionun sənədi", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.StadiumDocumentUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.StadiumDocumentUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.StadiumDocumentUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.StadiumDocumentUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StadiumSchemeUpload, "Stadionun sxemi", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.StadiumSchemeUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.StadiumSchemeUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.StadiumSchemeUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.StadiumSchemeUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StructureUpload, "Klubun strukturu", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.StructureUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.StructureUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.StructureUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.StructureUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VoenUpload, "VÖEN", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.VoenUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.VoenUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.VoenUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.VoenUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CharterUpload, "Nizamnamə", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.CharterUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.CharterUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.CharterUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.CharterUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-3">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+@section footer
+{
+    <script>
+
+    @{
+        string logoJS = "";
+        string stadiumPhotoJS = "";
+
+        if (Model != null)
+        {
+            if (!string.IsNullOrEmpty(Model.LogoUrl))
+            {
+                logoJS = "initialPreview: \"<img src='" + Model.LogoUrl + "' class='file-preview-image' style='width: 100%; height: 160px;'>\", deleteUrl: \"#\", overwriteInitial: true, maxFileSize: 100,";
+            }
+
+            if (!string.IsNullOrEmpty(Model.StadiumPhotoUrl))
+            {
+                stadiumPhotoJS = "initialPreview: \"<img src='" + Model.StadiumPhotoUrl + "' class='file-preview-image' style='width: 100%; height: 160px;'>\", deleteUrl: \"#\", overwriteInitial: true";
+            }
+        }
+
+
+
+    }
+
+
+        $(document).ready(function () {
+
+
+            $("#LogoUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 2000,
+                @Html.Raw(logoJS)
+            });
+
+            $("#StadiumPhotoUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 2000,
+                @Html.Raw(stadiumPhotoJS)
+            });
+
+            $("#StadiumDocumentUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+
+            $("#StadiumSchemeUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 50000
+            });
+
+            $("#StructureUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+
+            $("#VoenUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+
+            $("#CharterUpload").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+        });
+
+    </script>
+}
+

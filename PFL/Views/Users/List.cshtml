@@ -1,0 +1,103 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<PFL.Entities.EntityModels.User>
+
+@{
+    Layout = "";//"~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+    string editUrl = "EditAdmin";
+}
+
+@*<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Turnir tipləri</h5>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" data-toggle="dropdown"><i class="icon-user-plus position-left"></i>Yeni istifadəçi</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="/Users/CreateAdmin"><i class="icon-user-plus"></i>Admin</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/Users/CreateClubAdmin"><i class="icon-user-plus"></i>Klub admin</a></li>
+                            <li><a href="/Users/CreateReferee"><i class="icon-user-plus"></i>Hakim</a></li>
+                        </ul>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>*@
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Adı</th>
+            <th>Soyad</th>
+            <th>Ata adı</th>
+            <th>İstifadəçi adı</th>
+            <th>Email</th>
+
+            <th>Status</th>
+            <th class="text-center col-md-2">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            //string role = item.Roles.Select(x => x.Name).FirstOrDefault();
+            //string editUrl = "EditAdmin";
+
+            //if (role == "club-admin")
+            //{
+            //    editUrl = "EditClubAdmin";
+            //}
+            //else if (role == "referee")
+            //{
+            //    editUrl = "EditReferee";
+            //}
+
+
+            rowNumber++;
+            <tr>
+                <td>@rowNumber</td>
+                <td>@item.FirstName</td>
+                <td>@item.LastName</td>
+                <td>@item.FatherName</td>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td><span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span></td>
+
+                <td class="text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="col-md-6">
+                            <a href="/@(baseUrl)/@(editUrl)?Id=@item.Id"><i class="icon-pencil7 text-primary-600"></i></a>
+                        </div>
+
+                        @if (item.IsDeleted)
+                        {
+                            <div class="col-md-6">
+                                <a href="/@(baseUrl)/Undo?Id=@item.Id"><i class="fas fa-undo-alt"></i></a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <a href="/@(baseUrl)/Delete?Id=@item.Id"><i class="icon-trash text-danger-600"></i></a>
+                            </div>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="datatable-footer">
+    <div class="dataTables_paginate">
+        @Html.PagedListPager(Model, page => Url.Action("List", new { userType = ViewBag.UserType, page }))
+    </div>
+</div>
+@*</div>*@

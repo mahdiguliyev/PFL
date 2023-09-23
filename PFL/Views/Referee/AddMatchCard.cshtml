@@ -1,0 +1,208 @@
+﻿@model PFL.Models.ViewModels.RefereeAddMatchCard
+@{
+    Layout = null;
+}
+
+@*<script type="text/javascript" src="/assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/forms/selects/bootstrap_select.min.js"></script>*@
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { id = "match-card-form", @class = "form-horizontal" }))
+{
+    <label class="label label-danger col-md-12" style="font-size:12px;" id="validation-message"></label>
+
+    <br />
+    <br />
+    @Html.AntiForgeryToken()
+
+    if (Model != null)
+    {
+        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+    }
+
+    <input type="hidden" id="MatchId" name="MatchId" value="@ViewBag.MatchId" />
+
+    <div class="form-group">
+        <label class="control-label col-md-3" for="CardType">Kart</label>
+
+        <div class="col-md-9">
+            @if (Model != null)
+            {
+                <label class="label label-danger" style="font-size: 12px;">@(Model.CardType)</label>
+                <input type="hidden" id="CardType" name="CardType" value="@(ViewBag.CardTypeValue)" />
+            }
+            else
+            {
+                <select class="border-warning" id="CardType" name="CardType">
+
+                    <option value="0">Seçim edin</option>
+                    <option value="yellow">Sarı</option>
+                    <option value="red">Qırmızı</option>
+                </select>
+            }
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-md-3" for="PlayerId">Futbolçu seçimi</label>
+
+        <div class="col-md-9">
+            @if (Model != null)
+            {
+                <label class="label label-info" style="font-size: 12px;">@(Model.PlayerFirstName) @(Model.PlayerLastName) @(Model.PlayerFatherName)</label>
+                <input type="hidden" id="PlayerId" name="PlayerId" value="@(Model.PlayerId)" />
+            }
+            else
+            {
+                <select class="select-player border-warning" id="PlayerId" name="PlayerId">
+
+                    <option value="0">Seçim edin</option>
+                </select>
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3" for="captain">Əsas vaxt</label>
+
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="Minute" name="Minute" value="@(Model?.Minute)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-3" for="captain">Artırılmış vaxt</label>
+
+        <div class="col-md-2">
+            <input type="number" class="form-control" id="MinutePlus" name="MinutePlus" value="@(Model?.MinutePlus)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3">Oyundan kənar</label>
+        <div class="col-md-9">
+            <div class="col-md-4 text-center">
+                <label for="">oyundan öncə</label>
+                <input type="radio" class="form-control off-game-type" name="OffGameTypeId" value="1">
+            </div>
+
+            <div class="col-md-4 text-center">
+                <label for="yellow2">fasilədə</label>
+                <input type="radio" class="form-control off-game-type" name="OffGameTypeId" value="2">
+            </div>
+
+            <div class="col-md-4 text-center">
+                <label for="red">oyundan sonra</label>
+                <input type="radio" class="form-control off-game-type" name="OffGameTypeId" value="3">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-3" for="CardReasonId">Səbəbi</label>
+
+        <div class="col-md-9">
+            <select class="select-player border-warning" id="CardReasonId" name="CardReasonId">
+                @if (Model != null)
+                {
+                    <option value="@Model.CardReasonId">@Model.CardReasonName</option>
+                }
+                else
+                {
+                    <option value="0">Seçim edin</option>
+                }
+            </select>
+        </div>
+    </div>
+
+
+
+    <br />
+    <br />
+    <br />
+}
+
+
+@if (Model == null)
+{
+    <script>
+        $('#PlayerId').select2({
+            dropdownParent: $('#card-modal'),
+            dropdownCssClass: 'border-primary',
+            containerCssClass: 'border-primary text-primary-700',
+            ajax: {
+                url: "/Referee/MatchPlayers?matchId=" + $("#match-id").val(),
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchText: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+
+        $('#CardType').selectpicker();
+
+    </script>
+}
+
+<script>
+
+    $('#CardReasonId').select2({
+        dropdownParent: $('#card-modal'),
+        dropdownCssClass: 'border-primary',
+        containerCssClass: 'border-primary text-primary-700',
+        ajax: {
+            url: "/Referee/CardReasons",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchText: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
+
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        }
+    });
+
+
+    var offGameTypeValue = '';
+    $(".off-game-type").click(function () {
+
+        var currentRadioValue = $(this).val();
+
+        if (offGameTypeValue === currentRadioValue) {
+            $(".off-game-type").prop('checked', false);
+            offGameTypeValue = '';
+        } else {
+            offGameTypeValue = currentRadioValue;
+        }
+    });
+</script>

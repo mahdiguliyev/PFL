@@ -1,0 +1,1814 @@
+﻿@using PFL.Models.DTO
+@using PFL.Models.Enums
+@using PFL.Models.ViewModels
+@model PFL.Models.ViewModels.MatchDocumentViewModel
+@{
+    /**/
+
+    Layout = null;
+    bool isPdf = ViewBag.IsPdf;
+    List<int?> plusGoalTypes = new List<int?>() { 1, 2, 5 };
+
+    DateTime currentDate = DateTime.Now;
+    int seasonStartYear = Model.MatchInfo.TournamentSeasonStartYear;
+    int seasonEndYear = Model.MatchInfo.TournamentSeasonEndYear;
+
+    //if (currentDate.Month < 7)
+    //{
+    //    seasonStartYear = seasonStartYear - 1;
+    //}
+    //else
+    //{
+    //    seasonEndYear = seasonEndYear + 1;
+    //}
+
+    bool isDefeatMatch = Model.MatchInfo.HomeClubTechnicalDefeat || Model.MatchInfo.GuestClubTechnicalDefeat;
+}
+
+@if (!isPdf)
+{
+    <div style="width: 20%; float: right">
+        <div class="btn-group" style="width: 100%">
+            <a href="/Tournaments/MatchDocumentPdf?MatchId=@ViewBag.MatchId" target="_blank" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled" data-match-id="5783"><b><i class="icon-file-text2"></i></b> <span>PDF</span></a>
+        </div>
+    </div>
+    <br />
+    <br />
+}
+
+
+
+@if (isPdf)
+{
+    <link href="/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+}
+
+<div id="match-document-content" style="background-color:white">
+
+    <STYLE TYPE="text/css">
+
+        @@page {
+            margin: 0.5in
+        }
+
+        P {
+            margin-bottom: 0.08in;
+            direction: ltr;
+            widows: 2;
+            orphans: 2
+        }
+
+        .document-container {
+            padding: 20px;
+            width: 100%;
+        }
+
+        .logo-header-combo {
+            width: 100%;
+            text-align: center
+        }
+
+        .tournament-unchecked-box {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            margin: 0 auto;
+        }
+
+        .tournament-checked-box {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            background-color: black;
+            margin: 0 auto;
+        }
+
+        .table-header {
+            margin-bottom: 0.11in;
+            background: #002060;
+            border: 1px solid #00000a;
+            text-align: center;
+        }
+
+            .table-header span {
+                font-family: Calibri Light, serif;
+                font-size: 17px;
+                font-weight: 900;
+                color: white;
+            }
+
+
+
+
+        /*.document-table th {
+                height: 32px;
+            }*/
+        .document-table {
+            border-collapse: collapse;
+            width: 98%;
+            margin: 0 auto;
+        }
+
+        table.document-table > thead > tr > th {
+            border: 1px solid #00000a;
+            height: 24px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        table.document-table > tbody > tr > td {
+            border: 1px solid #00000a;
+            height: 24px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        span.text-bold-500 {
+            font-weight: 500;
+        }
+    </STYLE>
+
+
+
+    <div class="document-container">
+
+        <div class="row" style="width: 90%; margin-left:5%">
+            <img src="/assets/images/brands/protokol_header.png?v2" style="width: 100%" />
+        </div>
+
+
+        <BR><BR>
+
+
+        <table style="width: 100%; text-align: center">
+            <tr>
+                <td style="width: 25%"></td>
+                <td style="width: 10%">
+                    <IMG SRC="/assets/images/brands/olke_kuboku_logo.jpg" WIDTH=56 HEIGHT=79 BORDER=0>
+                </td>
+                <td style="width: 10%">
+                    @*<IMG SRC="/assets/images/brands/topaz_logo.jpg" WIDTH=107 HEIGHT=42>*@
+
+                    @if (Model.MatchInfo.SeasonId > 23)
+                    {
+                        <IMG SRC="~/assets/images/premyer_liqa_misli.png" HEIGHT=55>
+                    }
+                    else
+                    {
+                        <IMG SRC="~/assets/images/premyer_liqa.png" HEIGHT=55>
+                    }
+
+                </td>
+                <td style="width: 10%; padding:10px">
+                    <img SRC="~/assets/images/1_liqa.jpg" HEIGHT=60 />
+                </td>
+                <td style="width: 10%; padding:10px">
+                    <img SRC="~/assets/images/2_liqa.jpg" HEIGHT=60 />
+                </td>
+                <td style="width: 10%">
+                    <img SRC="~/assets/images/evezedici.png" HEIGHT=60 />
+                </td>
+                <td style="width: 25%"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class="@(Model.MatchInfo.TournamentTypeId == 4 ? "tournament-checked-box" : "tournament-unchecked-box")"></div>
+                </td>
+                <td>
+                    <div class="@(Model.MatchInfo.TournamentTypeId == 1 ? "tournament-checked-box" : "tournament-unchecked-box")"></div>
+                </td>
+                <td>
+                    <div class="@(Model.MatchInfo.TournamentTypeId == 3 ? "tournament-checked-box" : "tournament-unchecked-box")"></div>
+                </td>
+                <td>
+                    <div class="@(Model.MatchInfo.TournamentTypeId == 6 ? "tournament-checked-box" : "tournament-unchecked-box")"></div>
+                </td>
+                <td>
+                    <div class="@(Model.MatchInfo.TournamentTypeId == 2 ? "tournament-checked-box" : "tournament-unchecked-box")"></div>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+
+
+
+        <p style="margin-bottom: 0.11in">
+            <BR><BR>
+        </p>
+        <div class="table-header">
+            <span>@(seasonStartYear)/@(seasonEndYear) mövsümü</span>
+        </div>
+
+
+        @if (isDefeatMatch)
+        {
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width:33.3%"></th>
+                        <th style="width:33.3%">Ev</th>
+                        <th style="width:33.3%">Qonaq</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matç</td>
+                        <td>@(Model.MatchInfo.HomeClubName)</td>
+                        <td>@(Model.MatchInfo.GuestClubName)</td>
+                    </tr>
+                    <tr>
+                        <td>Hesab</td>
+                        <td>@(Model.MatchScoreInfo.FullTimeScore.HomeClubScore)</td>
+                        <td>@(Model.MatchScoreInfo.FullTimeScore.GuestClubScore)</td>
+                    </tr>
+                    <tr>
+                        <td>Tur</td>
+                        <td colspan="2">
+                            <table style="width: 100%; height: 100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 33.3%; border-right: 1px solid #00000a; text-align: center">
+                                            @if (Model.MatchInfo.TournamentTypeId == 4)
+                                            {
+                                                <text>@Model.MatchInfo.TourLabel</text>
+                                            }
+                                            else
+                                            {
+                                                <text>@Model.MatchInfo.TourNumber</text>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <P STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+        }
+
+
+        @if (!isDefeatMatch)
+        {
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width:33.3%"></th>
+                        <th style="width:33.3%">Ev</th>
+                        <th style="width:33.3%">Qonaq</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Matç</td>
+                        <td>@(Model.MatchInfo.HomeClubName)</td>
+                        <td>@(Model.MatchInfo.GuestClubName)</td>
+                    </tr>
+                    <tr>
+                        <td>Tur / Tarix / Saat</td>
+                        <td colspan="2">
+                            <table style="width: 100%; height: 100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 33.3%; border-right: 1px solid #00000a; text-align: center">
+                                            @if (Model.MatchInfo.TournamentTypeId == 4)
+                                            {
+                                                <text>@Model.MatchInfo.TourLabel</text>
+                                            }
+                                            else
+                                            {
+                                                <text>@Model.MatchInfo.TourNumber</text>
+                                            }
+
+                                        </td>
+                                        <td style="width: 33.4%; border-right: 1px solid #00000a; text-align: center">@(Model.MatchInfo.MatchDate?.ToString("dd.MM.yyyy"))</td>
+                                        <td style="width: 33.3%; text-align: center">@(Model.MatchInfo.MatchDate?.ToString("HH:mm"))</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Şəhər/ Stadion / Tamaşaçı sayı</td>
+                        <td colspan="2">
+                            <table style="width: 100%; height: 100%">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 25%; border-right: 1px solid #00000a; text-align: center">@Model.MatchInfo.Place</td>
+                                        <td style="width: 50%; border-right: 1px solid #00000a; text-align: center">@Model.MatchInfo.Stadium</td>
+                                        <td style="width: 25%; text-align: center">@Model.MatchInfo.StadiumAudienceCount</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <P STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+
+
+            <div class="table-header">
+                <span>Oyunun rəsmi şəxsləri:</span>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width:24%">Vəzifəsi</th>
+                        <th style="width:19%">Ad</th>
+                        <th style="width:19%">Soyad</th>
+                        <th style="width:19%">Dərəcəsi</th>
+                        <th style="width:19%">Şəhər</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="text-bold-500">Baş hakim</span></td>
+                        <td>@(Model.MatchOfficials.Referee?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.Referee?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.Referee?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.Referee?.City)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-bold-500">B/h köməkçisi</span></td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant1?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant1?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant1?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant1?.City)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-bold-500">B/h köməkçisi</span></td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant2?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant2?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant2?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAssistant2?.City)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-bold-500">4-cü hakim</span></td>
+                        <td>@(Model.MatchOfficials?.FourthReferee?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.FourthReferee?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.FourthReferee?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.FourthReferee?.City)</td>
+                    </tr>
+
+
+                    <tr>
+                        <td><span class="text-bold-500">VAR</span></td>
+                        <td>@(Model.MatchOfficials?.RefereeVar?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeVar?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeVar?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.RefereeVar?.City)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-bold-500">AVAR</span></td>
+                        <td>@(Model.MatchOfficials?.RefereeAvar?.FirstName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAvar?.LastName)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAvar?.Grade)</td>
+                        <td>@(Model.MatchOfficials?.RefereeAvar?.City)</td>
+                    </tr>
+
+
+                    @*<tr>
+            <td><span class="text-bold-500">ƏKH</span></td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee1?.FirstName)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee1?.LastName)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee1?.Grade)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee1?.City)</td>
+        </tr>
+        <tr>
+            <td><span class="text-bold-500">ƏKH</span></td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee2?.FirstName)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee2?.LastName)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee2?.Grade)</td>
+            <td>@(Model.MatchOfficials?.AdditionalReferee2?.City)</td>
+        </tr>*@
+                    <tr>
+                        <td><span class="text-bold-500">AFFA nümayəndəsi</span></td>
+                        <td>@Model.MatchOfficials.AffaRepresentative.FirstName</td>
+                        <td>@Model.MatchOfficials.AffaRepresentative.LastName</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-bold-500">Hakim-inspektor</span></td>
+                        <td>@Model.MatchOfficials.RefereeInspector.FirstName</td>
+                        <td>@Model.MatchOfficials.RefereeInspector.LastName</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width:25%"></th>
+                        <th style="width:25%">I hissə</th>
+                        <th style="width:25%">II hissə</th>
+                        <th style="width:25%">Yekun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hesab</td>
+                        <td>
+                            @Model.MatchScoreInfo.HalfTimeScore.HomeClubScore : @Model.MatchScoreInfo.HalfTimeScore.GuestClubScore
+                        </td>
+                        <td>
+                            @Model.MatchScoreInfo.FullTimeScore.HomeClubScore : @Model.MatchScoreInfo.FullTimeScore.GuestClubScore
+                        </td>
+                        <td>
+                            @Model.MatchScoreInfo.FullTimeScore.HomeClubScore : @Model.MatchScoreInfo.FullTimeScore.GuestClubScore
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Artırılmış vaxt</td>
+                        <td>@(Model.MatchInfo.HalfTimeExtra ?? 0)</td>
+                        <td>@(Model.MatchInfo.FullTimeExtra ?? 0)</td>
+                        <td>@((Model.MatchInfo.HalfTimeExtra ?? 0) + (Model.MatchInfo.FullTimeExtra ?? 0))</td>
+                    </tr>
+
+                    @if (Model.MatchPenaltyGoals.Count > 0 || Model.MatchGoals.Any(x => x.Minute > 90) || Model.MatchInfo.Half2TimeExtra > 0 || Model.MatchInfo.Full2TimeExtra > 0)
+                    {
+                        <tr>
+                            <td>Əlavə vaxta artırılmış vaxt</td>
+                            <td>@(Model.MatchInfo.Half2TimeExtra ?? 0)</td>
+                            <td>@(Model.MatchInfo.Full2TimeExtra ?? 0)</td>
+                            <td>@((Model.MatchInfo.Half2TimeExtra ?? 0) + (Model.MatchInfo.Full2TimeExtra ?? 0))</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+
+            <div class="table-header">
+                <span>Qollar:</span>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">№</th>
+                        <th style="width: 25%">Ad, soyad</th>
+                        <th style="width: 23%">Komanda</th>
+                        <th style="width: 12%">Vaxt</th>
+                        <th style="width: 12%">Hesab</th>
+                        <th style="width: 23%">Vəziyyət – standart, penalti, avtoqol</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int homeScore = 0;
+                        int guestScore = 0;
+                    }
+                    @foreach (var item in Model.MatchGoals)
+                    {
+                        if ((item.ClubId == Model.MatchInfo.HomeClubId && plusGoalTypes.Contains(item.GoalTypeId)) || (item.ClubId == Model.MatchInfo.GuestClubId && item.GoalTypeId == 3))
+                        {
+                            homeScore++;
+                        }
+
+                        if ((item.ClubId == Model.MatchInfo.GuestClubId && plusGoalTypes.Contains(item.GoalTypeId)) || (item.ClubId == Model.MatchInfo.HomeClubId && item.GoalTypeId == 3))
+                        {
+                            guestScore++;
+                        }
+
+
+                        <tr>
+                            <td>@item.PlayerNumber</td>
+                            <td>@item.PlayerFirstName @item.PlayerLastName</td>
+                            <td>@item.ClubName</td>
+                            <td>@item.Minute @(item.MinutePlus != null && item.MinutePlus > 0 ? " + " + @item.MinutePlus : "")</td>
+                            <td>
+                                @homeScore : @guestScore
+                            </td>
+                            <td>@item.GoalType</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+
+            if (Model.MatchPenaltyGoals != null && Model.MatchPenaltyGoals.Count > 0)
+            {
+                <div class="table-header">
+                    <span>Oyunsonrası penallaşma qolları:</span>
+                </div>
+
+                <table class="document-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%">№</th>
+                            <th style="width: 25%">Ad, soyad</th>
+                            <th style="width: 23%">Komanda</th>
+                            <th style="width: 12%">Ardıcıllıq</th>
+                            <th style="width: 12%">Hesab</th>
+                            <th style="width: 23%">Vəziyyət – penalti, penalti-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int homePenaltyScore = 0;
+                            int guestPenaltyScore = 0;
+                        }
+                        @foreach (var item in Model.MatchPenaltyGoals)
+                        {
+                            if ((item.ClubId == Model.MatchInfo.HomeClubId && plusGoalTypes.Contains(item.GoalTypeId)) || (item.ClubId == Model.MatchInfo.GuestClubId && item.GoalTypeId == 3))
+                            {
+                                homePenaltyScore++;
+                            }
+
+                            if ((item.ClubId == Model.MatchInfo.GuestClubId && plusGoalTypes.Contains(item.GoalTypeId)) || (item.ClubId == Model.MatchInfo.HomeClubId && item.GoalTypeId == 3))
+                            {
+                                guestPenaltyScore++;
+                            }
+
+
+                            <tr>
+                                <td>@item.PlayerNumber</td>
+                                <td>@item.PlayerFirstName @item.PlayerLastName</td>
+                                <td>@item.ClubName</td>
+                                <td>@(item.PenaltyOrder)</td>
+                                <td>
+                                    @homePenaltyScore : @guestPenaltyScore
+                                </td>
+                                <td>@item.GoalType</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                    <BR><BR>
+                </P>
+            }
+
+
+
+
+
+
+            <div class="table-header" style="page-break-before:always;">
+                <span>Əvəzetmələr:</span>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th colspan="4">Ev</th>
+                        <th colspan="4">Qonaq</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 4%">№</th>
+                        <th style="width: 20%">Meydanı tərk edən oyunçu</th>
+                        <th style="width: 20%">Meydana daxil olan oyunçu</th>
+                        <th style="width: 6%">Dəq.</th>
+                        <th style="width: 4%">№</th>
+                        <th style="width: 20%">Meydanı tərk edən oyunçu</th>
+                        <th style="width: 20%">Meydana daxil olan oyunçu</th>
+                        <th style="width: 6%">Dəq.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int rowCountMax = 0;
+                        MatchPlayerShiftDto[] homeClubShifts = new MatchPlayerShiftDto[] { };
+                        MatchPlayerShiftDto[] guestClubShifts = new MatchPlayerShiftDto[] { };
+                        if (Model.MatchPlayerShifts.Count > 0)
+                        {
+                            homeClubShifts = Model.MatchPlayerShifts.Where(x => x.ClubId == Model.MatchInfo.HomeClubId).ToArray();
+                            guestClubShifts = Model.MatchPlayerShifts.Where(x => x.ClubId == Model.MatchInfo.GuestClubId).ToArray();
+
+                            rowCountMax = Math.Max(homeClubShifts.Length, guestClubShifts.Length);
+                        }
+                    }
+
+                    @for (int rowNumber = 0; rowNumber < rowCountMax; rowNumber++)
+                    {
+                        <tr>
+                            @if (rowNumber < homeClubShifts.Length)
+                            {
+                                <td>@(rowNumber + 1).</td>
+                                <td>@homeClubShifts[rowNumber].FirstNameOut @homeClubShifts[rowNumber].LastNameOut</td>
+                                <td>@homeClubShifts[rowNumber].FirstNameIn @homeClubShifts[rowNumber].LastNameIn</td>
+                                <td>@homeClubShifts[rowNumber].Minute @(homeClubShifts[rowNumber].MinutePlus != null && homeClubShifts[rowNumber].MinutePlus > 0 ? " + " + homeClubShifts[rowNumber].MinutePlus : "")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
+
+                            @if (rowNumber < guestClubShifts.Length)
+                            {
+                                <td>@(rowNumber + 1).</td>
+                                <td>@guestClubShifts[rowNumber].FirstNameOut @guestClubShifts[rowNumber].LastNameOut</td>
+                                <td>@guestClubShifts[rowNumber].FirstNameIn @guestClubShifts[rowNumber].LastNameIn</td>
+                                <td>@guestClubShifts[rowNumber].Minute @(guestClubShifts[rowNumber].MinutePlus != null && guestClubShifts[rowNumber].MinutePlus > 0 ? " + " + guestClubShifts[rowNumber].MinutePlus : "")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+
+            <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+            <div class="table-header">
+                <span>Sarı vərəqələr:</span>
+            </div>
+
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">№</th>
+                        <th style="width: 25%">Ad, soyad</th>
+                        <th style="width: 20%">Komanda</th>
+                        <th style="width: 10%">Dəq.</th>
+                        <th style="width: 40%">Səbəbi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.MatchPenaltyCards.Where(x => x.PenaltyCardType == PenaltyCardTypeEnum.Yellow))
+                    {
+                        string imgCard = "";
+                        switch (item.PenaltyCardType)
+                        {
+                            case PenaltyCardTypeEnum.Yellow:
+                                imgCard = "yellow";
+                                break;
+                            case PenaltyCardTypeEnum.Yellow2:
+                                imgCard = "yellow_red";
+                                break;
+                            case PenaltyCardTypeEnum.Red:
+                                imgCard = "red";
+                                break;
+
+                        }
+
+                        <tr>
+                            <td>@item.PlayerNumber</td>
+                            <td>@item.LastName @item.FirstName</td>
+                            <td>@item.ClubName</td>
+                            <td>
+                                <img src="/assets/images/@(imgCard).png" />
+
+                                @if (string.IsNullOrEmpty(item.OffGameTypeName))
+                                {
+                                    @item.Minute @(item.MinutePlus != null && item.MinutePlus > 0 ? " + " + item.MinutePlus : "")
+                                }
+                                else
+                                {
+                                    @item.OffGameTypeName
+                                }
+                            </td>
+                            <td>@item.Reason</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+
+            <P LANG="en-US" STYLE="margin-bottom: 0.11in">
+                <BR><BR>
+            </P>
+
+            <div class="table-header">
+                <span>Qırmızı vərəqələr:</span>
+            </div>
+            <table class="document-table">
+                <thead>
+                    <tr>
+                        <th style="width: 5%">№</th>
+                        <th style="width: 25%">Ad, soyad</th>
+                        <th style="width: 20%">Komanda</th>
+                        <th style="width: 10%">Dəq.</th>
+                        <th style="width: 40%">Səbəbi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.MatchPenaltyCards.Where(x => x.PenaltyCardType != PenaltyCardTypeEnum.Yellow))
+                    {
+                        string imgCard = "";
+                        switch (item.PenaltyCardType)
+                        {
+                            case PenaltyCardTypeEnum.Yellow:
+                                imgCard = "yellow";
+                                break;
+                            case PenaltyCardTypeEnum.Yellow2:
+                                imgCard = "yellow_red";
+                                break;
+                            case PenaltyCardTypeEnum.Red:
+                                imgCard = "red";
+                                break;
+
+                        }
+
+                        <tr>
+                            <td>@item.PlayerNumber</td>
+                            <td>@item.LastName @item.FirstName</td>
+                            <td>@item.ClubName</td>
+                            <td>
+                                <img src="/assets/images/@(imgCard).png" />
+                                @if (string.IsNullOrEmpty(item.OffGameTypeName))
+                                {
+                                    @item.Minute @(item.MinutePlus != null && item.MinutePlus > 0 ? " + " + item.MinutePlus : "")
+                                }
+                                else
+                                {
+                                    @item.OffGameTypeName
+                                }
+                            </td>
+                            <td>@item.Reason</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+
+            <div style="width: 100%; margin-top: 30px; font-size: 16px; bottom: 0px;">
+
+                @if (Model.MatchInfo.TournamentTypeId == 4 && !string.IsNullOrEmpty(Model.MatchInfo.CupNote))
+                {
+                    <div style="width: 100%; height: 100px;">
+                        <div style="width: 20%; float: left;">
+                            Penalti qeydi:
+                        </div>
+                        <div style="width: 80%; float: right;">@(Model.MatchInfo.CupNote)</div>
+                    </div>
+                }
+
+                <div style="width: 100%; height: 100px;">
+                    <div style="width: 20%; float: left;">
+                        Hakimin qeydi:
+                    </div>
+                    <div style="width: 80%; float: right;">@(Model.MatchInfo.RefereeNote)</div>
+                </div>
+                <div style="width: 100%; margin-top: 30px; height: 100px;">
+                    <div style="width: 20%; float: left;">
+                        Komandaların qeydi:
+                    </div>
+                    <div style="width: 80%; float: right;">
+                        <div style="width: 100%;">
+                            <div style="width: 20%; float: left;">@(Model.MatchInfo.HomeClubName):</div>
+                            <div style="width: 80%; float: right;">@(Model.MatchInfo.HomeClubNote)</div>
+                        </div>
+                        <div style="width: 100%; margin-top: 40px;">
+                            <div style="width: 20%; float: left;">@(Model.MatchInfo.GuestClubName):</div>
+                            <div style="width: 80%; float: right;">@(Model.MatchInfo.GuestClubNote)</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width: 100%; margin-top: 30px; height: 100px;">
+                    Referinin adı, soyadı:_______________________________imzası______________
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+    @if (!isPdf)
+    {
+        <hr />
+        <br />
+        <br />
+    }
+
+
+
+
+
+
+    @{
+        var matchPlayerHome = (IEnumerable<MatchPlayerSelectionViewModel>)ViewBag.MatchPlayerSelectionViewModel;
+
+        var matchPlayerGuest = (IEnumerable<MatchPlayerSelectionViewModel>)ViewBag.MatchPlayerSelectionViewModelGuest;
+
+        var homeClubOfficialSelection = (List<MatchOfficialSelectionViewModel>)ViewBag.MatchHomeClubOfficialSelectionViewModels;
+
+        var guestClubOfficialSelection = (List<MatchOfficialSelectionViewModel>)ViewBag.MatchGuestClubOfficialSelectionViewModels;
+    }
+
+
+
+
+    @if (!isDefeatMatch)
+    {
+        <style>
+            .club-table {
+                text-align: center;
+                border-collapse: collapse;
+                border: none;
+            }
+
+                .club-table tr {
+                    height: 35px
+                }
+
+            .header-number {
+                width: 20pt;
+                border: solid 1.0pt;
+                border-top: none;
+                font-size: 16px;
+                color: #002060;
+            }
+
+            .header-asa {
+                width: 127.45pt;
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+            }
+
+            .header-birthdate {
+                width: 54.55pt;
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+            }
+
+            .header-s {
+                width: .35in;
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+            }
+
+            .header-e {
+                width: .35in;
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 9.0pt;
+                color: #002060;
+            }
+
+            .number {
+                border: solid 1.0pt;
+                border-top: none;
+                font-size: 16px;
+            }
+
+            .asa {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+                text-align: left;
+                padding-left: 10px;
+            }
+
+            .birthdate {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 14px;
+            }
+
+            .s {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+            }
+
+            .e {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+            }
+
+            .player-young span {
+                color: #0000ff;
+            }
+
+            .player-legioner span {
+                color: red;
+            }
+
+            .player-under-2000 span {
+                color: green;
+            }
+
+            .club-table {
+                font-family: 'Times New Roman', serif;
+                text-align: center;
+                border-collapse: collapse;
+                border: none;
+            }
+
+                .club-table tr {
+                    height: 35px;
+                }
+
+            .header-position {
+                width: 30%;
+                border: solid 1.0pt;
+                border-top: none;
+                font-size: 16px;
+                color: #002060;
+                font-weight: 900;
+            }
+
+            .header-oasa {
+                width: 40%;
+                border: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+                font-weight: 900;
+            }
+
+            .header-tz {
+                width: 15%;
+                border: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+                font-weight: 900;
+            }
+
+            .header-ey {
+                width: 15%;
+                border: solid 1.0pt;
+                font-size: 16px;
+                color: #002060;
+                font-weight: 900;
+            }
+
+            .position {
+                border: solid 1.0pt;
+                border-top: none;
+                font-size: 16px;
+            }
+
+            .oasa {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+            }
+
+            .tz {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+                text-align: center;
+            }
+
+            .ey {
+                border-top: none;
+                border-left: none;
+                border-bottom: solid 1.0pt;
+                border-right: solid 1.0pt;
+                font-size: 17px;
+            }
+        </style>
+
+        <style>
+    .custom-checkbox-label {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+
+        .custom-checkbox-label input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .check-mark {
+        position: absolute;
+        top: @(!isPdf ? "-9px": "-12px");
+        left: 5px;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    .custom-checkbox-label:hover input ~ .check-mark {
+        background-color: #ccc;
+    }
+
+    .custom-checkbox-label input:checked ~ .check-mark {
+        background-color: #2196F3;
+    }
+
+    .check-mark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .custom-checkbox-label input:checked ~ .check-mark:after {
+        display: block;
+    }
+
+    .custom-checkbox-label .check-mark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .club-protokol-header {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        width: 94%;
+        margin-left: 3%;
+        height: 90px;
+        position: relative;
+    }
+
+    .club-protokol-header-rotated-div {
+        -moz-transform: rotate(120deg);
+        -o-transform: rotate(120deg);
+        -webkit-transform: rotate(120deg);
+        -ms-transform: rotate(120deg);
+        transform: rotate(120deg);
+        background-color: white;
+        height: 55px;
+        width: 160px;
+        margin-left: -20px;
+        -ms-border-top-right-radius: 50px;
+        border-top-right-radius: 100px;
+    }
+
+    .club-protokol-logo-container {
+        background-color: #002060;
+        height: 100%
+    }
+
+    .club-protokol-logo {
+        width: 30%;
+        float: left;
+        margin-left: 35%;
+        margin-top: 5%;
+    }
+
+    .club-protokol-club-name {
+        color: #002060;
+        font-size: 40px;
+        font-weight: 900;
+        margin-left: -25%;
+    }
+
+    .club-protokol-bottom-line {
+        height: 5px;
+        position: absolute;
+        background-color: #002060;
+        bottom: 0px;
+        width: 97%;
+    }
+    .protokol-content {
+        font-family: "Roboto", Helvetica Neue, Helvetica, Arial, sans-serif !important;
+        font-size: 16px;
+        line-height: 1.5384616;
+        color: #333333;
+        background-color: #f5f5f5;
+        width: 100%;
+        background: white;
+
+    }
+        </style>
+        <div style="page-break-before: always"></div>
+
+        <div class="protokol-content">
+
+
+            <div class="club-protokol-header" style="width: 94%; text-align: center; height: 90px;">
+
+                <div class="club-protokol-logo-container" style="width: 20%; float: left; display: inline-block;">
+                    @*<img class="club-protokol-logo" src="/Files/Logos/qarabag_logo.png" />*@
+                </div>
+                <div style="background-color: #002060; height: 100%; width: 7%; float: left; display: inline-block;">
+                    <div class="club-protokol-header-rotated-div">
+                    </div>
+                </div>
+                <div style="width: 70%; text-align: center; float: left; display: inline-block; margin-top: 10px;">
+                    <span class="club-protokol-club-name">@Model.MatchInfo.HomeClubName</span>
+                </div>
+
+                <div class="club-protokol-bottom-line" style="width: 100%"></div>
+            </div>
+
+            <div style="width: 94%; margin-left: 3%; background-color: #002060; color: white; padding-top: 5px; padding-bottom: 5px; text-align: center; margin-top: 25px;">
+                <span style="font-size:16px;">S – start heyəti, E – ehtiyat oyunçular, K – komandanın kapitanı</span>
+                <br />
+                <span style="font-size: 14px;">(cəzalı, zədəli, adı siyahıda olmayan futbolçular ehtiyat skamyada otura bilməz</span>
+            </div>
+
+            <div style="width: 100%; margin-top: 20px; overflow: auto">
+            
+                <div style="width: 50%; float: left;">
+                    <table class="club-table" style="width: 90%; margin-left: 5%;">
+                        <tbody>
+                            <tr>
+                                <td class="text-center" style="background: #002060; color: white;" colspan="5">
+                                    <strong><span style="font-size: 17px;">A Komandası</span></strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="header-number">№</td>
+
+                                <td class="header-asa">Adı soyadı</td>
+
+                                <td class="header-birthdate">Təvəllüd</td>
+
+                                <td class="header-s">S</td>
+
+                                <td class="header-e">E</td>
+                            </tr>
+
+                            @foreach (var item in matchPlayerHome?.Where(x => x.ClubTypeId == 1))
+                            {
+                                string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                string playerTypeClass = "";
+
+                                if (item.CitizenshipId != 16)
+                                {
+                                    playerTypeClass = "player-legioner";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge21Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge21Limit > 1980)
+                                {
+                                    playerTypeClass = "player-young";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge19Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge19Limit > 1980)
+                                {
+                                    playerTypeClass = "player-under-2000";
+                                }
+
+                                <tr class="@playerTypeClass">
+                                    <td class="number">
+                                        <span>@item.PlayerNumber</span>
+                                    </td>
+
+                                    <td class="asa ">
+                                        <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                                    </td>
+
+                                    <td class="birthdate">
+                                        <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy"))</span>
+                                    </td>
+
+                                    <td class="s">
+                                        @if (item.MainStaff && item.Selected)
+                                        {
+                                            if (item.Captain)
+                                            {
+                                                <span style="font-weight: 700; font-size: 20px; color:#000000">K</span>
+                                            }
+                                            else
+                                            {
+                                                <label class="custom-checkbox-label">
+                                                    <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="true">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+
+                                        }
+                                    </td>
+                                    <td class="e">
+                                        @if (!item.MainStaff && item.Selected)
+                                        {
+                                            <label class="custom-checkbox-label">
+                                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="false">
+                                                <span class="check-mark"></span>
+                                            </label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="width: 50%; float: right;">
+                    <table class="club-table" style="width: 90%; margin-right: 5%; float: right;">
+                        <tbody>
+                            <tr style="height: 23pt;">
+                                <td class="text-center" style="background: #002060; color: white;" colspan="5">
+                                    <strong><span style="font-size: 17px;">B Komandası</span></strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="header-number">№</td>
+
+                                <td class="header-asa">Adı soyadı</td>
+
+                                <td class="header-birthdate">Təvəllüd</td>
+
+                                <td class="header-s">S</td>
+
+                                <td class="header-e">E</td>
+                            </tr>
+
+                            @foreach (var item in matchPlayerHome.Where(x => x.ClubTypeId == 2))
+                            {
+                                string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                string playerTypeClass = "";
+
+                                if (item.CitizenshipId != 16)
+                                {
+                                    playerTypeClass = "player-legioner";
+                                }
+
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge21Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge21Limit > 1980)
+                                {
+                                    playerTypeClass = "player-young";
+                                }
+
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge19Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge19Limit > 1980)
+                                {
+                                    playerTypeClass = "player-under-2000";
+                                }
+
+                                <tr class="@playerTypeClass">
+                                    <td class="number">
+                                        <span>@item.PlayerNumber</span>
+                                    </td>
+
+                                    <td class="asa">
+                                        <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                                    </td>
+
+                                    <td class="birthdate">
+                                        <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy"))</span>
+                                    </td>
+
+                                    <td class="s">
+                                        @if (item.MainStaff && item.Selected)
+                                        {
+                                            if (item.Captain)
+                                            {
+                                                <span style="font-weight: 700; font-size: 20px; color:#000000">K</span>
+                                            }
+                                            else
+                                            {
+                                                <label class="custom-checkbox-label">
+                                                    <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="true">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="e">
+                                        @if (!item.MainStaff && item.Selected)
+                                        {
+                                            <label class="custom-checkbox-label">
+                                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="false">
+                                                <span class="check-mark"></span>
+                                            </label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div style="width: 100%; page-break-before: always;">
+
+                @if (Model.MatchInfo.TournamentTypeId == 1 || (Model.MatchInfo.TournamentTypeId == 4 && homeClubOfficialSelection.Count(x => x.ClubTypeId == 1) > 0))
+                {
+                    <div style="width: 94%; margin-left: 3%; margin-top: 25px;">
+                        <table class="club-table" style="width: 100%;">
+                            <tbody>
+                                <tr style="height: 23pt;">
+                                    <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                                        <strong><span style="font-size: 16px;">A Komandasının rəsmi şəxsləri</span></strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="header-position">Vəzifəsi</td>
+
+                                    <td class="header-oasa">Adı, soyadı</td>
+
+                                    <td class="header-tz">T/Z</td>
+
+                                    <td class="header-ey">Ə/Y</td>
+                                </tr>
+
+                                @foreach (var item in homeClubOfficialSelection.Where(x => x.ClubTypeId == 1))
+                                {
+                                    string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                    <tr>
+                                        <td class="position">@item.OfficialPositionName</td>
+
+                                        <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                                        <td class="tz">
+                                            @if (item.MatchOfficialZoneTypeId == 1 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="1">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                        <td class="ey">
+                                            @if (item.MatchOfficialZoneTypeId == 2 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="2">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+
+                @if (Model.MatchInfo.TournamentTypeId == 3 || Model.MatchInfo.TournamentTypeId == 6 || Model.MatchInfo.TournamentTypeId == 2 || (Model.MatchInfo.TournamentTypeId == 4 && homeClubOfficialSelection.Count(x => x.ClubTypeId == 2) > 0 && homeClubOfficialSelection.Count(x => x.ClubTypeId == 1) == 0))
+                {
+                    <div style="width: 94%; margin-left: 3%; margin-top: 25px;">
+                        <table class="club-table" style="width: 100%;">
+                            <tbody>
+                                <tr style="height: 23pt;">
+                                    <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                                        <strong><span style="font-size: 16px;">B Komandasının rəsmi şəxsləri</span></strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="header-position">Vəzifəsi</td>
+
+                                    <td class="header-oasa">Adı, soyadı</td>
+
+                                    <td class="header-tz">T/Z</td>
+
+                                    <td class="header-ey">Ə/Y</td>
+                                </tr>
+
+                                @foreach (var item in homeClubOfficialSelection.Where(x => x.ClubTypeId == 2))
+                                {
+                                    string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                    <tr>
+                                        <td class="position">@item.OfficialPositionName</td>
+
+                                        <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                                        <td class="tz">
+                                            @if (item.MatchOfficialZoneTypeId == 1 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="1">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                        <td class="ey">
+                                            @if (item.MatchOfficialZoneTypeId == 2 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="2">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+
+        <hr />
+        <br />
+        <br />
+
+
+        <div style="page-break-before: always"></div>
+
+        <div class="protokol-content">
+
+
+            <div class="club-protokol-header" style="width: 94%; text-align: center; height: 90px;">
+
+                <div class="club-protokol-logo-container" style="width: 20%; float: left; display: inline-block;">
+                    @*<img class="club-protokol-logo" src="/Files/Logos/qarabag_logo.png" />*@
+                </div>
+                <div style="background-color: #002060; height: 100%; width: 7%; float: left; display: inline-block;">
+                    <div class="club-protokol-header-rotated-div">
+                    </div>
+                </div>
+                <div style="width: 70%; text-align: center; float: left; display: inline-block; margin-top: 10px;">
+                    <span class="club-protokol-club-name">@Model.MatchInfo.GuestClubName</span>
+                </div>
+
+                <div class="club-protokol-bottom-line" style="width: 100%"></div>
+            </div>
+
+            <div style="width: 94%; margin-left: 3%; background-color: #002060; color: white; padding-top: 5px; padding-bottom: 5px; text-align: center; margin-top: 25px;">
+                <span style="font-size:16px;">S – start heyəti, E – ehtiyat oyunçular, K – komandanın kapitanı</span>
+                <br />
+                <span style="font-size: 14px;">(cəzalı, zədəli, adı siyahıda olmayan futbolçular ehtiyat skamyada otura bilməz</span>
+            </div>
+
+            <div style="width: 100%; margin-top: 20px; overflow: auto">
+                
+                    <div style="width: 50%; float: left;">
+                    <table class="club-table" style="width: 90%; margin-left: 5%;">
+                        <tbody>
+                            <tr>
+                                <td class="text-center" style="background: #002060; color: white;" colspan="5">
+                                    <strong><span style="font-size: 17px;">A Komandası</span></strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="header-number">№</td>
+
+                                <td class="header-asa">Adı soyadı</td>
+
+                                <td class="header-birthdate">Təvəllüd</td>
+
+                                <td class="header-s">S</td>
+
+                                <td class="header-e">E</td>
+                            </tr>
+
+
+
+                            @foreach (var item in matchPlayerGuest.Where(x => x.ClubTypeId == 1))
+                            {
+                                string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                string playerTypeClass = "";
+
+                                if (item.CitizenshipId != 16)
+                                {
+                                    playerTypeClass = "player-legioner";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge21Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge21Limit > 1980)
+                                {
+                                    playerTypeClass = "player-young";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge19Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge19Limit > 1980)
+                                {
+                                    playerTypeClass = "player-under-2000";
+                                }
+
+                                <tr class="@playerTypeClass">
+                                    <td class="number">
+                                        <span>@item.PlayerNumber</span>
+                                    </td>
+
+                                    <td class="asa ">
+                                        <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                                    </td>
+
+                                    <td class="birthdate">
+                                        <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy"))</span>
+                                    </td>
+
+                                    <td class="s">
+                                        @if (item.MainStaff && item.Selected)
+                                        {
+                                            if (item.Captain)
+                                            {
+                                                <span style="font-weight: 700; font-size: 20px; color:#000000">K</span>
+                                            }
+                                            else
+                                            {
+                                                <label class="custom-checkbox-label">
+                                                    <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="true">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+
+                                        }
+                                    </td>
+                                    <td class="e">
+                                        @if (!item.MainStaff && item.Selected)
+                                        {
+                                            <label class="custom-checkbox-label">
+                                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="false">
+                                                <span class="check-mark"></span>
+                                            </label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="width: 50%; float: right;">
+                    <table class="club-table" style="width: 90%; margin-right: 5%; float: right;">
+                        <tbody>
+                            <tr style="height: 23pt;">
+                                <td class="text-center" style="background: #002060; color: white;" colspan="5">
+                                    <strong><span style="font-size: 17px;">B Komandası</span></strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td class="header-number">№</td>
+
+                                <td class="header-asa">Adı soyadı</td>
+
+                                <td class="header-birthdate">Təvəllüd</td>
+
+                                <td class="header-s">S</td>
+
+                                <td class="header-e">E</td>
+                            </tr>
+
+                            @foreach (var item in matchPlayerGuest.Where(x => x.ClubTypeId == 2))
+                            {
+                                string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                string playerTypeClass = "";
+
+                                if (item.CitizenshipId != 16)
+                                {
+                                    playerTypeClass = "player-legioner";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge21Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge21Limit > 1980)
+                                {
+                                    playerTypeClass = "player-young";
+                                }
+                                if (item.PlayerBirthDate?.Year >= Model.MatchInfo.YoungPlayerAge19Limit && item.CitizenshipId == 16 && Model.MatchInfo.YoungPlayerAge19Limit > 1980)
+                                {
+                                    playerTypeClass = "player-under-2000";
+                                }
+
+                                <tr class="@playerTypeClass">
+                                    <td class="number">
+                                        <span>@item.PlayerNumber</span>
+                                    </td>
+
+                                    <td class="asa">
+                                        <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                                    </td>
+
+                                    <td class="birthdate">
+                                        <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy"))</span>
+                                    </td>
+
+                                    <td class="s">
+                                        @if (item.MainStaff && item.Selected)
+                                        {
+                                            if (item.Captain)
+                                            {
+                                                <span style="font-weight: 700; font-size: 20px; color:#000000">K</span>
+                                            }
+                                            else
+                                            {
+                                                <label class="custom-checkbox-label">
+                                                    <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="true">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        }
+                                    </td>
+                                    <td class="e">
+                                        @if (!item.MainStaff && item.Selected)
+                                        {
+                                            <label class="custom-checkbox-label">
+                                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="false">
+                                                <span class="check-mark"></span>
+                                            </label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div style="width: 100%; page-break-before: always;">
+
+                @if (Model.MatchInfo.TournamentTypeId == 1 || (Model.MatchInfo.TournamentTypeId == 4 && guestClubOfficialSelection.Count(x => x.ClubTypeId == 1) > 0))
+                {
+                    <div style="width: 94%; margin-left: 3%; margin-top: 25px;">
+                        <table class="club-table" style="width: 100%;">
+                            <tbody>
+                                <tr style="height: 23pt;">
+                                    <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                                        <strong><span style="font-size: 16px;">A Komandasının rəsmi şəxsləri</span></strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="header-position">Vəzifəsi</td>
+
+                                    <td class="header-oasa">Adı, soyadı</td>
+
+                                    <td class="header-tz">T/Z</td>
+
+                                    <td class="header-ey">Ə/Y</td>
+                                </tr>
+
+                                @foreach (var item in guestClubOfficialSelection.Where(x => x.ClubTypeId == 1))
+                                {
+                                    string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                    <tr>
+                                        <td class="position">@item.OfficialPositionName</td>
+
+                                        <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                                        <td class="tz">
+                                            @if (item.MatchOfficialZoneTypeId == 1 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="1">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                        <td class="ey">
+                                            @if (item.MatchOfficialZoneTypeId == 2 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="2">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                @if (Model.MatchInfo.TournamentTypeId == 3 || Model.MatchInfo.TournamentTypeId == 6 || Model.MatchInfo.TournamentTypeId == 2 || (Model.MatchInfo.TournamentTypeId == 4 && guestClubOfficialSelection.Count(x => x.ClubTypeId == 2) > 0 && guestClubOfficialSelection.Count(x => x.ClubTypeId == 1) == 0))
+                {
+                    <div style="width: 94%; margin-left: 3%; margin-top: 25px;">
+                        <table class="club-table" style="width: 100%;">
+                            <tbody>
+                                <tr style="height: 23pt;">
+                                    <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                                        <strong><span style="font-size: 16px;">B Komandasının rəsmi şəxsləri</span></strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="header-position">Vəzifəsi</td>
+
+                                    <td class="header-oasa">Adı, soyadı</td>
+
+                                    <td class="header-tz">T/Z</td>
+
+                                    <td class="header-ey">Ə/Y</td>
+                                </tr>
+
+                                @foreach (var item in guestClubOfficialSelection.Where(x => x.ClubTypeId == 2))
+                                {
+                                    string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                                    <tr>
+                                        <td class="position">@item.OfficialPositionName</td>
+
+                                        <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                                        <td class="tz">
+                                            @if (item.MatchOfficialZoneTypeId == 1 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="1">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                        <td class="ey">
+                                            @if (item.MatchOfficialZoneTypeId == 2 && !string.IsNullOrEmpty(@inputChecked))
+                                            {
+                                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="2">
+                                                    <span class="check-mark"></span>
+                                                </label>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+    }
+
+
+
+</div>
+
+<script>
+
+    $('.custom-checkbox-label input[type="checkbox"]').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+
+
+
+
+
+</script>

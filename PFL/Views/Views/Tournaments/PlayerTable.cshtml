@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PFL.Entities.EntityModels.Views.VTournamentPlayerTable>
+@{
+    Layout = null;
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    int rowCount = 0;
+}
+
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th class="col-md-4">Oyunçu</th>
+            <th class="col-md-4">Klubu</th>
+            <th>Qol</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            rowCount++;
+
+            <tr id="@item.PlayerId">
+                <td>@rowCount</td>
+                <td>@item.PlayerLastName @item.PlayerFirstName @item.PlayerFatherName</td>
+                <td>@item.ClubName</td>
+                <td>@item.PlayerGoalCount</td>
+            </tr>
+        }
+
+        </tbody>
+    </table>
+</div>
+

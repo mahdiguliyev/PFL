@@ -1,0 +1,248 @@
+﻿@model IEnumerable<PFL.Models.ViewModels.MatchOfficialSelectionViewModel>
+@{
+    Layout = null;
+    string baseUrl = ViewBag.BaseUrl;
+}
+<style>
+    .club-table {
+        font-family: 'Times New Roman', serif;
+        text-align: center;
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .club-table tr {
+            height: 21.8pt
+        }
+
+    .header-position {
+        width: 30%;
+        border: solid 1.0pt;
+        border-top: none;
+        font-size: 9.0pt;
+        color: #002060;
+        font-weight: 900;
+    }
+
+    .header-oasa {
+        width: 40%;
+        border: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+        font-weight: 900;
+    }
+
+    .header-tz {
+        width: 15%;
+        border: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+        font-weight: 900;
+    }
+
+    .header-ey {
+        width: 15%;
+        border: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+        font-weight: 900;
+    }
+
+    .position {
+        border: solid 1.0pt;
+        border-top: none;
+        font-size: 9.0pt;
+    }
+
+    .oasa {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+    }
+
+    .tz {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+        text-align: center;
+    }
+
+    .ey {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+    }
+</style>
+@*#0070c0 - blue color*@
+
+
+<div class="row">
+    @if (ViewBag.TournamentTypeId == 1 || (ViewBag.TournamentTypeId == 4 && Model.Count(x => x.ClubTypeId == 1)>0))
+    {
+        <div class="col-md-6">
+            <table class="club-table col-md-12">
+                <tbody>
+                    <tr style="height: 21.8pt;">
+                        <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                            <strong><span style="font-size: 9.0pt;">A Komandası</span></strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="header-position">Vəzifəsi</td>
+
+                        <td class="header-oasa">Adı, soyadı</td>
+
+                        <td class="header-tz">T/Z</td>
+
+                        <td class="header-ey">Ə/Y</td>
+                    </tr>
+
+                    @foreach (var item in Model.Where(x => x.ClubTypeId == 1))
+                    {
+                        string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                        <tr>
+                            <td class="position">@item.OfficialPositionName</td>
+
+                            <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                            <td class="tz">
+                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="1">
+                                    <span class="check-mark"></span>
+                                </label>
+                            </td>
+                            <td class="ey">
+                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="1" data-zone-type-id="2">
+                                    <span class="check-mark"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    }
+
+
+
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (ViewBag.TournamentTypeId == 3 || (ViewBag.TournamentTypeId == 4 && Model.Count(x => x.ClubTypeId == 2)>0 && Model.Count(x => x.ClubTypeId == 1)==0))
+    {
+        <div class="col-md-6 col-md-offset-6">
+            <table class="club-table col-md-12">
+                <tbody>
+                    <tr style="height: 21.8pt;">
+                        <td class="text-center" style="background: #002060; color: white;" colspan="1">
+                            <strong><span style="font-size: 9.0pt;">B Komandası</span></strong>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="header-position">Vəzifəsi</td>
+
+                        <td class="header-oasa">Adı, soyadı</td>
+
+                        <td class="header-tz">T/Z</td>
+
+                        <td class="header-ey">Ə/Y</td>
+                    </tr>
+
+                    @foreach (var item in Model.Where(x => x.ClubTypeId == 2))
+                    {
+                        string inputChecked = item.Selected ? "checked='checked'" : "";
+
+                        <tr>
+                            <td class="position">@item.OfficialPositionName</td>
+
+                            <td class="oasa">@item.OfficialFirstName @item.OfficialLastName @item.OfficialFatherName</td>
+
+                            <td class="tz">
+                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 1 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="1">
+                                    <span class="check-mark"></span>
+                                </label>
+                            </td>
+                            <td class="ey">
+                                <label class="custom-checkbox-label" style="margin-left: 20px;">
+                                    <input type="checkbox" class="add-official" @(item.MatchOfficialZoneTypeId == 2 ? @inputChecked : "") data-official-id="@item.ClubOfficialId" data-club-type-id="2" data-zone-type-id="2">
+                                    <span class="check-mark"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    }
+
+</div>
+
+<script>
+        var addOfficialJson = {
+            "MatchId": @ViewBag.MatchId,
+            "OfficialId": 0,
+            "OfficialClubTypeId": 0,
+            "MatchOfficialZoneTypeId":0,
+            "AddStatus":false
+    };
+
+    $(".add-official").change(function () {
+
+        var checkbox = $(this);
+
+        addOfficialJson.OfficialId = checkbox.data("official-id");
+        addOfficialJson.OfficialClubTypeId = checkbox.data("club-type-id");
+        addOfficialJson.MatchOfficialZoneTypeId = checkbox.data("zone-type-id");
+        addOfficialJson.AddStatus = checkbox.prop("checked");
+
+
+        $.ajax({
+                    type: "POST",
+                    url: "/Club/AddMatchOfficial",
+                    dataType: 'json',
+                    data: JSON.stringify(addOfficialJson),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.ok) {
+
+
+
+                        } else {
+                            checkbox.prop("checked", false);
+                            swal({
+                                title: "Xəta!",
+                                text: response.error,
+                                icon: "warning"
+                            });
+
+
+                        }
+                    },
+                    error: function () {
+                        swal({
+                            title: "Xəta!",
+                            icon: "warning"
+                        });
+                    }
+                });
+            });
+
+
+
+
+
+
+</script>
+
+
+

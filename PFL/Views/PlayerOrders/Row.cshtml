@@ -1,0 +1,59 @@
+﻿@model PFL.Entities.EntityModels.ClubPlayerOrder
+@{
+    Layout = "";
+}
+
+
+<tr id="cpo-row-@(Model.Id)">
+    <td></td>
+    <td><span class="text-primary-700">@Model.PlayerNumber</span></td>
+    <td>@Model.Player.FirstName @Model.Player.LastName @Model.Player.FatherName</td>
+    <td>
+        @if (!string.IsNullOrEmpty(Model.HealthFile))
+        {
+            <a href="@Model.HealthFile" target="_blank">Sağlamlıq arayışı</a>
+        }
+    </td>
+    <td>
+
+    </td>
+
+    @if (Model.Rejected && !Model.ClubConfirm)
+    {
+        <td><span class="label label-danger">İmtina edilib</span></td>
+    }
+    else if (Model.OperatorConfirm)
+    {
+        <td><span class="label label-success">Təsdiqlənib</span></td>
+    }
+    else if (Model.ClubConfirm)
+    {
+        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+    }
+    else
+    {
+        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+    }
+
+    <td class="text-center">
+        @if (Model.ClubConfirm && !Model.Rejected && !Model.OperatorConfirm)
+        {
+
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6">
+                    <button type="button" data-href="/PlayerOrders/Confirmation?id=@(Model.Id)&confirm=false" class="btn btn-danger btn-icon player-order-confirm" title="Təsdiqlə"><b><i class="icon-cross"></i></b>&nbsp;</button>
+                </div>
+
+                <div class="col-md-6">
+                    <button type="button" data-href="/PlayerOrders/Confirmation?id=@(Model.Id)&confirm=true" class="btn btn-primary btn-icon player-order-confirm" title="Təsdiqlə"><b><i class="icon-check2"></i></b>&nbsp;</button>
+                </div>
+            </div>
+
+        }
+        else
+        {
+                            
+            <a data-player-order-id="@(Model.Id)" class="edit-after-confirm" data-toggle="modal" data-target="#edit-player-order-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-pencil3"></i></b>&nbsp;</a>
+        }
+    </td>
+</tr>

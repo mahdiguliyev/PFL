@@ -1,0 +1,211 @@
+﻿@model PFL.Models.DTO.DClubDocumentDto
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+
+<div class="panel panel-flat">
+
+    <div class="panel-heading">
+        <h5 class="panel-title">D komandasının sənədləri - <b>@Model.ClubName</b></h5>
+        <div class="heading-elements">
+            
+            <div class="btn-group" style="width: 100%">
+                <a href="/ClubDocuments#d-club" type="button" class="btn bg-teal-400 bxtn-labeled"><b><i class="icon-backward2"></i></b> <span>Siyahıya qayıt</span></a>
+            </div>
+                
+        </div>
+    </div>
+    
+    @{
+        if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="panel-heading">
+                <slan class="label label-danger">@(ViewBag.ErrorMessage)</slan>
+            </div>
+        }
+    }
+
+    <br />
+
+
+    <div class="panel-body">
+
+        @using (Html.BeginForm("DClubEdit", baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal", encType = "multipart/form-data" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DStadiumContractUpload, "Stadionun müqaviləsi", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DStadiumContractUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DStadiumContractUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DStadiumContractUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DStadiumContractUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DStadiumSchemeUpload, "Stadionun sxemi", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DStadiumSchemeUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DStadiumSchemeUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DStadiumSchemeUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DStadiumSchemeUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DClubStructureUpload, "Klubun strukturu", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DClubStructureUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DClubStructureUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DClubStructureUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DClubStructureUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DVoenUpload, "VÖEN", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DVoenUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DVoenUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DVoenUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DVoenUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DCharterUpload, "Nizamnamə", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DCharterUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DCharterUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DCharterUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DCharterUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DDinLetterUpload, "DİN məktubu", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DDinLetterUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DDinLetterUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DDinLetterUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DDinLetterUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DRegisterExtractUpload, "Dövlət reyesterindən çıxarış", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DRegisterExtractUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DRegisterExtractUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DRegisterExtractUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DRegisterExtractUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DRegisterExtractUpload, "Dövlət reyesterindən çıxarış", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DRegisterExtractUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DRegisterExtractUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.DRegisterExtractUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DRegisterExtractUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <hr />
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-3">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+@section footer
+{
+    <script>
+
+  
+        $(document).ready(function () {
+
+            $(".club-document").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+
+        });
+
+    </script>
+}
+

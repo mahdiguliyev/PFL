@@ -1,0 +1,187 @@
+﻿@model PFL.Entities.EntityModels.OfficialTournamentPenalty
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Cərimənin təyini")
+
+    <div class="panel-body">
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal" }))
+        {
+            <fieldset class="content-group col-md-6 col-md-offset-3">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model?.Id)" />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="MatchId">Matç seçimi</label>
+
+                    <div class="col-md-9">
+                        <select class="select-player border-warning" id="MatchId" name="MatchId">
+                            @if (Model?.MatchClubOfficial.Match != null)
+                            {
+                                <option value="@Model.MatchClubOfficial.MatchId">@(Model.MatchClubOfficial.Match.MatchDate?.ToString("dd.MM.yyyy HH:mm")) - @Model.MatchClubOfficial.Match.HomeClub.Name - @Model.MatchClubOfficial.Match.GuestClub.Name</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seçim edin</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="MatchClubOfficialId">Oyunçu seçimi</label>
+
+                    <div class="col-md-9">
+                        <select class="select-official border-warning" id="MatchClubOfficialId" name="MatchClubOfficialId">
+                            @if (Model?.MatchClubOfficialId != null)
+                            {
+                                <option value="@Model.MatchClubOfficialId">@Model.MatchClubOfficial.ClubOfficial.FirstName @Model.MatchClubOfficial.ClubOfficial.LastName @Model.MatchClubOfficial.ClubOfficial.FatherName</option>
+                            }
+                            else
+                            {
+                                <option value="0">Seçim edin</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                @*Custom Penalty yazmada type ne olaraq secilecek?*@
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="PenaltyReason">Cərimə səbəbi</label>
+
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.PenaltyReason, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PenaltyReason, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="PassMatchCount">Buraxılacaq oyun sayı</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PassMatchCount, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-5">
+                        @Html.ValidationMessageFor(model => model.PassMatchCount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="PenaltyPriceAmount">Cərimə məbləği</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.PenaltyPriceAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    <div class="col-md-5">
+                        @Html.ValidationMessageFor(model => model.PenaltyPriceAmount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="AdminReview">Admin təsdiqi</label>
+                    <div class="col-md-4">
+                        @Html.CheckBoxFor(model => model.AdminReview, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-5 col-md-offset-1">
+                        @Html.ValidationMessageFor(model => model.AdminReview, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <br/>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>
+
+
+<script>
+
+    $('#PenaltyCardTypeId').selectpicker();
+
+    $('#MatchId').select2({
+        dropdownCssClass: 'border-primary',
+        containerCssClass: 'border-primary text-primary-700',
+        ajax: {
+            url: "/Select2/Matches",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchText: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
+
+                return {
+                    results: data.results,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        }
+    });
+
+    $('#MatchClubOfficialId').select2();
+
+
+    $('#MatchId').on('select2:select',
+        function (e) {
+
+            $('#MatchClubOfficialId').select2({
+                dropdownCssClass: 'border-primary',
+                containerCssClass: 'border-primary text-primary-700',
+                ajax: {
+                    url: "/Select2/MatchOfficials?matchId=" + $("#MatchId").val(),
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            searchText: params.term, // search term
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data, params) {
+
+                        params.page = params.page || 1;
+
+                        return {
+                            results: data.results,
+                            pagination: {
+                                more: (params.page * 30) < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+        });
+</script>
+

@@ -1,0 +1,124 @@
+﻿@model  dynamic
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+<div class="col-md-12">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Turnir tipləri</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" data-toggle="dropdown"><i class="icon-user-plus position-left"></i>Yeni istifadəçi</button>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="/Users/CreateAdmin"><i class="icon-user-plus"></i>Admin</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/Users/CreateClubAdmin"><i class="icon-user-plus"></i>Klub admin</a></li>
+                                <li><a href="/Users/CreateReferee"><i class="icon-user-plus"></i>Hakim</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body" style="margin-top: 30px;">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight nav-justified" id="panel-links">
+                    <li>
+                        <a href="#admin" data-toggle="tab" data-tab-id="admin" onclick="getContent('admin')">
+                            Adminlər &nbsp;<span class="badge badge-primary">@(ViewBag.AdminUserCount)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#club" data-toggle="tab" data-tab-id="club" onclick="getContent('club')">
+                            Klub istifadəçiləri &nbsp;<span class="badge badge-primary">@(ViewBag.ClubUserCount)</span>
+
+                        </a>
+                    </li>
+                        <li>
+                            <a href="#referee" data-toggle="tab" data-tab-id="referee" onclick="getContent('referee')">
+                                Hakim istifadəçilər &nbsp;<span class="badge badge-primary">@(ViewBag.RefereeUserCount)</span>
+                            </a>
+                        </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane" id="admin">
+
+                    </div>
+
+                    <div class="tab-pane" id="club">
+
+                    </div>
+                    <div class="tab-pane" id="referee">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section footer{
+    @*<script src="/assets/js/sweetalert.min.js"></script>*@
+    <script>
+
+        function getContent(label) {
+
+            var _url;
+            switch (label) {
+            case 'admin':
+                    _url = "/Users/List?userType=admin";
+                break;
+            case 'club':
+                    _url = "/Users/List?userType=club";
+                break;
+            case 'referee':
+                    _url = "/Users/List?userType=referee";
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        $(document).ready(function() {
+            //$("#panel-links li.active a").click();
+
+            var activeTab = window.location.href.split('#')[1];
+            var tab;
+            if (activeTab) {
+                tab = $("li").find("[data-tab-id='" + activeTab + "']");
+
+                if (tab.length === 0) {
+                    tab = $("li").find("[data-tab-id='admin']");
+                }
+            } else {
+                tab = $("li").find("[data-tab-id='admin']");
+                if (tab.length === 0) {
+                    tab = $("li").find("[data-tab-id='admin']");
+                }
+            }
+
+            tab.click();
+        });
+
+    </script>
+
+
+
+}

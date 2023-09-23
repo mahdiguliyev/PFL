@@ -1,0 +1,446 @@
+﻿@using PFL.Models.ViewModels
+@model IEnumerable<PFL.Models.ViewModels.MatchPlayerSelectionViewModel>
+@{
+    Layout = null;
+    string baseUrl = ViewBag.BaseUrl;
+    MatchLimitViewModel limit = (MatchLimitViewModel)ViewBag.Limit;
+
+    int youngPlayerAge21Limit = ViewBag.YoungPlayerAge21Limit;
+    int youngPlayerAge19Limit = ViewBag.YoungPlayerAge19Limit;
+}
+<style>
+    .club-table {
+        font-family: 'Times New Roman', serif;
+        text-align: center;
+        border-collapse: collapse;
+        border: none;
+    }
+
+        .club-table tr {
+            height: 21.8pt
+        }
+
+    .header-number {
+        width: 20pt;
+        border: solid 1.0pt;
+        border-top: none;
+        font-size: 9.0pt;
+        color: #002060;
+    }
+
+    .header-asa {
+        width: 127.45pt;
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+    }
+
+    .header-birthdate {
+        width: 54.55pt;
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+    }
+
+    .header-s {
+        width: .35in;
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+    }
+
+    .header-e {
+        width: .35in;
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 9.0pt;
+        color: #002060;
+    }
+
+    .number {
+        border: solid 1.0pt;
+        border-top: none;
+        font-size: 9.0pt;
+    }
+
+    .asa {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+        text-align: left;
+        padding-left: 10px;
+    }
+
+    .birthdate {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+    }
+
+    .s {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+    }
+
+    .e {
+        border-top: none;
+        border-left: none;
+        border-bottom: solid 1.0pt;
+        border-right: solid 1.0pt;
+        font-size: 10.0pt;
+    }
+
+    .player-young span {
+        color: #0000ff;
+    }
+
+    .player-legioner span {
+        color: red;
+    }
+
+    .player-under-2000 span {
+        color: green;
+    }
+</style>
+@*#0070c0 - blue color*@
+
+
+
+<div class="row">
+    <div class="col-md-12 text-center" style="background-color: #002060; color: white; padding-top: 5px; padding-bottom: 5px; width: 94%; margin-left: 3%;">
+        <span style="font-size:16px;">S – start heyəti, E – ehtiyat oyunçular, K – komandanın kapitanı</span>
+        <br />
+        <span style="font-size: 14px;">(cəzalı, zədəli, adı siyahıda olmayan futbolçular ehtiyat skamyada otura bilməz)</span>
+    </div>
+</div>
+<p></p>
+<div class="row">
+    <div class="col-md-6">
+        <table class="club-table col-md-10 col-md-offset-1">
+            <tbody>
+                <tr>
+                    <td class="text-center" style="background: #002060; color: white;" colspan="6">
+                        <strong><span style="font-size: 9.0pt;">A Komandası</span></strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="header-number">№</td>
+
+                    <td class="header-asa">Adı soyadı</td>
+
+                    <td class="header-birthdate">Təvəllüd</td>
+
+                    <td class="header-s">S</td>
+
+                    <td class="header-e">E</td>
+                    <td class="header-e">K</td>
+                </tr>
+
+
+
+                @foreach (var item in Model.Where(x => x.ClubTypeId == 1))
+                {
+                    string inputChecked = item.Selected ? "checked='checked'" : "";
+                    string captainChecked = item.Captain ? "checked='checked'" : "";
+
+                    string playerTypeClass = "";
+
+                    if (item.CitizenshipId != 16)
+                    {
+                        playerTypeClass = "player-legioner";
+                    }
+                    if (item.PlayerBirthDate?.Year >= youngPlayerAge21Limit && item.CitizenshipId == 16 && youngPlayerAge21Limit > 1980)
+                    {
+                        playerTypeClass = "player-young";
+                    }
+                    if (item.PlayerBirthDate?.Year > youngPlayerAge19Limit && item.CitizenshipId == 16 && youngPlayerAge19Limit > 1980)
+                    {
+                        playerTypeClass = "player-under-2000";
+                    }
+
+                    <tr class="@playerTypeClass">
+                        <td class="number">
+                            <span>@item.PlayerNumber</span>
+                        </td>
+
+                        <td class="asa ">
+                            <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                        </td>
+
+                        <td class="birthdate">
+                            <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo))</span>
+                        </td>
+
+                        <td class="s">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="true" id="section11-@item.PlayerId">
+                                <span class="check-mark"></span>
+                            </label>
+                        </td>
+                        <td class="e">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="false" id="section10-@item.PlayerId">
+                                <span class="check-mark"></span>
+                            </label>
+                        </td>
+                        <td class="e">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player captain" @captainChecked data-player-id="@item.PlayerId" data-club-type-id="1" data-main-staff="true" data-captain="true">
+                                <span class="check-mark" style="border-radius: 15px; background-color:#16b00b; border: 2px solid #0ea604;"></span>
+                            </label>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table class="club-table col-md-10 col-md-offset-1">
+            <tbody>
+                <tr style="height: 21.8pt;">
+                    <td class="text-center" style="background: #002060; color: white;" colspan="6">
+                        <strong><span style="font-size: 9.0pt;">B Komandası</span></strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="header-number">№</td>
+
+                    <td class="header-asa">Adı soyadı</td>
+
+                    <td class="header-birthdate">Təvəllüd</td>
+
+                    <td class="header-s">S</td>
+
+                    <td class="header-e">E</td>
+                    <td class="header-e">K</td>
+                </tr>
+
+                @foreach (var item in Model.Where(x => x.ClubTypeId == 2))
+                {
+                    string inputChecked = item.Selected ? "checked='checked'" : "";
+                    string captainChecked = item.Captain ? "checked='checked'" : "";
+
+                    string playerTypeClass = "";
+
+                    if (item.CitizenshipId != 16)
+                    {
+                        playerTypeClass = "player-legioner";
+                    }
+                    if (item.PlayerBirthDate?.Year >= youngPlayerAge21Limit && item.CitizenshipId == 16 && youngPlayerAge21Limit > 1980)
+                    {
+                        playerTypeClass = "player-young";
+                    }
+                    if (item.PlayerBirthDate?.Year > youngPlayerAge19Limit && item.CitizenshipId == 16 && youngPlayerAge19Limit > 1980)
+                    {
+                        playerTypeClass = "player-under-2000";
+                    }
+
+                    <tr class="@playerTypeClass">
+                        <td class="number">
+                            <span>@item.PlayerNumber</span>
+                        </td>
+
+                        <td class="asa">
+                            <span>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName @(item.PositionLabel == "Q" ? "(Q)" : "")</span>
+                        </td>
+
+                        <td class="birthdate">
+                            <span>@(item.PlayerBirthDate?.ToString("dd.MM.yyyy", System.Globalization.DateTimeFormatInfo.InvariantInfo))</span>
+                        </td>
+
+                        <td class="s">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player" @(item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="true" id="section21-@item.PlayerId">
+                                <span class="check-mark"></span>
+                            </label>
+                        </td>
+                        <td class="e">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player" @(!item.MainStaff ? @inputChecked : "") data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="false" id="section20-@item.PlayerId">
+                                <span class="check-mark"></span>
+                            </label>
+                        </td>
+                        <td class="e">
+                            <label class="custom-checkbox-label">
+                                <input type="checkbox" class="add-player captain" @captainChecked data-player-id="@item.PlayerId" data-club-type-id="2" data-main-staff="true" data-captain="true">
+                                <span class="check-mark" style="border-radius: 15px; background-color:#16b00b; border: 2px solid #0ea604;"></span>
+                            </label>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@*<div class="row" style="margin-top: 30px;">
+    <div class="btn-group col-md-4 col-md-offset-4">
+
+        @if (ViewBag.ClubMatchConfirm)
+        {
+            <a style="width: 100%" class="btn bg-grey-400 btn-labeled">
+                <b><i class="icon-check2"></i></b> <span>Siyahını təsdiqlə</span>
+            </a>
+        }
+        else
+        {
+            <a href="#" id="confirm-match" style="width: 100%" class="btn bg-primary-400 btn-labeled confirm-match" data-match-id="@(ViewBag.MatchId)">
+                <b><i class="icon-checkbox-unchecked2"></i></b> <span>Siyahını təsdiqlə</span>
+            </a>
+        }
+
+
+    </div>
+</div>*@
+
+
+
+
+
+<script>
+        var addPlayerJson = {
+            "MatchId": @ViewBag.MatchId,
+            "PlayerId": 0,
+            "MainStaff": true,
+            "Captain": false,
+            "PlayerClubTypeId": 0,
+            "AddStatus":false
+    };
+
+
+    var limit = {
+        "Limit11Count":@limit.Limit11Count,
+        "LimitLegionerCount":@limit.LimitLegionerCount,
+        "LimitYoungCount":@limit.LimitYoungCount
+    };
+
+    $(".add-player").change(function () {
+
+        var checkbox = $(this);
+
+        var playerId = checkbox.data("player-id");
+        var mainStaffId = checkbox.data("main-staff") ? 1 : 0;
+        var clubTypeId = checkbox.data("club-type-id");
+        var isCaptain = null != checkbox.data("captain");
+        var addStatus = checkbox.prop("checked");
+
+        addPlayerJson.PlayerId = playerId;
+        addPlayerJson.MainStaff = checkbox.data("main-staff");
+        addPlayerJson.PlayerClubTypeId = clubTypeId;
+        addPlayerJson.AddStatus = addStatus;
+        addPlayerJson.Captain = isCaptain;
+
+
+        //if (limit.Limit11Count === 11 && addPlayerJson.MainStaff && addPlayerJson.AddStatus) {
+        //    checkbox.prop("checked", false);
+        //    swal({
+        //        title: "Məlumat!",
+        //        text: "Əsas heyyətə 11 oyunçudan artıq seçilə bilməz.",
+        //        icon: "warning"
+        //    });
+        //    return;
+        //}
+
+
+        $.ajax({
+                    type: "POST",
+                    url: "/Club/AddMatchPlayer",
+                    dataType: 'json',
+                    data: JSON.stringify(addPlayerJson),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.ok) {
+
+                            if (addPlayerJson.MainStaff === true && addPlayerJson.AddStatus) {
+                                limit.Limit11Count++;
+                            }
+                            if (!addPlayerJson.AddStatus) {
+                                limit.Limit11Count--;
+                            }
+
+                            if (isCaptain) {
+                                $("#section" + clubTypeId + mainStaffId + "-" + playerId).prop('checked', addStatus);
+                                $(".captain").prop('checked', false);
+                                checkbox.prop('checked', true);
+
+                            }
+
+
+                        } else {
+                            checkbox.prop("checked", false);
+                            swal({
+                                title: "Xəta!",
+                                text: response.error,
+                                icon: "warning"
+                            });
+                        }
+                    },
+                    error: function () {
+                        swal({
+                            title: "Xəta!",
+                            icon: "warning"
+                        });
+                    }
+                });
+            });
+
+
+    $(".add-captain-player").change(function () {
+
+        var checkboxCaptain = $(this);
+
+        $.ajax({
+            type: "GET",
+            url: "/Club/AddCaptain?matchId=@(ViewBag.MatchId)&playerId="+$(this).data("player-id"),
+            success: function (response) {
+                if (response.ok) {
+
+                    $(".add-captain-player").prop('checked', false);
+                    checkboxCaptain.prop('checked', true);
+
+                } else {
+                    checkboxCaptain.prop("checked", false);
+                    swal({
+                        title: "Xəta!",
+                        text: response.error,
+                        icon: "warning"
+                    });
+                }
+            },
+            error: function () {
+                swal({
+                    title: "Xəta!",
+                    icon: "warning"
+                });
+            }
+        });
+    });
+
+
+
+</script>
+
+
+

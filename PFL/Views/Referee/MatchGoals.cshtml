@@ -1,0 +1,142 @@
+﻿@model IEnumerable<PFL.Models.ViewModels.RefereeMatchGoalsViewModel>
+@{
+    ViewBag.Title = "Qollar";
+    Layout = "";
+    int rowNumber = 0;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+
+<div class="row">
+    <div class="col-md-2 col-md-offset-10">
+        <button type="button" class="btn btn-primary alpaca-float-right goal-form-modal">+ Qol əlavə et</button>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered" id="tbl-match-goals">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ad, soyad</th>
+                <th>Komanda</th>
+                <th>Vaxt</th>
+                <th>Hesab</th>
+                <th>Vəziyyət – standart, penalti, avtoqol</th>
+                <th>Əməliyyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+
+                <tr id="match-goal-row-@(item.Id)">
+                    <td>@rowNumber</td>
+                    <td>@item.PlayerNumber - @item.PlayerFirstName @item.PlayerLastName</td>
+                    <td>@item.ClubName</td>
+                    <td>@item.Minute @(item.MinutePlus != null && item.MinutePlus != 0 ? " + " + item.MinutePlus : "")</td>
+                    <td></td>
+                    <td>@item.GoalTypeName</td>
+                    @*@TableHelper.OperationButtonDelete("Referee", item.Id, "remove-goal", "DeleteGoal")*@
+                    <td class="text-center">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-6">
+                                <a data-href="/@(baseUrl)/EditMatchGoal?Id=@(item.Id)&matchId=@(item.MatchId)" class="goal-form-modal"><i class="icon-pencil7 text-primary-600"></i></a>
+                            </div>
+                            <div class="col-md-6">
+                                <a data-href="/@(baseUrl)/DeleteMatchGoal?Id=@(item.Id)&matchId=@(item.MatchId)" class="remove-goal"><i class="icon-trash text-danger-600"></i></a>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@Swal.DeleteWithClass("remove-goal", "Silinsin?", "", "/Referee/DeleteGoal", null, "match-goal-row-")
+
+
+
+
+<!-- Add-Modal -->
+<div class="modal fade" id="goal-modal" tabindex="-1" role="dialog" aria-labelledby="goal-modal-label" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="goal-modal-label">Yeni qolun əlavə edilməsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="goal-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#form-save').on('click', function (e) {
+        e.preventDefault();
+
+        var _url = "/Referee/AddMatchGoal";
+
+        if ($('#match-goal-form').find('#Id').val() != null) {
+            _url = "/Referee/EditMatchGoal";
+        }
+
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: $('#match-goal-form').serialize(),
+            success: function (response) {
+
+                if (response.ok) {
+                    $("#goal-modal").modal('toggle');
+                    //matchGoalRow(response.Id);
+                    window.location.reload();
+                } else {
+                    $("#validation-message").html(response.error);
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+
+
+
+
+    $('#edit-form-save').on('click', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "/Referee/EditMatchGoal",
+            data: $('#match-goal-form').serialize(),
+            success: function (response) {
+
+                if (response.ok) {
+                    $("#edit-goal-modal").modal('toggle');
+                    matchGoalRow(response.Id);
+                } else {
+                    $("#validation-message").html(response.error);
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+</script>

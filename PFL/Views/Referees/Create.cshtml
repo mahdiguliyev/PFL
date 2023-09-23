@@ -1,0 +1,102 @@
+﻿@model PFL.Entities.EntityModels.Referee
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Hakim, nümayəndə, inspektor")
+
+    <div class="panel-body">
+        @*<p class="content-group-lg">Yeni rayonun(şəhərin) əlavə edilməsi</p>*@
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal col-md-6 col-md-offset-3" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model?.Id??0)" />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RefereeTypeId, "Tip", new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("RefereeTypeId", null, new { @class = "form-control select-size-lg", data_placeholder = "Seçim edin" })
+
+                        @Html.ValidationMessageFor(model => model.RefereeTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, "Ad", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, "Soyad", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FatherName, "Ata adı", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.FatherName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Grade, "Dərəcə", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        <select class="form-control select" id="Grade" name="Grade">
+                            @*<option value="I/D" @(Model?.Grade == "I/D" ? "selected" : "")>I/D</option>
+                            <option value="FİFA" @(Model?.Grade == "FİFA" ? "selected" : "")>FİFA</option>
+                            <option value="M/D" @(Model?.Grade == "M/D" ? "selected" : "")>M/D</option>
+                            <option value="I" @(Model?.Grade == "I" ? "selected" : "")>I</option>*@
+
+                            <option value="I/D" @(Model?.Grade == "Elit" ? "selected" : "")>Elit</option>
+                            <option value="FİFA" @(Model?.Grade == "I/D" ? "selected" : "")>I/D</option>
+                            <option value="M/D" @(Model?.Grade == "II/D" ? "selected" : "")>II/D</option>
+                            <option value="I" @(Model?.Grade == "III/D" ? "selected" : "")>III/D</option>
+                        </select>
+
+                        @*@Html.EditorFor(model => model.Grade, new { htmlAttributes = new { @class = "form-control" } })*@
+                        @Html.ValidationMessageFor(model => model.Grade, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DistrictId, "Region", new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("DistrictId", null, new { @class = "form-control select-size-lg", data_placeholder = "Seçim edin" })
+
+                        @Html.ValidationMessageFor(model => model.DistrictId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>

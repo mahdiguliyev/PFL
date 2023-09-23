@@ -1,0 +1,121 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Views.VPlayerPenalty>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+
+    int seasonId = ViewBag.SeasonId ?? 22;
+}
+
+
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Futbolçu cərimələri</h5>
+            <div class="heading-elements">
+                <div class="btn-group">
+                    <a href="/@(baseUrl)/CustomCreate" type="button" class="btn bg-primary-400 btn-labeled"><b><i class="icon-add"></i></b> <span>Yeni</span></a>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <td>#</td>
+                    <th>Turnir</th>
+                    <th>Tur</th>
+                    <th>Klub</th>
+                    <th><input type="text" id="player-name" class="form-control input-xlg" placeholder="Futbolçu" value="@(ViewBag.PlayerNameSearchText)"></th>
+                    <th>Kart</th>
+                    <th>Buraxılmalı oyun</th>
+                    <th>Cərimənin ödənilməsi</th>
+                    <th>Admin təsdiqi</th>
+                    <th class="text-center">Əməliyyatlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    rowNumber++;
+                    <tr>
+                        <td>@rowNumber</td>
+                        <td>@item.TournamentName</td>
+                        <td>@item.TourNumber</td>
+                        <td>@item.ClubName</td>
+                        <td>@item.PlayerFirstName @item.PlayerLastName</td>
+                        <td>
+                            @if (item.CardTypeId != null)
+                            {
+                                <text>@item.CardTypeName</text>
+                            }
+                            else
+                            {
+                                <text>@item.PenaltyReason</text>
+                            }
+                        </td>
+                        <td>@item.PassMatchCount</td>
+                        <td>
+                            <span class="label label-@(item.Payed ? "success" : "danger")">@(item.Payed ? "Ödənilmiş" : "Ödənilməmiş")</span>
+                        </td>
+                        <td class="text-center">
+                            <span><b>@item.PenaltyPriceAmount</b> AZN</span>
+                            <br />
+                            <span class="label label-@(item.AdminReview ? "success" : "danger")">@(item.AdminReview ? "Təsdiqlənmiş" : "Təsdiqlənməmiş")</span>
+                        </td>
+                        <td class="text-center">
+                            <ul class="icons-list">
+                                @if (!item.AdminReview)
+                                {
+                                    <li class="text-primary-600"><a href="/@(baseUrl)/@(item.IsManual ? "Custom": "")Edit?Id=@item.Id"><i class="icon-pencil7"></i></a></li>
+                                    <li class="text-danger-600"><a href="/@(baseUrl)/Delete?Id=@item.Id"><i class="icon-trash"></i></a></li>
+                                }
+                                else
+                                {
+                                    string payUrl = item.Payed ? "#" : "/" + baseUrl + "/SetAsPayed/?id=" + item.Id;
+
+                                    <li class="text-primary-600"><a href="/@(baseUrl)/EditAfterConfirm?Id=@item.Id"><i class="icon-pencil7"></i></a></li>
+
+                                    <li class="text-primary-600">
+                                        <a href="@(payUrl)" class="btn btn-primary btn-labeled btn-xs text-white">
+                                            @if (!item.Payed)
+                                            {
+                                                <b><i class="icon-checkbox-unchecked2"></i></b>
+                                                <span>Ödənişi təsdiqilə</span>
+                                            }
+                                            else
+                                            {
+                                                <b><i class="icon-check"></i></b>
+                                                <span>Ödəniş təsdiqlənmişdir</span>
+                                            }
+
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="datatable-footer">
+            <div class="dataTables_paginate">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, seasonId }))
+            </div>
+        </div>
+    </div>
+
+@section footer{
+
+    <script>
+        $('#player-name').keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                window.location.href = "/PlayerPenalties/Index?playerName=" + $(this).val();
+            }
+        });
+    </script>
+}

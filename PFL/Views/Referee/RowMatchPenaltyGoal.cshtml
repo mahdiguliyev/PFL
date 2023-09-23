@@ -1,0 +1,26 @@
+﻿@model PFL.Models.ViewModels.RefereeMatchPenaltyGoalsViewModel
+   
+@{
+    Layout = null;
+}
+
+<tr id="match-penalty-goal-row-@(Model.Id)">
+    <td></td>
+    <td>@Model.PlayerNumber - @Model.PlayerFirstName @Model.PlayerLastName</td>
+    <td>@Model.ClubName</td>
+    <td>@Model.PenaltyOrder</td>
+    <td></td>
+    <td>@Model.GoalTypeName</td>
+    @*@TableHelper.OperationButtonDelete("Referee", Model.Id, "remove-goal", "DeleteGoal")*@
+    <td class="text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6">
+                <a data-href="/Referee/EditMatchGoal?Id=@(Model.Id)&matchId=@(Model.MatchId)" class="goal-form-modal"><i class="icon-pencil7 text-primary-600"></i></a>
+            </div>
+            <div class="col-md-6">
+                <a data-href="/Referee/DeleteMatchGoal?Id=@(Model.Id)&matchId=@(Model.MatchId)" class="remove-goal"><i class="icon-trash text-danger-600"></i></a>
+            </div>
+
+        </div>
+    </td>
+</tr>

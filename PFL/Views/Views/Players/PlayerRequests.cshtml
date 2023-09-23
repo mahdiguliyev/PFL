@@ -1,0 +1,89 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.ClubPlayerRequest>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Yeni oyunçu sifarişləri</h5>
+        <div class="heading-elements">
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>#</td>
+                <th style="width:5%">Şəkil</th>
+                <th>
+                    <input type="text" id="player-name" class="form-control input-xlg" placeholder="Nömrə - A.S.A." value="@(ViewBag.PlayerNameSearchText)">
+                </th>
+                <td>Müraciət edən klub</td>
+
+                <th>Hansı klubdan</th>
+                <th>Status</th>
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>
+                        <div class="media-left media-middle">
+                            <a href="#"><img src="@(item.PlayerPhotoUrl)" class="img-circle img-xs" alt=""></a>
+                        </div>
+                    </td>
+
+                    <td>@item.PlayerFirstName @item.PlayerLastName @item.PlayerFatherName</td>
+                    <td>@item.RequestClub.Name</td>
+                    <td>@(item.FromClub != null ? item.FromClub.Name : item.FromClubName)</td>
+                    <td>
+                        @if (item.Rejected && !item.ClubConfirm)
+                        {
+                            <span class="label label-danger">İmtina edilmiş</span>
+                        }
+                        else if (item.OperatorConfirm)
+                        {
+                            <span class="label label-success">Təsdiqlənmiş</span>
+                        }
+                        else
+                        {
+                            <span class="label label-danger">Təsdiq gözləyən</span>
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a type="button" href="/Players/PlayerRequestDetail?id=@(item.Id)" class="btn btn-primary btn-icon"><i class="icon-info3"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("PlayerRequests", new { clubId = ViewBag.ClubId, page, ViewBag.SeasonId }))
+        </div>
+    </div>
+</div>
+
+
+
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+
+    <script>
+        $('#player-name').keypress(function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                window.location.href = "/Players/PlayerRequests?@(ViewBag.ClubId != null ? "clubId="+ ViewBag.ClubId : "")&playerName=" + $(this).val();
+            }
+        });
+    </script>
+}

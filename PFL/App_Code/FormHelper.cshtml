@@ -1,0 +1,42 @@
+﻿@helper CreateFormHeader(string headerName, string url="Index")
+{
+    // your helper can contain code and/or markup, e.g.
+    // var msg = "Hello " + name;
+    // <p>@msg</p>
+    // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
+
+
+    <div class="panel-heading">
+        <h5 class="panel-title">@headerName</h5>
+        <div class="heading-elements">
+            @*<ul class="icons-list">
+                <li>*@
+                    <div class="btn-group" style="width: 100%">
+                        <a href="@url" type="button" class="btn bg-teal-400 btn-labeled"><b><i class="icon-backward2"></i></b> <span>Siyahıya qayıt</span></a>
+                    </div>
+                @*</li>
+            </ul>*@
+        </div>
+    </div>
+    <hr />
+}
+
+@helper ListFormHeader(string headerName, string createBtnName, string createUrl = "Create")
+{
+    // your helper can contain code and/or markup, e.g.
+    // var msg = "Hello " + name;
+    // <p>@msg</p>
+    // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
+
+
+    <div class="panel-heading">
+        <h5 class="panel-title">@headerName</h5>
+        <div class="heading-elements">
+            <div class="btn-group">
+                <a href="@createUrl" type="button" class="btn bg-primary-400 btn-labeled"><b><i class="icon-add"></i></b> <span>@createBtnName</span></a>
+            </div>
+            
+        </div>
+    </div>
+    <br/>
+}

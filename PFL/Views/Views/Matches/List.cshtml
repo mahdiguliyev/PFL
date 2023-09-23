@@ -1,0 +1,355 @@
+﻿@model IEnumerable<PFL.Models.DTO.AdminMatchListDto>
+@{
+    Layout = null;
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;//(Model.PageNumber - 1) * Model.PageSize;
+    DateTime currentDate = DateTime.Now;
+}
+
+<style>
+    a.custom-button {
+        padding: 1px !important;
+    }
+
+    .fa-document-color {
+        color: #0084ed;
+    }
+</style>
+
+
+<div class="panel-body">
+    <div class="tabbable">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8"></div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary alpaca-float-right" data-toggle="modal" data-target="#match-modal" data-backdrop="static" data-keyboard="false">+ Yeni matç</button>
+            </div>
+        </div>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tur@(ViewBag.TourNumber)">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tbl-matches">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Klub (ev)</th>
+                                    <th>Protokolun son<br />təsdiqlənmə <br />tarixi (ev)</th>
+                                    <th>Qol</th>
+                                    <th>Qol</th>
+                                    <th>Protokolun son<br />təsdiqlənmə <br />tarixi (qonaq)</th>
+                                    <th>Klub</th>
+                                    <th>Oyunun vaxtı</th>
+                                    <th>Protokolun son<br />təsdiqlənmə <br />tarixi (<b>hakim</b>)</th>
+                                    <th>Protokol</th>
+                                    <th>Əməliyyat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @{ rowNumber = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    if (item != null)
+                                    {
+                                        <tr id="match-row-@(item.Id)">
+                                            <td>@rowNumber</td>
+                                            <td>@(item?.HomeClubName)</td>
+                                            <td>
+                                                @{
+                                                    if (item.HomeClubConfirm != null && item.HomeClubConfirm.Value)
+                                                    {
+
+                                                        if (item.HomeClubConfirmedDate != null && item.HomeClubConfirmedDate.Value > item.HomeClubConfirmedDate.Value.AddMinutes(-75))
+                                                        {
+                                                            <span style="color:red"><b>@(item?.HomeClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            @(item?.HomeClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                                                        }
+
+                                                        <a data-match-id="@item.Id" data-club-id="@item.HomeClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+
+                                                    }
+                                                    else if (currentDate.AddMinutes(75) > item.MatchDate)
+                                                    {
+                                                        if (!item.HomeClubExpConfirmAllow)
+                                                        {
+                                                            <span style="color:red"><b>Təsdiqləmə gecikmişdir.</b></span>
+                                                            <a data-match-id="@item.Id" data-club-id="@item.HomeClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td>@item.HomeClubScore</td>
+                                            <td>@item.GuestClubScore</td>
+                                            <td>
+                                                @{
+                                                    if (item.GuestClubConfirm != null && item.GuestClubConfirm.Value)
+                                                    {
+
+                                                        if (item.GuestClubConfirmedDate != null && item.GuestClubConfirmedDate.Value > item.GuestClubConfirmedDate.Value.AddMinutes(-75))
+                                                        {
+                                                            <span style="color:red"><b>@(item?.GuestClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            @(item?.GuestClubConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                                                        }
+
+                                                        <a data-match-id="@item.Id" data-club-id="@item.GuestClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+
+                                                    }
+                                                    else if (currentDate.AddMinutes(75) > item.MatchDate)
+                                                    {
+                                                        if (!item.GuestClubExpConfirmAllow)
+                                                        {
+                                                            <span style="color:red"><b>Təsdiqləmə gecikmişdir.</b></span>
+                                                            <a data-match-id="@item.Id" data-club-id="@item.GuestClubId" class="btn btn-primary access-club-orders">Redaktə</a>
+                                                        }
+                                                    }
+                                                }
+                                            </td>
+                                            <td>@(item?.GuestClubName)</td>
+                                            <td>@(item?.MatchDate?.ToString("dd.MM.yyyy HH:mm"))</td>
+                                            <td>
+                                                @{
+                                                    if (item.RefereeConfirmedDate.HasValue)
+                                                    {
+                                                        if (item.RefereeConfirmedDate.Value > item.RefereeConfirmedDate.Value.AddMinutes(-75))
+                                                        {
+                                                            <span style="color:red"><b>@(item?.RefereeConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))</b></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            @(item?.RefereeConfirmedDate?.ToString("dd.MM.yyyy HH:mm"))
+                                                        }
+                                                    }
+
+                                                    if (item.RefereeConfirm)
+                                                    {
+                                                        <a data-match-id="@item.Id" class="btn btn-primary access-referee-edit">Redaktə</a>
+                                                    }
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="document-modal-trigger" data-match-id="@(item.Id)" href="#" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><i class="fas fa-2x fa-file-alt fa-document-color"></i></a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="match-modal-trigger" data-match-id="@(item.Id)" href="#" data-toggle="modal" data-target="#match-modal" data-backdrop="static" data-keyboard="false"><i class="icon-pencil7 text-primary-600"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    rowNumber++;
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Protocol-Modal -->
+<div class="modal fade" id="document-modal" tabindex="-1" role="dialog" aria-labelledby="document-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="document-modal-label">Protokol</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="document-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                    <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="match-modal" tabindex="-1" role="dialog" aria-labelledby="match-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="match-modal-label">YENİ MATÇ</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="match-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="add-match-form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    $(".access-referee-edit").on('click',
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            $.ajax({
+                url: "/Matches/AccessRefereeEdit?matchId="+$(this).data('match-id'),
+                method: "GET",
+                success: function (data) {
+                    if (data.ok) {
+                        location.reload();
+                    }
+                }
+            });
+
+        });
+
+    $(".access-club-orders").on('click',
+        function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            $.ajax({
+                url: "/Matches/AccessClubOrders?matchId="+$(this).data('match-id')+"&clubId="+$(this).data('club-id'),
+                method: "GET",
+                success: function (data) {
+                    if (data.ok) {
+                        location.reload();
+                    }
+                }
+            });
+
+        });
+
+
+    $(".document-modal-trigger").click("click",
+
+        function () {
+
+            var matchId = this.getAttribute('data-match-id');
+
+            var _url = "/Tournaments/MatchDocument?matchId="+matchId;
+
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    $("#document-modal-body").html(data);
+                }
+            });
+
+
+            $('#document-modal').trigger();
+        });
+
+
+    //$('#document-modal').on('show.bs.modal',
+    //    function (event) {
+
+    //        var _url = "/Tournaments/MatchDocument?matchId=1";
+
+
+    //        $.ajax({
+    //            url: _url,
+    //            method: "GET",
+    //            success: function(data) {
+    //                $("#document-modal-body").html(data);
+    //            }
+    //        });
+    //    });
+
+
+
+
+    $('#match-modal').on('show.bs.modal',
+        function (event) {
+
+            var _url = "/Matches/Create?tournamentId=@(ViewBag.TournamentId)&tourNumber=@(ViewBag.TourNumber)";
+
+            var matchId = $(event.relatedTarget).data('match-id');
+            if (matchId) {
+                _url += '&matchId=' + matchId;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#match-modal-body").html(data);
+                }
+            });
+        });
+
+
+    $('#add-match-form-save').on('click', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "/Matches/Create",
+            data: $('#add-match-form').serialize(),
+            success: function(response) {
+                if (response.ok) {
+                    $("#match-modal").modal('toggle');
+                    matchRow(response.Id);
+                } else {
+                    //write validations
+                    $("#validation-message").html(response.error);
+                }
+            },
+            error: function() {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+
+
+    function matchRow(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Matches/Row?matchId=" + id,
+            success: function (response) {
+
+                if ($("#match-row-" + id).length>0) {
+                    ($("#match-row-" + id).replaceWith(response));
+                } else {
+                    if ($("#tbl-matches tbody tr").length === 0) {
+                        $("#tbl-matches tbody").html(response);
+                    }
+                    else {
+                        $("#tbl-matches tbody tr:first").before(response);
+                    }
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+</script>

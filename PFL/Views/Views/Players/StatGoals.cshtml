@@ -1,0 +1,53 @@
+﻿@using PFL.Entities.EntityModels
+@using PFL.Models.ViewModels
+@model  IEnumerable<PFL.Entities.EntityModels.ProcModels.PlayerStatGoal>
+
+@{
+    Layout = null;
+    PlayerInfo playerInfo = ViewBag.PlayerInfo;
+    Tournament tournamentInfo = ViewBag.TournamentInfo;
+    int rowNumber = 0;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+
+        <div class="media">
+            <div class="media-body">
+                <h6 class="media-heading">@playerInfo.FirstName @playerInfo.LastName  - <b>Qollar üzrə statistika</b></h6>
+                <p class="text-muted">@tournamentInfo.Name (@tournamentInfo.SeasonStartYear - @tournamentInfo.SeasonEndYear)</p>
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Tur</th>
+            <th>Oyunlar</th>
+            <th>Dəqiqə</th>
+            <th>Komanda</th>
+            <th>Qollar</th>
+            <th>Tarix</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            rowNumber++;
+            <tr>
+                <td>@rowNumber</td>
+                <td>@item.TourNumber</td>
+                <td>@item.HomeClubName  @item.HomeClubScore - @item.GuestClubScore  @item.GuestClubName</td>
+                <td>@item.GoalMinute @(item.GoalMinutePlus != 0 ? "+ " + item.GoalMinutePlus : "")</td>
+                <td>@item.ClubName</td>
+                <td>@item.GoalTypeName</td>
+                <td>@(item.MatchDate?.ToString("dd.MM.yyyy HH:mm"))</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

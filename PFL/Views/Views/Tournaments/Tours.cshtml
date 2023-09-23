@@ -1,0 +1,80 @@
+﻿@model PFL.Models.ViewModels.ToursViewModel
+@{
+    Layout = null;
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+}
+
+<style>
+    a.custom-button {
+        padding: 1px !important;
+    }
+</style>
+
+<div class="panel-body">
+    <div class="tabbable">
+        <ul class="nav nav-tabs nav-tabs-solid nav-tabs-component nav-justified">
+
+            @foreach (var tour in Model.TourNumbers)
+            {
+                <li class="tour @(tour.TourNumber == Model.CurrentTourNumber ? "active" : "")">
+                    <a href="#tur@(tour.TourNumber)" data-toggle="tab" class="custom-button">@(string.IsNullOrEmpty(tour.TourLabel) ? tour.TourNumber.ToString() : tour.TourLabel)</a>
+                </li>
+            }
+        </ul>
+        
+        
+        <div class="row" id="tour-content-body">
+            @Html.Action("List", "Matches", new { tournamentId = Model.TournamentId, tourNumber = Model.CurrentTourNumber })
+        </div>
+        
+
+    </div>
+</div>
+
+
+
+@* <!-- Modal --> *@
+@* <div class="modal fade" id="match-modal" tabindex="-1" role="dialog" aria-labelledby="match-modal-label" aria-hidden="true"> *@
+@*     <div class="modal-dialog" role="document"> *@
+@*         <div class="modal-content"> *@
+@*             <div class="modal-header"> *@
+@*                 <h5 class="modal-title" id="exampleModalLabel">YENİ MATÇ</h5> *@
+@*                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"> *@
+@*                     <span aria-hidden="true">&times;</span> *@
+@*                 </button> *@
+@*             </div> *@
+@*             <div class="modal-body"> *@
+@* *@
+@*             </div> *@
+@*             <div class="modal-footer"> *@
+@*                 <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button> *@
+@*                 <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button> *@
+@*             </div> *@
+@*         </div> *@
+@*     </div> *@
+@* </div> *@
+
+<script>
+
+
+    $('.tour').on('click', function(e) {
+        //e.preventDefault();
+        var tourNumber = e.target.href.split('#')[1].replace('tur','');
+        
+        $.ajax({
+            type: "GET",
+            url: "/Matches/List?tournamentId="+$("#tournament-id").val()+"&tourNumber="+ tourNumber,
+            success: function (data) {
+                $('.tour').removeClass('active');
+                $(e.target).parent().addClass('active');
+                $("#tour-content-body").html(data);
+            },
+            error: function() {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+</script>

@@ -1,0 +1,385 @@
+﻿@model PFL.Models.ViewModels.RefereeMatchViewModel
+@{
+    ViewBag.Title = "Matç";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <div class="panel panel-flat">
+        <div class="panel-heading" style="height: 150px;">
+            <div class="col-md-10">
+                <h5 class="label border-left-primary label-striped">
+                    @Model.SeasonStartYear - @Model.SeasonEndYear @Model.TournamentName (@Model.TourNumber tur)
+                </h5>
+                <br />
+                <h5 class="label border-left-primary label-striped">
+                    @Model.HomeClubName - @Model.GuestClubName (tarix: @(Model.MatchDate?.ToString("dd.MM.yyyy HH:mm")))
+                </h5>
+            </div>
+            <div class="col-md-2" style="margin-top: 10px;">
+                <div class="btn-group dropup" style="width: 100%">
+                    <a href="#" type="button" style="width: 100%" class="btn bg-teal-400 btn-labeled document-modal-trigger" data-match-id="@(Model.MatchId)" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-file-text2"></i></b> <span>Protokol</span></a>
+                </div>
+                <p></p>
+                <div class="btn-group" style="width: 100%">
+                    <a href="#" id="confirm-match" style="width: 100%" class="btn bg-primary-400 btn-labeled confirm-match" data-match-id="@(Model.MatchId)">
+
+                        @if (ViewBag.RefereeConfirm)
+                        {
+                            <b>
+                                <i class="icon-check2"></i>
+                            </b> <span>Təsdiqlənib</span>
+                        }
+                        else
+                        {
+                            <b>
+                                <i class="icon-checkbox-unchecked2"></i>
+                            </b> <span>Təsdiqlə</span>
+                        }
+
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                    <li>
+                        <a href="#main-info" data-tab-id="main-info" data-toggle="tab" onclick="getMatchContent('main-info')">Əsas məlumatlar</a>
+                    </li>
+                    <li>
+                        <a href="#match-goals" data-tab-id="match-goals" data-toggle="tab" onclick="getMatchContent('match-goals')">Qollar</a>
+                    </li>
+                    <li>
+                        <a href="#player-shifts" data-tab-id="player-shifts" data-toggle="tab" onclick="getMatchContent('player-shifts')">Əvəzetmələr</a>
+                    </li>
+                    <li>
+                        <a href="#match-cards" data-tab-id="match-cards" data-toggle="tab" onclick="getMatchContent('match-cards')">Sarı, qırmızı vərəqələr</a>
+                    </li>
+                    <li>
+                        <a href="#match-notes" data-tab-id="match-notes" data-toggle="tab" onclick="getMatchContent('match-notes')">Klubların və hakimin qeydi</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane" id="main-info">
+                        @*@Html.Action("MatchMainInfo", "Referee", new { tournamentId = Model.MatchId })*@
+                    </div>
+                    <div class="tab-pane" id="match-goals">
+
+                    </div>
+                    <div class="tab-pane" id="player-shifts">
+
+                    </div>
+                    <div class="tab-pane" id="match-cards">
+
+                    </div>
+                    <div class="tab-pane" id="match-notes">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Protocol-Modal -->
+<div class="modal fade" id="document-modal" tabindex="-1" role="dialog" aria-labelledby="document-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="document-modal-label">Protokol</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="document-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                    <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<input type="hidden" id="match-id" value="@Model.MatchId" />
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <script>
+
+        var matchId = @Model.MatchId;
+
+        function getMatchContent(label) {
+
+            var _url;
+            switch (label) {
+            case 'main-info':
+                    _url = "/Referee/MatchMainInfo?matchId=" + matchId;
+                    window.location.hash = "#main-info";
+                    break;
+            case 'match-goals':
+                    _url = "/Referee/MatchGoals?matchId=" + matchId;
+                    window.location.hash = "#match-goals";
+                    break;
+            case 'player-shifts':
+                    _url = "/Referee/PlayerShifts?matchId=" + matchId;
+                    window.location.hash = "#player-shifts";
+                    break;
+            case 'match-cards':
+                    _url = "/Referee/MatchCards?matchId=" + matchId;
+                    window.location.hash = "#match-cards";
+                    break;
+            case 'match-notes':
+                    _url = "/Referee/MatchNotes?matchId=" + matchId;
+                    window.location.hash = "#match-notes";
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+        setTimeout(function() {
+                var activeTab = window.location.href.split('#')[1];
+                var tab;
+                if (activeTab) {
+                    tab = $("li").find("[data-tab-id='" + activeTab + "']");
+
+                    if (tab.length === 0) {
+                        tab = $("li").find("[data-tab-id='main-info']");
+                    }
+                } else {
+                    tab = $("li").find("[data-tab-id='main-info']");
+                }
+                tab.click();
+            },
+            100);
+
+
+
+
+
+
+
+
+        $(".document-modal-trigger").click("click",
+
+            function () {
+
+                var matchId = this.getAttribute('data-match-id');
+
+                var _url = "/Tournaments/MatchDocument?matchId="+matchId;
+
+
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#document-modal-body").html(data);
+                    }
+                });
+
+
+                $('#document-modal').trigger();
+            });
+
+        $(".confirm-match").click(function() {
+
+            swal("Qeydlər təsdiqlənsin?", {
+                    buttons: {
+                        cancel: "İmtina",
+                        confirm: "Təsdiqlə"
+                    }
+                })
+                .then((value) => {
+                    if (value) {
+
+                        $.ajax({
+                            url: "/Referee/ConfirmMatch?matchId=" + $(this).data("match-id"),
+                            method: "GET",
+                            success: function (data) {
+
+                                if (data.Status === 0) {
+                                    swal({
+                                        title: data.Note,
+                                        icon: "warning"
+                                    });
+                                } else {
+                                    $("#confirm-match").html('<b><i class="icon-check2"></i></b> <span>Təsdiqlənib</span>');
+
+                                    swal("Təsdiqləndi.");
+                                }
+                            }
+                        });
+
+                    }
+                });
+        });
+
+
+
+
+
+
+
+
+
+        $(document).on('click', '.player-shift-form-modal',
+        function (event) {
+
+
+            var _url = "/Referee/AddPlayerShift?matchId=" + $("#match-id").val();
+
+            if ($(this).data('href') != null) {
+                _url = $(this).data('href');
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    if (data.ok && !data.ok) {
+
+                        swal(data.error, { icon: "error" });
+                        return false;
+                    }
+
+                    $("#player-shift-modal-body").html(data);
+                    $("#player-shift-modal").modal('toggle');
+
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $(document).on('click', '.card-modal',
+        function (event) {
+
+
+            var _url = "/Referee/AddMatchCard?matchId=" + $("#match-id").val();
+
+            if ($(this).data('href') != null) {
+                _url = $(this).data('href');
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    if (data.ok && !data.ok) {
+
+                        swal(data.error, { icon: "error" });
+                        return false;
+                    }
+
+                    $("#card-modal-body").html(data);
+                    $("#card-modal").modal('toggle');
+
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+        $(document).on('click', '.goal-form-modal',
+        function (event) {
+
+
+            var _url = "/Referee/AddMatchGoal?matchId=" + $("#match-id").val();
+
+            if ($(this).data('href') != null) {
+                _url = $(this).data('href');
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    if (data.ok && !data.ok) {
+
+                        swal(data.error, { icon: "error" });
+                        return false;
+                    }
+
+                    $("#goal-modal-body").html(data);
+                    $("#goal-modal").modal('toggle');
+
+                }
+            });
+        });
+
+
+
+
+
+
+
+
+
+    function matchGoalRow(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Referee/RowMatchGoal?id=" + id,
+            success: function (response) {
+
+                if ($("#match-goal-row-" + id).length > 0) {
+                    ($("#match-goal-row-" + id).replaceWith(response));
+                } else {
+                    if ($("#tbl-matches-goals tbody tr").length === 0) {
+                        $("#tbl-matches-goals tbody").html(response);
+                    }
+                    else {
+                        $("#tbl-matches-goals tbody tr:first").before(response);
+                    }
+                }
+
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+
+
+
+    </script>
+}

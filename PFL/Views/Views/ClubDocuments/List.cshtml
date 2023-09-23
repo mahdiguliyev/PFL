@@ -1,0 +1,127 @@
+﻿@model List<PFL.Models.DTO.ClubDocumentDto>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-lg">
+
+        @foreach (var item in Model)
+        {
+            string fileInputClassName = "club-document-new";
+            <tr id="document-name-row-@(item.DocumentNameId)">
+                <td class="col-md-3">
+                    @item.DocumentName
+                    @if(item.Rejected != null && item.Rejected.Value)
+                    {
+                        <br/>
+                        <br/>
+                        <b>İmtina səbəbi: </b><span style="color:red">@item.RejectionNote</span>
+                    }
+                </td>
+
+                <td class="col-md-1">
+                    @if (string.IsNullOrEmpty(item.FilePath))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else if (item.ClubConfirm.Value && !item.OperatorConfirm.Value && !item.Rejected.Value)
+                    {
+                        <span class="label label-warning">TƏSDİQƏ GÖNDƏRİLİB</span>
+                    }
+                    else if (item.ClubConfirm.Value && item.OperatorConfirm.Value && !item.Rejected.Value)
+                    {
+                        <span class="label label-success">TƏSDİQLƏNİB</span>
+                    }
+                    else if (!item.ClubConfirm.Value && !item.OperatorConfirm.Value && item.Rejected.Value)
+                    {
+                        <span class="label label-danger">İMTİNA EDİLİB</span>
+                    }
+                </td>
+                <td class="col-md-1">
+                    @if (!string.IsNullOrEmpty(item.FilePath))
+                    {
+                        <a href="@item.FilePath" target="_blank">@(item.FileName)</a>
+                    }
+                </td>
+                <td class="col-md-6">
+                    @Html.TextBox(item.Label, null, new { @class = fileInputClassName, type = "file", name = "Files", data_show_preview = "false", data_file_id = 5, data_document_name_id = item.DocumentNameId, data_document_id = item.DocumentId })
+                </td>
+                <td class="col-md-1"></td>
+            </tr>
+        }
+    </table>
+</div>
+<input type="hidden" id="club-type" value="@(ViewBag.ClubType)"/>
+
+<script>
+
+    $(document).ready(function () {
+
+        var clubType = @(ViewBag.ClubType);
+
+
+        var fileUploadUrl = '';
+
+        @foreach (var item in Model)
+        {
+            <text>
+                fileUploadUrl = "/ClubDocuments/UploadDocument?documentNameId=" + $("#@(item.Label)").data('document-name-id');
+            </text>
+
+            if (item.DocumentId != null) {
+                <text>
+                    fileUploadUrl +='&documentId='+@item.DocumentId;
+                </text>
+            }
+
+            <text>
+
+                $("#@(item.Label)").fileinput({
+                    browseLabel: 'Seçim edin',
+                    browseIcon: '<i class="icon-file-plus"></i>',
+                    uploadUrl: fileUploadUrl,
+                    uploadIcon: '<i class="icon-file-upload2"></i>',
+                    removeLabel: 'Ləğv et',
+                    removeIcon: '<i class="icon-cross3"></i>',
+                    layoutTemplates: {
+                        icon: '<i class="icon-file-check"></i>'
+                    },
+                    uploadLabel: 'Yüklə və göndər',
+                    uploadTitle: 'Seçilmiş faylı təsdiqə göndər',
+                    initialCaption: "Fayl seçilməyib",
+                    maxFilesNum: 10,
+                    maxFileSize: 25000,
+                    allowedFileExtensions: ["jpg", "png", "pdf"]
+        });
+
+
+
+                $("#@(item.Label)").on('fileuploaded', function(event, previewId, index, fileId) {
+                    //console.log(previewId.jqXHR.responseJSON.Id);
+                    setTimeout(function() {
+                        
+                        $.ajax({
+                            type: "GET",
+                            url: "/ClubDocuments/Row?clubType=" + clubType + '&documentId=' + previewId.jqXHR.responseJSON.Id,
+                            success: function (response) {
+
+                                $("#document-name-row-" + $("#@(item.Label)").data('document-name-id')).replaceWith(response);
+
+                            },
+                            error: function () {
+                                alert('Error');
+                            }
+                        });
+
+                    }, 1000);
+
+
+                });
+            </text>
+        }
+
+
+    });
+
+</script>

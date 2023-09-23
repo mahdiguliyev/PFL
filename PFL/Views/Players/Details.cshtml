@@ -1,0 +1,179 @@
+﻿@model PFL.Entities.EntityModels.Player
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Player</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Club.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Club.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Club1.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Club1.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractType.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContractType.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Position.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Position.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User1.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User1.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FatherName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FatherName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReversePlayer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsReversePlayer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FromClub)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FromClub)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractBeginDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContractBeginDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContractEndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContractEndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlayerNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhotoUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhotoUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

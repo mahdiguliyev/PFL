@@ -1,0 +1,90 @@
+﻿@using PFL.Entities.EntityModels
+@using PFL.Models.ViewModels
+@model  IEnumerable<PFL.Entities.EntityModels.ProcModels.PlayerStatMatch>
+
+@{
+    Layout = null;
+    PlayerInfo playerInfo = ViewBag.PlayerInfo;
+    Tournament tournamentInfo = ViewBag.TournamentInfo;
+    int rowNumber = 0;
+
+    bool isPdf = ViewBag.IsPdf ?? false;
+
+    var httpRequest = HttpContext.Current.Request;
+    var baseUrl = httpRequest.Url.Scheme + "://" + httpRequest.Url.Authority;
+}
+
+@if (!isPdf)
+{
+    <div style="width: 20%; float: right">
+        <div class="btn-group" style="width: 100%">
+            <a href="/Players/StatMainStaffPdf?playerId=@(ViewBag.PlayerId)&tournamentId=@(ViewBag.TournamentId)" target="_blank" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled" data-match-id="5783"><b><i class="icon-file-text2"></i></b> <span>PDF</span></a>
+        </div>
+    </div>
+    <br />
+    <br />
+}
+
+@if (isPdf)
+{
+    <link href="@(baseUrl)/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <style>
+        table {
+            page-break-inside: auto
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto
+        }
+
+        thead {
+            display: table-header-group;
+            display: table-header-group;
+        }
+
+        tfoot {
+            display: table-footer-group
+        }
+    </style>
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+
+        <div class="media">
+            <div class="media-body">
+                <h6 class="media-heading">@playerInfo.FirstName @playerInfo.LastName  - <b>İlk 11-lik statistikası</b></h6>
+                <p class="text-muted">@tournamentInfo.Name (@tournamentInfo.SeasonStartYear - @tournamentInfo.SeasonEndYear)</p>
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Tur</th>
+                <th>Oyunlar</th>
+                <th>Oyundan çıxıb</th>
+                <th>Komanda</th>
+                <th>Tarix</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>@item.TourNumber</td>
+                    <td>@item.HomeClubName  @item.HomeClubScore - @item.GuestClubScore  @item.GuestClubName</td>
+                    <td>@item.PlayerOutTime</td>
+                    <td>@item.ClubName</td>
+                    <td>@(item.MatchDate?.ToString("dd.MM.yyyy HH:mm"))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,117 @@
+﻿@helper OperationButtons(string baseUrl, int id, bool isDeleted = false, string delete = "Delete", string edit = "Edit")
+{
+    // your helper can contain code and/or markup, e.g.
+    // var msg = "Hello " + name;
+    // <p>@msg</p>
+    // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
+
+    <td class="text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6">
+                <a href="/@(baseUrl)/Edit?Id=@id"><i class="icon-pencil7 text-primary-600"></i></a>
+            </div>
+
+            @if (isDeleted)
+            {
+                <div class="col-md-6">
+                    <a href="/@(baseUrl)/Undo?Id=@id"><i class="fas fa-undo-alt"></i></a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-6">
+                    <a href="/@(baseUrl)/Delete?Id=@id"><i class="icon-trash text-danger-600"></i></a>
+                </div>
+            }
+        </div>
+    </td>
+}
+
+@helper OperationButtons(string baseUrl, long id, bool isDeleted = false, string delete = "Delete", string edit = "Edit")
+{
+    // your helper can contain code and/or markup, e.g.
+    // var msg = "Hello " + name;
+    // <p>@msg</p>
+    // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
+
+    <td class="text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6">
+                <a href="/@(baseUrl)/Edit?Id=@id"><i class="icon-pencil7 text-primary-600"></i></a>
+            </div>
+
+            @if (isDeleted)
+            {
+                <div class="col-md-6"><a href="/@(baseUrl)/Undo?Id=@id"><i class="fas fa-undo-alt"></i></a></div>
+            }
+            else
+            {
+                <div class="col-md-6">
+                    <a href="/@(baseUrl)/Delete?Id=@id"><i class="icon-trash text-danger-600"></i></a>
+                </div>
+            }
+        </div>
+    </td>
+}
+
+@helper OperationButtons(string baseUrl, Guid id, bool isDeleted = false, string delete = "Delete", string edit = "Edit")
+{
+    // your helper can contain code and/or markup, e.g.
+    // var msg = "Hello " + name;
+    // <p>@msg</p>
+    // For more information, visit https://go.microsoft.com/fwlink/?LinkID=204658
+
+    <td class="text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6">
+                <a href="/@(baseUrl)/Edit?Id=@id"><i class="icon-pencil7 text-primary-600"></i></a>
+            </div>
+
+            @if (isDeleted)
+            {
+                <div class="col-md-6">
+                    <a href="/@(baseUrl)/Undo?Id=@id"><i class="fas fa-undo-alt"></i></a>
+                </div>
+            }
+            else
+            {
+                <div class="col-md-6">
+                    <a href="/@(baseUrl)/Delete?Id=@id"><i class="icon-trash text-danger-600"></i></a>
+                </div>
+            }
+
+        </div>
+    </td>
+}
+
+
+@*@helper OperationButtonDelete(string baseUrl, int id, string deleteAction = "Delete")
+    {
+        <td class="text-center">
+            <ul class="icons-list">
+                <li class="text-danger-600"><a href="/@(baseUrl)/@(deleteAction)?Id=@id"><i class="icon-trash"></i></a></li>
+            </ul>
+        </td>
+    }*@
+
+@helper OperationButtonDelete(string baseUrl, long id, string className = "", string deleteAction = "Delete")
+{
+    <td class="text-center">
+        <ul class="icons-list">
+            <li class="text-danger-600">
+                <a class="@className" data-href="/@(baseUrl)/@(deleteAction)?Id=@id"><i class="icon-trash"></i></a>
+            </li>
+        </ul>
+    </td>
+}
+
+@helper OperationButtonDelete(string baseUrl, int id, string className = "", string deleteAction = "Delete")
+{
+    <td class="text-center">
+        <ul class="icons-list">
+            <li class="text-danger-600">
+                <a class="@className" data-href="/@(baseUrl)/@(deleteAction)?Id=@id"><i class="icon-trash"></i></a>
+            </li>
+        </ul>
+    </td>
+}

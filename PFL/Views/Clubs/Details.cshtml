@@ -1,0 +1,163 @@
+﻿@model PFL.Entities.EntityModels.Club
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Club</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.District.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.District.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User1.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User1.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LogoUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LogoUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationYear)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationYear)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Stadium)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Stadium)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StadiumCapacity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StadiumCapacity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StadiumPhotoUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StadiumPhotoUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Faks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Faks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WebSite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WebSite)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClubPresident)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClubPresident)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDeleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDeleted)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

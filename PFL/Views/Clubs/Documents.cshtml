@@ -1,0 +1,203 @@
+﻿@model PFL.Entities.EntityModels.Club
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int ClubTournamentTypeId = ViewBag.ClubTournamentTypeId;
+}
+
+
+
+
+
+
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klubun sənədləri - <b>@Model.Name</b></h5>
+
+    </div>
+
+    <div class="panel-body">
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                @if (ClubTournamentTypeId == 1)
+                {
+                    <li><a href="#a-club" data-toggle="tab" data-tab-id="a-club" onclick="getContent('a-club')">A komandasının sənədləri</a></li>
+                    <li><a href="#b-club" data-toggle="tab" data-tab-id="b-club" onclick="getContent('b-club')">B komandasının sənədləri</a></li>
+                }
+
+                @if (ClubTournamentTypeId == 3)
+                {
+                    <li><a href="#d-club" data-toggle="tab" data-tab-id="d-club" onclick="getContent('d-club')">I Divizion sənədləri</a></li>
+                }
+                @if (ClubTournamentTypeId == 6)
+                {
+                    <li><a href="#d-club" data-toggle="tab" data-tab-id="d-club" onclick="getContent('d-club')">II Divizion sənədləri</a></li>
+                }
+            </ul>
+
+            <div class="tab-content">
+                @if (ClubTournamentTypeId == 1)
+                {
+                    <div class="tab-pane" id="a-club"></div>
+
+                    <div class="tab-pane" id="b-club"></div>
+                }
+
+                @if (ClubTournamentTypeId == 3 || ClubTournamentTypeId == 6)
+                {
+                    <div class="tab-pane" id="d-club"></div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="club-document-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="club-document-confirm-modal-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="club-document-confirm-modal-label">Sifarişin redaktəsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body" id="club-document-confirm-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary col-md-12" id="club-document-confirm-form-save">Təsdiqlə</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section footer{
+
+    <script>
+
+        var clubId = @Model.Id;
+
+        function getContent(label) {
+
+            var _url;
+            switch(label) {
+            case 'a-club':
+                    _url = "/Clubs/DocumentsByType?clubId=" + clubId + "&clubType=2&seasonId=" + @(ViewBag.SeasonId);
+                break;
+            case 'b-club':
+                    _url = "/Clubs/DocumentsByType?clubId=" + clubId + "&clubType=3&seasonId=" + @(ViewBag.SeasonId);
+                break;
+            case 'd-club':
+                    _url = "/Clubs/DocumentsByType?clubId=" + clubId + "&clubType=4&seasonId=" + @(ViewBag.SeasonId);
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        var activeTab = window.location.href.split('#')[1];
+        var tab;
+        if (activeTab) {
+            tab = $("li").find("[data-tab-id='" + activeTab + "']");
+
+            if (tab.length === 0) {
+                tab = $("li").find("[data-tab-id='a-club']");
+            }
+        } else {
+            tab = $("li").find("[data-tab-id='a-club']");
+            if (tab.length === 0) {
+                tab = $("li").find("[data-tab-id='d-club']");
+            }
+        }
+
+        tab.click();
+
+
+        $(document).ready(function() {
+
+            $('#club-document-confirm-form-save').on('click',
+                function(event) {
+                    event.preventDefault();
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Clubs/DocumentConfirmation",
+                        data: new FormData($('#club-document-confirm-form')[0]),
+                        dataType: "json",
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+
+                            if (response.ok) {
+                                $("#club-document-confirm-modal").modal('toggle');
+                                //window.location.reload();
+                                clubDocumentRow(response.Id, response.DocumentNameId);
+
+                            } else {
+                                //write validations
+                                $("#validation-message").html(response.error);
+                            }
+                        },
+                        error: function() {
+                            alert('Error');
+                        }
+                    });
+                    return false;
+                });
+
+            function clubDocumentRow(id, documentNameId) {
+                $.ajax({
+                    type: "GET",
+                    url: "/Clubs/DocumentsByTypeRow?clubId=" + clubId + "&clubType="+clubType+'&documentId='+id+"&seasonId=" + @(ViewBag.SeasonId),
+                    success: function (response) {
+
+
+
+
+                        if ($("#document-name-row-" + documentNameId)) {
+                            ($("#document-name-row-" + documentNameId).replaceWith(response));
+                        } else {
+                            //$("#cpo-tbl tbody").appendTo(response);
+                        }
+                    },
+                    error: function() {
+                        alert('Error');
+                    }
+                });
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+}

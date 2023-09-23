@@ -1,0 +1,21 @@
+﻿@model PFL.Entities.EntityModels.Club
+
+@{
+    Layout = null;
+    string baseUrl = ViewBag.BaseUrl;
+}
+<tr id="tournament-club-row-@(Model.Id)">
+    <td>@Model.Name</td>
+    <td>@(Model?.District?.Name)</td>
+    <td>@Model.Stadium</td>
+    <td>@Model.Phone</td>
+    <td>@Model.WebSite</td>
+    <td>@Model.Email</td>
+    <td class="text-center">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-6">
+                <a data-club-id="@Model.Id"><i class="icon-trash text-danger-600"></i></a>
+            </div>
+        </div>
+    </td>
+</tr>

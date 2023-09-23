@@ -1,0 +1,66 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.Referee>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Hakimlər, nümayəndələr və inspektorlar</h5>
+        <div class="heading-elements">
+            <div class="btn-group">
+                <a href="/@(baseUrl)/Create" type="button" class="btn bg-primary-400 btn-labeled"><b><i class="icon-add"></i></b> <span>Yeni</span></a>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <td>#</td>
+            <th>Tip</th>
+            <th><input type="text" id="referee-name" class="form-control input-xlg" placeholder="Axtarış"></th>
+            <th>Dərəcə</th>
+            <th>Region</th>
+            <th>Status</th>
+            <th class="text-center col-md-2">Əməliyyatlar</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            rowNumber++;
+            <tr>
+                <td>@rowNumber</td>
+                <td>@(item?.RefereeType?.Name)</td>
+                <td>@item.FirstName @item.LastName @item.FatherName</td>
+                <td>@item.Grade</td>
+                <td>@(item?.District?.Name)</td>
+                <td><span class="label label-@(!item.IsClosed ? "success" : "danger")">@(!item.IsClosed ? "Aktiv" : "Arxiv")</span></td>
+                @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+
+@section footer{
+ 
+    <script>
+        $('#referee-name').keypress(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                window.location.href = "/Referees/Index?refereeName=" + $(this).val();
+            }
+        });
+    </script>
+
+}

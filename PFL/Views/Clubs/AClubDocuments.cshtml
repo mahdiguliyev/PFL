@@ -1,0 +1,160 @@
+﻿@model PFL.Models.DTO.AClubDocumentDto
+@{
+    Layout = null;
+}
+
+<div class="panel panel-flat" style="border: none;">
+<div class="panel-heading">
+    <div class="heading-elements">
+
+        @*<ul class="icons-list">
+            <li>
+                <div class="btn-group" style="width: 100%">
+                    <a href="/ClubDocumentOlds/Edit?clubType=a" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-pencil3"></i></b> <span>Düzəliş et</span></a>
+                </div>
+            </li>
+        </ul>*@
+    </div>
+
+</div>
+
+<div class="panel-body">
+
+<br/>
+<div class="table-responsive">
+    <table class="table table-lg">
+        <tr>
+            <td>Stadionun müqaviləsi</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AStadiumContractUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AStadiumContractUrl" target="_blank">@Model.AStadiumContractUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Stadion sxemi</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AStadiumSchemeUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AStadiumSchemeUrl" target="_blank">@Model.AStadiumSchemeUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Klubun strukturu</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AClubStructureUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AClubStructureUrl" target="_blank">@Model.AClubStructureUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Rəsmi Dövlət Reyesterindən çıxarış</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.ARegisterExtractUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.ARegisterExtractUrl" target="_blank">@Model.ARegisterExtractUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>VÖEN</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AVoenUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AVoenUrl" target="_blank">@Model.AVoenUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Nizamnamə</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.ACharterUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.ACharterUrl" target="_blank">@Model.ACharterUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>FHN məktubu</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AFhnLetterUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AFhnLetterUrl" target="_blank">@Model.AFhnLetterUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>DİN məktubu</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.ADinLetterUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.ADinLetterUrl" target="_blank">@Model.ADinLetterUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Təcili Tibbi yardım Məktubu</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AAmbulanceUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AAmbulanceUrl" target="_blank">@Model.AAmbulanceUrl</a>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>AFFA lisenziyası</td>
+            <td>
+                @if (string.IsNullOrEmpty(Model.AAffaLicenseUrl))
+                {
+                    <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                }
+                else
+                {
+                    <a href="@Model.AAffaLicenseUrl" target="_blank">@Model.AAffaLicenseUrl</a>
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+
+</div>
+</div>

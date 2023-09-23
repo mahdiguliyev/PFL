@@ -1,0 +1,177 @@
+﻿@model PFL.Models.DTO.BClubDocumentDto
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+<div class="panel panel-flat">
+
+    <div class="panel-heading">
+        <h5 class="panel-title">B komandasının sənədləri - <b>@Model.ClubName</b></h5>
+        <div class="heading-elements">
+            
+            <div class="btn-group" style="width: 100%">
+                <a href="/ClubDocuments#b-club" type="button" class="btn bg-teal-400 btn-labeled"><b><i class="icon-backward2"></i></b> <span>Siyahıya qayıt</span></a>
+            </div>
+                
+        </div>
+    </div>
+    
+    @{
+        if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+        {
+            <div class="panel-heading">
+                <slan class="label label-danger">@(ViewBag.ErrorMessage)</slan>
+            </div>
+        }
+    }
+
+    <br />
+
+
+    <div class="panel-body">
+
+        @using (Html.BeginForm("BClubEdit", baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal", encType = "multipart/form-data" }))
+        {
+        <fieldset class="content-group">
+
+            @Html.AntiForgeryToken()
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BStadiumContractUpload, "Stadionun müqaviləsi", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BStadiumContractUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BStadiumContractUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BStadiumContractUrl))
+                {
+                    <div class="col-lg-2">
+                        <a href="@Model.BStadiumContractUrl" target="_blank">Cari sənəd</a>
+                    </div>
+                }
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BStadiumSchemeUpload, "Stadionun sxemi", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BStadiumSchemeUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BStadiumSchemeUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BStadiumSchemeUrl))
+                {
+                    <div class="col-lg-2">
+                        <a href="@Model.BStadiumSchemeUrl" target="_blank">Cari sənəd</a>
+                    </div>
+                }
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BClubStructureUpload, "Klubun strukturu", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BClubStructureUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BClubStructureUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BClubStructureUrl))
+                {
+                    <div class="col-lg-2">
+                        <a href="@Model.BClubStructureUrl" target="_blank">Cari sənəd</a>
+                    </div>
+                }
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BDinLetterUpload, "DİN məktubu", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BDinLetterUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BDinLetterUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BDinLetterUrl))
+                {
+                    <div class="col-lg-2">
+                        <a href="@Model.BDinLetterUrl" target="_blank">Cari sənəd</a>
+                    </div>
+                }
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BAmbulanceUpload, "Təcili Tibbi yardım Məktubu", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BAmbulanceUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BAmbulanceUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BAmbulanceUrl))
+                {
+                <div class="col-lg-2">
+                    <a href="@Model.BAmbulanceUrl" target="_blank">Cari sənəd</a>
+                </div>
+                }
+            </div>
+
+            <hr />
+            
+            
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.BAffaLicenseUpload, "AFFA lisenziyası", new { @class = "control-label col-md-2" })
+                <div class="col-lg-2">
+                    @Html.TextBoxFor(m => m.BAffaLicenseUpload, new { @class = "file-input2 club-document", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                    @Html.ValidationMessageFor(model => model.BAffaLicenseUpload, "", new { @class = "text-danger" })
+                </div>
+                @if (!string.IsNullOrEmpty(Model.BAffaLicenseUrl))
+                {
+                    <div class="col-lg-2">
+                        <a href="@Model.BAffaLicenseUrl" target="_blank">Cari sənəd</a>
+                    </div>
+                }
+            </div>
+
+            <hr />*@
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-3">
+                    <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                </div>
+            </div>
+
+        </fieldset>
+        }
+    </div>
+</div>
+
+
+@section footer
+{
+    <script>
+
+
+        $(document).ready(function() {
+
+            $(".club-document").fileinput({
+                browseLabel: 'Seçim edin',
+                browseIcon: '<i class="icon-file-plus"></i>',
+                uploadIcon: '<i class="icon-file-upload2"></i>',
+                removeLabel: 'Ləğv edin',
+                removeIcon: '<i class="icon-cross3"></i>',
+                layoutTemplates: {
+                    icon: '<i class="icon-file-check"></i>'
+                },
+                initialCaption: "Fayl seçilməyib",
+                maxFileSize: 5000
+            });
+        });
+
+    </script>
+}
+

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<PFL.Models.DTO.ClubPlayerOrderListDto>
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_LayoutForPdf.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = 0;
+    DateTime currentDate = DateTime.Now;
+}
+
+<style>
+    .order-row {
+        background-color: #ffa5a5;
+    }
+
+    thead {
+        display: table-header-group
+    }
+
+    tfoot {
+        display: table-row-group
+    }
+
+    tr {
+        page-break-inside: avoid
+    }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Sifarişlər</h5>
+        <div class="heading-elements">
+
+            @*<ul class="icons-list">
+                    <li>
+                        <label for="ActiveOrders">Aktiv sifarişlər</label>
+                        <input type="radio" name="PlayerOrderListType" id="ActiveOrders" value="1" checked="checked" />
+                    </li>
+                    <li>
+                        <label for="TerminatedOrders">Xitam edilmiş sifarişlər</label>
+                        <input type="radio" name="PlayerOrderListType" id="TerminatedOrders" value="1" />
+                    </li>
+                </ul>*@
+        </div>
+    </div>
+
+    <table class="table table-bordered" id="cpo-tbl">
+        <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-1">
+                    Oyunçunun nömrəsi
+                </th>
+                <th>
+                    A.S.A.
+                </th>
+                <th>
+                    Müqavilənin bitmə tarixi
+                </th>
+                <th>
+                    Xitam tarixi
+                </th>
+
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+
+                string rowClass = item.TerminationDate.HasValue && item.TerminationDate < currentDate ? "order-row" : "";
+
+
+                <tr id="cpo-row-@(item.Id)" class="@(rowClass)">
+                    <td>@rowNumber</td>
+                    <td><span class="text-primary-700">@item.PlayerNumber</span></td>
+                    <td>@item.FirstName @item.LastName @item.FatherName</td>
+                    <td>
+                        @(item.ContractEndDate?.ToString("dd.MM.yyyy"))
+                    </td>
+                    <td>
+                        @(item.TerminationDate?.ToString("dd.MM.yyyy"))
+                    </td>
+
+                    @if (item.Rejected && !item.ClubConfirm)
+                    {
+                        <td><span class="label label-danger">İmtina edilib</span></td>
+                    }
+                    else if (item.OperatorConfirm)
+                    {
+                        <td><span class="label label-success">Təsdiqlənib</span></td>
+                    }
+                    else if (item.ClubConfirm)
+                    {
+                        <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

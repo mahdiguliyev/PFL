@@ -1,0 +1,82 @@
+﻿@using PagedList.Mvc
+@model  PagedList.IPagedList<PFL.Entities.EntityModels.ClubOfficial>
+@{
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+    int rowNumber = (Model.PageNumber - 1) * Model.PageSize;
+}
+
+
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Klubların rəsmiləri</h5>
+            <div class="heading-elements">
+
+                <ul class="icons-list">
+                    <li>
+                        <div class="btn-group" style="width: 100%">
+                            <a href="/ClubOfficial/Create" type="button" style="width: 100%" class="btn bg-primary-400 btn-labeled"><b><i class="icon-user-plus"></i></b> <span>Yeni qeydiyyat</span></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <hr />
+        @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Klub</th>
+                    <th>Rəsminin A.S.A</th>
+                    <th>Vəzifəsi</th>
+                    <th>Status</th>
+                    <th class="text-center col-md-2">Əməliyyatlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    rowNumber++;
+                    <tr>
+                        <td>@rowNumber</td>
+                        <td>@item.Club.Name</td>
+                        <td>@item.FirstName @item.LastName @item.FatherName</td>
+                        <td>@(item.Position?.Name)</td>
+                        @if (item.Rejected && !item.ClubConfirm)
+                        {
+                            <td><span class="label label-danger">İmtina edilib</span></td>
+                        }
+                        else if (item.OperatorConfirm)
+                        {
+                            <td><span class="label label-success">Təsdiqlənib</span></td>
+                        }
+                        else if (item.ClubConfirm)
+                        {
+                            <td><span class="label label-primary">Təsdiqə göndərilib</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="label label-warning">Yekunlaşmamış</span></td>
+                        }
+
+
+                        @if (!item.ClubConfirm || item.Rejected)
+                        {
+                            @TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="datatable-footer">
+            <div class="dataTables_paginate">
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, ViewBag.SeasonId }))
+            </div>
+        </div>
+    </div>

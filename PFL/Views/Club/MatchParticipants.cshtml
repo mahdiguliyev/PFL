@@ -1,0 +1,294 @@
+﻿@model PFL.Entities.EntityModels.Match
+
+@{
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+<style>
+    .custom-checkbox-label {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+
+        .custom-checkbox-label input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .check-mark {
+        position: absolute;
+        top: -9px;
+        left: 10px;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+    }
+
+    .custom-checkbox-label:hover input ~ .check-mark {
+        background-color: #ccc;
+    }
+
+    .custom-checkbox-label input:checked ~ .check-mark {
+        background-color: #2196F3;
+    }
+
+    .check-mark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .custom-checkbox-label input:checked ~ .check-mark:after {
+        display: block;
+    }
+
+    .custom-checkbox-label .check-mark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading" style="height: 200px;">
+        <div class="col-md-9">
+            <h5 class="label border-left-primary label-striped">@(Model.MatchDate?.ToString("dd.MM.yyyy HH:mm")) tarixində keçiriləcək oyunun sifariş vərəqi</h5>
+        </div>
+
+
+
+        <div class="col-md-3" style="margin-top: 10px;">
+
+            @if (ViewBag.ClubId == Model.HomeClubId)
+            {
+                <div class="btn-group dropup" style="width: 80%; float: right;">
+                    <a href="#" type="button" style="width: 100%" class="btn bg-teal-400 btn-labeled document-modal-trigger" data-match-id="@(Model.Id)" data-club-id="@Model.HomeClubId" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-file-text2"></i></b> <span>Protokol(@Model.HomeClub.Name)</span></a>
+                </div>
+                <p></p>
+
+                if (ViewBag.OpponentClubProtokol)
+                {
+                    <div class="btn-group dropup" style="width: 80%; float: right; margin-top: 10px;">
+                        <a href="#" style="width: 100%" class="btn bg-teal-400 btn-labeled document-modal-trigger" data-match-id="@(Model.Id)" data-club-id="@Model.GuestClubId" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-file-text2"></i></b> <span>Protokol(@Model.GuestClub.Name)</span></a>
+                    </div>
+                    <p></p>
+                }
+            }
+            else
+            {
+                <div class="btn-group dropup" style="width: 80%; float: right; margin-top: 10px;">
+                    <a href="#" style="width: 100%" class="btn bg-teal-400 btn-labeled document-modal-trigger" data-match-id="@(Model.Id)" data-club-id="@Model.GuestClubId" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-file-text2"></i></b> <span>Protokol(@Model.GuestClub.Name)</span></a>
+                </div>
+                <p></p>
+                if (ViewBag.OpponentClubProtokol)
+                {
+                    <div class="btn-group dropup" style="width: 80%; float: right; margin-top: 10px;">
+                        <a href="#" type="button" style="width: 100%" class="btn bg-teal-400 btn-labeled document-modal-trigger" data-match-id="@(Model.Id)" data-club-id="@Model.HomeClubId" data-toggle="modal" data-target="#document-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-file-text2"></i></b> <span>Protokol(@Model.HomeClub.Name)</span></a>
+                    </div>
+                    <p></p>
+                }
+            }
+
+
+
+            <div class="btn-group" style="width: 80%; float: right; margin-top: 10px;">
+
+                @if (ViewBag.ClubMatchConfirm)
+                {
+                    <a style="width: 100%" class="btn bg-primary-400 btn-labeled" data-match-id="@(Model.Id)">
+                        <b><i class="icon-check2"></i></b>
+                        <span>Siyahı təsdiqlənib</span>
+                    </a>
+                }
+                else
+                {
+                    if (DateTime.Now.AddMinutes(75) <= Model.MatchDate || (DateTime.Now.AddMinutes(75) > Model.MatchDate && ViewBag.ClubExpConfirmStatus))
+                    {
+                        <a id="confirm-match" style="width: 100%" class="btn bg-primary-400 btn-labeled confirm-match" data-match-id="@(Model.Id)">
+                            <b><i class="icon-checkbox-unchecked2"></i></b>
+                            <span>Siyahını təsdiqlə</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a style="width: 100%" class="btn bg-warning-400 btn-labeled" title="Dəyişiklik oyun vaxtından 75 dəqiqə əvvələ qədər edilə bilər.">
+                            <b><i class="icon-cross"></i></b>
+                            <span>Təsdiqlənmə gecikmişdir</span>
+                        </a>
+                    }
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                <li class="active" data-tab-id="player">
+                    <a href="#player" data-toggle="tab" onclick="getMatchParticipants('player')">KOMANDANIN HEYƏTİ</a>
+                </li>
+                <li data-tab-id="official">
+                    <a href="#official" data-toggle="tab" onclick="getMatchParticipants('official')">KOMANDANIN RƏSMİLƏRİ</a>
+                </li>
+            </ul>
+
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="player">
+                    @Html.Action("PlayerSelection", "Club", new { matchId = Model.Id })
+                </div>
+
+                <div class="tab-pane" id="official">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row">
+            <div class="col-md-2 col-md-offset-10">
+                <button type="button" class="btn btn-primary alpaca-float-right" data-toggle="modal" data-target="#add-match-player-modal" data-backdrop="static" data-keyboard="false">+ Oyunçu əlavə et</button>
+            </div>
+        </div>*@
+
+</div>
+
+
+
+
+<!-- Protocol-Modal -->
+<div class="modal fade" id="document-modal" tabindex="-1" role="dialog" aria-labelledby="document-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="document-modal-label">Protokol</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="document-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                    <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <script>
+
+        var matchId = @Model.Id;
+
+        function getMatchParticipants(label) {
+
+            var _url;
+            switch (label) {
+            case 'player':
+                _url = "/Club/PlayerSelection?matchId=" + matchId;
+                break;
+            case 'official':
+                _url = "/Club/OfficialSelection?matchId=" + matchId;
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    $("#" + label).html("");
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+
+        $(".document-modal-trigger").click("click",
+
+            function () {
+
+                var matchId = this.getAttribute('data-match-id');
+
+                var _url = "/Club/Protokol?matchId=" + matchId + "&clubId=" + $(this).data("club-id");
+
+
+                $.ajax({
+                    url: _url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#document-modal-body").html(data);
+                    }
+                });
+
+
+                $('#document-modal').trigger();
+            });
+
+
+        $(".confirm-match").on('click', function() {
+
+            swal("Siyahı təsdiqlənsin?", {
+                    buttons: {
+                        cancel: "İmtina",
+                        confirm: "Təsdiqlə"
+                    }
+                })
+                .then((value) => {
+                    if (value) {
+
+                        $.ajax({
+                            url: "/Club/ConfirmMatch?matchId=" + $(this).data("match-id"),
+                            method: "GET",
+                            success: function (data) {
+
+                                if (data.Status === 0) {
+                                    swal({
+                                        title: data.Note,
+                                        icon: "warning"
+                                    });
+                                } else {
+                                    $("#confirm-match").html('<b><i class="icon-check2"></i></b> <span>Siyahını təsdiqləndi</span>');
+                                    $("#confirm-match").removeClass('confirm-match');
+
+                                    swal("Siyahı təsdiqləndi");
+                                }
+                            }
+                        });
+
+                    }
+                });
+
+        });
+    </script>
+}

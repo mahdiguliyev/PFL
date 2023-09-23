@@ -1,0 +1,369 @@
+﻿@using PFL.Entities.EntityModels
+@model PFL.Models.DTO.ClubOfficialDto
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    List<ClubOfficialRejection> requestRejections = ViewBag.RequestRejections;
+}
+
+@section before_app_scripts
+{
+    <script type="text/javascript" src="/assets/js/plugins/notifications/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/moment/moment.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/daterangepicker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/anytime.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.date.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.time.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/legacy.js"></script>
+}
+
+@section after_app_scripts{
+    <script type="text/javascript" src="/assets/js/pages/picker_date.js?5"></script>
+}
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Rəsmi şəxsin qeydiyyatı")
+
+    <div class="panel-body">
+        @*<p class="content-group-lg">Yeni rayonun(şəhərin) əlavə edilməsi</p>*@
+
+        @if (requestRejections != null && requestRejections.Count > 0)
+        {
+            <h6 class="text-semibold">İmtina səbəb(lər)i</h6>
+            foreach (var item in requestRejections)
+            {
+                <div class="row">
+                    <div class="col-md-1">
+                        <code>@(item.CreationDate.ToString("dd.MM.yyyy"))</code>
+                    </div>
+                    <div class="col-md-11">
+                        <p>@item.RejectionNote</p>
+                    </div>
+                </div>
+
+            }
+            <hr>
+        }
+        @{
+            if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="panel-heading">
+                    <slan class="label label-danger">@(ViewBag.ErrorMessage)</slan>
+                </div>
+            }
+        }
+
+        <br />
+
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal", encType = "multipart/form-data" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model?.Id??0)" />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @*<div class="form-group">
+                        <label class="control-label col-md-2" for="ClubId">Klub</label>
+                        <div class="col-md-4">
+                            @Select2.Create("ClubId", "Clubs", "Select2")
+                            @Html.ValidationMessageFor(model => model.Club.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PhotoUpload, "Şəkil", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.PhotoUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.PhotoUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model?.PhotoUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.PhotoUrl" target="_blank" class="current-doc">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="PositionId">Vəzifə</label>
+                    <div class="col-md-4">
+                        @*@Select2.Create("PositionId", "OfficialPositions", "Select2")*@
+                        @*<div class="col-md-9">
+                                <select class="border-blue form-control club-official" id="PositionIdd" name="PositionIdd">
+                                    @if (Model != null)
+                                    {
+                                        <option value="@Model.PositionId">@Model.PositionName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="0">Seçim edin</option>
+                                    }
+
+                                </select>
+
+                                <input type="hidden" id="PositionId" name="PositionId" />
+                            </div>*@
+                        @Html.DropDownList("PositionId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PositionId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="FirstName">Adı</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="LastName">Soyadı</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="FatherName">Ata adı</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.FatherName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FatherName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BirthDate, "Doğum tarixi", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                            @Html.TextBoxFor(model => model.BirthDate, Model?.BirthDate?.ToString("dd MMM, yyyy"), new { @class = "form-control pickadate-selectors" })
+                        </div>
+
+                        @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="ClubId">Vətəndaşlığı</label>
+                    <div class="col-md-4">
+                        @*@Select2.Create("CitizenshipId", "Countries", "Select2")*@
+                        @Html.DropDownList("CitizenshipId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CitizenshipId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2" for="Contact">Əlaqə nömrəsi</label>
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ContractBeginDate, "Müqavilənin başlama tarixi", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                            @Html.TextBoxFor(model => model.ContractBeginDate, Model?.ContractBeginDate.ToString("dd MMM, yyyy"), new { @class = "form-control pickadate-selectors" })
+                        </div>
+
+                        @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ContractEndDate, "Müqavilənin bitmə tarixi", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="icon-calendar5"></i></span>
+                            @Html.TextBoxFor(model => model.ContractEndDate, Model?.ContractEndDate.ToString("dd MMM, yyyy"), new { @class = "form-control pickadate-selectors" })
+                        </div>
+
+                        @Html.ValidationMessageFor(model => model.BirthDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ContractUpload, "Müqavilə sənədi", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.ContractUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.ContractUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model?.ContractUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.ContractUrl" target="_blank" class="current-doc">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PassportUpload, "Passport", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.PassportUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.PassportUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model?.PassportUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.PassportUrl" target="_blank" class="current-doc">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group" id="div-license" style="display: @(Model?.PositionId == 1 || Model?.PositionId == 2 || Model?.PositionId == 3 ||  Model?.PositionId == 8 ||  Model?.PositionId == 9 || Model == null ? "show" : "none")">
+                    @Html.LabelFor(model => model.TrainerLicenseUpload, "Lisenziya", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.TrainerLicenseUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.TrainerLicenseUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model?.TrainerLicenseUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.TrainerLicenseUrl" target="_blank" class="current-doc">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group" id="div-diploma" style="display: @(Model?.PositionId == 5 ? "show" : "none")">
+                    @Html.LabelFor(model => model.DoctorDiplomaUpload, "Diplom", new { @class = "control-label col-md-2" })
+                    <div class="col-lg-2">
+                        @Html.TextBoxFor(m => m.DoctorDiplomaUpload, new { @class = "file-input2", type = "file", name = "Files", data_show_caption = "false", data_show_upload = "false" })
+                        @Html.ValidationMessageFor(model => model.DoctorDiplomaUpload, "", new { @class = "text-danger" })
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model?.DoctorDiplomaUrl))
+                    {
+                        <div class="col-lg-2">
+                            <a href="@Model.DoctorDiplomaUrl" target="_blank">Cari sənəd</a>
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ClubConfirm, "Təsdiqlə", new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        @Html.CheckBoxFor(model => model.ClubConfirm, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ClubConfirm, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-9">
+                        <span class="label label-info" style="padding-top: 6px;padding-bottom: 6px;font-size: 14px;">Məlumatlar təsdiqləndikdən sonra dəyişiklik aparıla bilməz.</span>
+                    </div>
+                </div>
+
+                @Html.HiddenFor(x => x.PassportUrl)
+                @Html.HiddenFor(x => x.TrainerLicenseUrl)
+                @Html.HiddenFor(x => x.DoctorDiplomaUrl)
+
+
+
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $("#PhotoUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib"
+        });
+
+        $("#PassportUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib"
+        });
+
+        $("#ContractUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib"
+        });
+
+
+        $("#TrainerLicenseUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib"
+        });
+
+        $("#DoctorDiplomaUpload").fileinput({
+            browseLabel: 'Seçim edin',
+            browseIcon: '<i class="icon-file-plus"></i>',
+            uploadIcon: '<i class="icon-file-upload2"></i>',
+            removeLabel: 'Ləğv edin',
+            removeIcon: '<i class="icon-cross3"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>'
+            },
+            initialCaption: "Fayl seçilməyib"
+        });
+
+
+        $("#PositionId").change(function () {
+
+            var position = $("#PositionId");
+
+            $("#div-license").hide();
+            $("#div-diploma").hide();
+
+            if (position.val() === "1" || position.val() === "2" || position.val() === "3" || position.val() === "8" || position.val() === "9") {
+                $("#div-license").show();
+            }
+            else if (position.val() === "5") {
+                $("#div-diploma").show();
+            }
+
+
+        });
+
+    });
+</script>

@@ -1,0 +1,49 @@
+﻿@model PFL.Models.DTO.ClubDocumentDto
+@{
+    Layout = null;
+}
+<tr id="document-name-row-@(Model.DocumentNameId)">
+    <td class="col-md-3">@Model.DocumentName</td>
+
+    <td class="col-md-1">
+        @if (string.IsNullOrEmpty(Model.FilePath))
+        {
+            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+        }
+        else if (Model.ClubConfirm.Value && !Model.OperatorConfirm.Value && !Model.Rejected.Value)
+        {
+            <span class="label label-warning">TƏSDİQƏ GÖNDƏRİLİB</span>
+        }
+        else if (Model.ClubConfirm.Value && Model.OperatorConfirm.Value && !Model.Rejected.Value)
+        {
+            <span class="label label-success">TƏSDİQLƏNİB</span>
+        }
+        else if (!Model.ClubConfirm.Value && !Model.OperatorConfirm.Value && Model.Rejected.Value)
+        {
+            <span class="label label-danger">İMTİNA EDİLİB</span>
+        }
+    </td>
+    <td class="col-md-1">
+        @if (!string.IsNullOrEmpty(Model.FilePath))
+        {
+            <a href="@Model.FilePath" target="_blank">@(Model.FileName)</a>
+        }
+    </td>
+    <td class="col-md-3 text-center">
+        @if (Model.OperatorConfirm != null && (Model.Rejected != null && (Model.ClubConfirm != null && (Model.ClubConfirm.Value && !Model.Rejected.Value && !Model.OperatorConfirm.Value))))
+        {
+
+            <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-6">
+                    <button type="button" data-href="/Clubs/DocumentConfirmation?documentId=@(Model.DocumentId)&confirm=false" class="btn btn-danger btn-icon club-document-confirm" title="İmtina"><b><i class="icon-cross"></i></b>&nbsp;</button>
+                </div>
+
+                <div class="col-md-6">
+                    <button type="button" data-href="/Clubs/DocumentConfirmation?documentId=@(Model.DocumentId)&confirm=true" class="btn btn-primary btn-icon club-document-confirm" title="Təsdiqlə"><b><i class="icon-check2"></i></b>&nbsp;</button>
+                </div>
+            </div>
+
+        }
+    </td>
+    <td class="col-md-4"></td>
+</tr>

@@ -1,0 +1,54 @@
+﻿@helper Create(string inputName, string action, string controller, string defaultText="Seçim edin")
+{
+
+    @*<div class="form-group">
+        <label class="control-label col-md-3" for="@(inputName)">Turnir seçimi</label>
+        <div class="col-md-9">
+
+            <select class="border-warning" id="@(inputName)" name="@(inputName)">
+
+                <option value="0">@(defaultText)</option>
+            </select>
+           
+        </div>
+    </div>*@
+
+    
+    <select class="border-warning" id="@(inputName)" name="@(inputName)">
+        <option value="0">@(defaultText)</option>
+    </select>
+
+
+
+    <script>
+        $('#@(inputName)').select2({
+            dropdownCssClass: 'border-primary',
+            containerCssClass: 'border-primary text-primary-700',
+            ajax: {
+                url: "/@(controller)/@(action)",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchText: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.results,
+                        pagination: {
+                            more: (params.page * 30) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            }
+        });
+    </script>
+
+}
+

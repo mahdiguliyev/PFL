@@ -1,0 +1,116 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<PFL.Models.ViewModels.RefereeMatchViewModel>
+@{
+    ViewBag.Title = "Matçlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int rowNumber = (Model.PageNumber-1) * Model.PageSize;
+
+    int seasonId = ViewBag.SeasonId ?? 22;
+}
+
+<style>
+
+    .match-list tbody tr {
+        cursor: pointer;
+    }
+
+    .match-list tbody tr td:last-child {
+        color: #1E88E5;
+    }
+
+    .match-list tbody tr:hover td {
+        cursor: pointer;
+        background-color: #26A69A;
+        color: white;
+    }
+    .match-list tbody tr:hover td a{
+        color: white;
+    }
+</style>
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Turnirlər</h5>
+        <div class="heading-elements">
+
+            <ul class="icons-list">
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    <hr/>
+    @Html.Partial("~/Views/Shared/_PartialArchiveHeader.cshtml")
+
+    <table class="table table-bordered match-list">
+        <thead>
+            <tr>
+                <th>#</th>
+                @*<th>Turnir tipi</th>*@
+                <th>Turnirin adı</th>
+                <th>Mövsüm</th>
+                <th>Tur</th>
+                <th>Klub (ev)</th>
+                <th>Klub (qonaq)</th>
+                <th>Stadion</th>
+                <th>Matçın tarixi</th>
+                <th class="text-center col-md-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowNumber++;
+
+                <tr class="match-detail" data-match-id="@item.MatchId">
+                    <td>@rowNumber</td>
+                    @*<td>
+                            @item.TournamentTypeName
+                        </td>*@
+                    <td>
+                        @item.TournamentName
+                    </td>
+                    <td>
+                        @item.SeasonStartYear
+                        -
+                        @item.SeasonEndYear
+                    </td>
+                    <td>
+                        @item.TourNumber
+                    </td>
+                    <td>
+                        @item.HomeClubName
+                    </td>
+                    <td>
+                        @item.GuestClubName
+                    </td>
+                    <td>
+                        @item.Stadium
+                    </td>
+                    <td>
+                        @(item?.MatchDate?.ToString("dd.MM.yyyy hh:mm"))
+                    </td>
+                    @*@TableHelper.OperationButtons(baseUrl, item.Id, item.IsDeleted)*@
+                    <td class="text-center">
+                        <a href="/Referee/MatchDetail?matchId=@(item.MatchId)#main-info">Ətraflı</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="datatable-footer">
+        <div class="dataTables_paginate">
+            @Html.PagedListPager(Model, page => Url.Action("Matches", new { page, seasonId }))
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $(".match-detail").on('click',
+            function () {
+                window.location = "/Referee/MatchDetail?matchId=" + $(this).data('match-id') +"#main-info";
+            });
+
+    });
+</script>

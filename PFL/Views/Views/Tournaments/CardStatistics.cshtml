@@ -1,0 +1,90 @@
+﻿@model IEnumerable<PFL.Entities.EntityModels.Views.VTournamentCardStatistic>
+@{
+    Layout = null;
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+    int rowCount = 0;
+}
+
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Klub</th>
+                <th><img src="/assets/images/ball.png" /></th>
+                <th><img src="/assets/images/yellow.png" /></th>
+                <th><img src="/assets/images/yellow_red.png" /></th>
+                <th><img src="/assets/images/red.png" /></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                rowCount++;
+
+                <tr id="@item.ClubId">
+                    <td>@rowCount</td>
+                    <td>
+                        <a href="#" class="club-card-modal-trigger" data-club-id="@item.ClubId" data-toggle="modal" data-target="#club-card-modal" data-backdrop="static" data-keyboard="false">
+                            @item.ClubName
+                        </a>
+                        
+                    </td>
+                    <td>@item.PlayedGame</td>
+                    <td>@item.YellowCardCount</td>
+                    <td>@item.DoubleYellowCardCount</td>
+                    <td>@item.RedCardCount</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="club-card-modal" tabindex="-1" role="dialog" aria-labelledby="club-card-modal-label" aria-hidden="true">
+    <div class="modal-dialog" style="width: 85%" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="club-card-modal-label">Klubun kard statistikası</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="club-card-modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Bağla</button>
+                @*<button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(".club-card-modal-trigger").click("click",
+
+        function () {
+
+            var _url = "/Tournaments/ClubCardStatistics?tournamentId=" + $("#tournament-id").val() + "&clubId="+$(this).data("club-id");
+
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    $("#club-card-modal-body").html(data);
+                }
+            });
+            
+        });
+   
+</script>

@@ -1,0 +1,230 @@
+﻿@model IEnumerable<PFL.Entities.EntityModels.Club>
+
+@{
+    Layout = null;
+    string baseUrl = ViewBag.BaseUrl;
+    bool hasConfirmed = ViewBag.HasConfirmed;
+}
+
+
+
+
+<div class="row">
+    <div class="col-md-2">
+        @if (!hasConfirmed)
+        {
+            <button type="button" id="confirm-clubs-list" class="btn bg-primary-400 btn-labeled" style="float: left;"><b><i class="icon-checkmark4"></i></b> <span>Siyahını təsdiqlə</span></button>
+        }
+    </div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2">
+        @if (!hasConfirmed)
+        {
+            <button type="button" class="btn bg-primary-400 btn-labeled" style="float: right;" data-toggle="modal" data-target="#add-club-modal" data-backdrop="static" data-keyboard="false"><b><i class="icon-add"></i></b> <span>Klub əlavə et</span></button>
+        }
+    </div>
+</div>
+<br />
+<table class="table table-bordered" id="tbl-tournament-clubs">
+    <thead>
+        <tr>
+            <th>Adı</th>
+            <th>Şəhər</th>
+            <th>Stadion</th>
+            <th>Telefon</th>
+            <th>Veb səhifəsi</th>
+            <th>Email</th>
+            @*<th>Status</th>*@
+            @if (!hasConfirmed)
+            {
+                <th class="text-center col-md-2">Əməliyyatlar</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="tournament-club-row-@(item.Id)">
+                <td>@item.Name</td>
+                <td>@(item?.District?.Name)</td>
+                <td>@item.Stadium</td>
+                <td>@item.Phone</td>
+                <td>@item.WebSite</td>
+                <td>@item.Email</td>
+
+                @*<td>
+                        <span class="label label-@(!item.IsDeleted ? "success" : "danger")">@(!item.IsDeleted ? "Aktiv" : "Silinmiş")</span>
+                    </td>*@
+                @if (!hasConfirmed)
+                {
+                    <td class="text-center">
+                        <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-6">
+                                <a class="remove-club" data-club-id="@item.Id" style="cursor: pointer"><i class="icon-trash text-danger-600"></i></a>
+                            </div>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="add-club-modal" tabindex="-1" role="dialog" aria-labelledby="add-club-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-club-modal-label">Turnirə yeni klubun əlavə edilməsi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">İmtina</button>
+                <button type="button" class="btn btn-primary" id="form-save">Yadda saxla</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#add-club-modal').on('show.bs.modal',
+        function (event) {
+
+            var _url = "/Tournaments/AddClub?tournamentId=" + $("#tournament-id").val();
+
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function (data) {
+                    $(".modal-body").html(data);
+                }
+            });
+        });
+
+
+    $('#form-save').on('click', function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "/Tournaments/AddClub",
+            data: $('#add-club-form').serialize(),
+            success: function (response) {
+                $("#add-club-modal").modal('toggle');
+
+                if (response.ok) {
+                    clubRow(response.Id);
+                }
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+        return false;
+    });
+
+
+    function clubRow(id) {
+        $.ajax({
+            type: "GET",
+            url: "/Tournaments/RowClub?tournamentClubId=" + id,
+            success: function (data) {
+                if ($("#tbl-tournament-clubs tbody tr").length === 0) {
+                    $("#tbl-tournament-clubs tbody").html(data);
+                }
+                else {
+                    $("#tbl-tournament-clubs tbody tr:first").before(data);
+                }
+
+            },
+            error: function () {
+                alert('Error');
+            }
+        });
+    }
+
+
+    $("#confirm-clubs-list").click(function () {
+        swal({
+            title: "Siyahını təsdiqlənsin?",
+            text: "Qeyd edilmiş turnirdə klubların siyahısı təsdiqləndikdən sonra siyahıya dəyişiklik edilməyəck!",
+            icon: "warning",
+            buttons: ["İmtina", "Təsdiq"],
+            dangerMode: false,
+
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "/Tournaments/ConfirmTournamentClubs?tournamentId=" + $("#tournament-id").val(),
+                        success: function (data) {
+                            swal("Klubların siyahısı təsdiqləndi!",
+                                {
+                                    icon: "success",
+                                });
+
+                            window.location.reload();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 403) {
+                                swal('Turnirə uyğun turların siyahısı artıq yaradılmışdır!');
+                            }
+                        }
+                    });
+
+
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
+    });
+
+    $(".remove-club").click(function () {
+        var clubId = $(this).data('club-id');
+        swal({
+            title: "Silinsin?",
+            text: "",
+            icon: "warning",
+            buttons: ["İmtina", "Təsdiq"],
+            dangerMode: false,
+
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "/Tournaments/RemoveClub?tournamentId=" + $("#tournament-id").val() + '&clubId=' + clubId,
+                        success: function (data) {
+                            swal("Uğurlu!",
+                                {
+                                    icon: "success",
+                                });
+
+                            $("#tournament-club-row-" + clubId).remove();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.status === 403) {
+                                swal('Silinmədə xəta yarandı.');
+                            }
+                        }
+                    });
+
+
+                } else {
+                    swal("Your imaginary file is safe!");
+                }
+            });
+    });
+</script>

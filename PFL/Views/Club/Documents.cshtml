@@ -1,0 +1,133 @@
+﻿@model PFL.Models.Entities.Club
+
+@{
+    ViewBag.Title = "Klubun sənədləri";
+    Layout = "~/Views/Shared/_LayoutClub.cshtml";
+}
+
+<div class="panel panel-flat">
+    <div class="panel-heading">
+        <h5 class="panel-title">Klubun sənədləri</h5>
+        <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a href="/Club/DocumentsEdit">Redaktə et</a></li>
+                </ul>
+            </div>
+    </div>
+
+    @*<div class="panel-body">
+            <code>Yeni oyunçu sifarişi</code> üçün klub tərəfindən göndərilmiş oyunçu məlumatları.
+        </div>*@
+
+    <div class="table-responsive">
+        <table class="table table-lg">
+            <tr>
+                <td style="width: 20%;">Ad</td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td>Loqo</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.LogoUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <div class="thumbnail no-padding" style="width: 100px;">
+                            <div class="thumb">
+                                <a href="@Model.LogoUrl" target="_blank">
+                                    <img src="@Model.LogoUrl">
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadionun şəkli - @Model.Stadium</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.StadiumPhotoUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <div class="thumbnail no-padding" style="width: 100px;">
+                            <div class="thumb">
+                                <a href="@Model.StadiumPhotoUrl" target="_blank">
+                                    <img src="@Model.StadiumPhotoUrl">
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadionun sənədi</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.StadiumDocumentUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.StadiumDocumentUrl" target="_blank">@Model.StadiumDocumentUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Stadion sxemi</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.StadiumSchemeUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.StadiumSchemeUrl" target="_blank">@Model.StadiumSchemeUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Klubun strukturu</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.StructureUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.StructureUrl" target="_blank">@Model.StructureUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>VÖEN</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.VoenUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.VoenUrl" target="_blank">@Model.VoenUrl</a>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Nizamnamə</td>
+                <td>
+                    @if (string.IsNullOrEmpty(Model.CharterUrl))
+                    {
+                        <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+                    }
+                    else
+                    {
+                        <a href="@Model.CharterUrl" target="_blank">@Model.CharterUrl</a>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,139 @@
+﻿@model PFL.Entities.EntityModels.Tournament
+@{
+    ViewBag.Title = "Tabs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section before_app_scripts
+{
+    <script type="text/javascript" src="/assets/js/plugins/notifications/jgrowl.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/ui/moment/moment.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/daterangepicker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/anytime.min.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.date.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/picker.time.js"></script>
+    <script type="text/javascript" src="/assets/js/plugins/pickers/pickadate/legacy.js"></script>
+
+
+}
+
+@section after_app_scripts
+{
+    <script type="text/javascript" src="/assets/js/pages/picker_date.js?5"></script>
+
+}
+
+
+<div class="col-md-12">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h6 class="panel-title">@Model.Name</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    @*<li><a data-action="collapse"></a></li>
+                        <li><a data-action="reload"></a></li>
+                        <li><a data-action="close"></a></li>*@
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-tabs-highlight nav-justified">
+                    <li><a href="#clubs" data-tab-id="clubs" data-toggle="tab" onclick="getContent('clubs')">Klublar</a></li>
+                    <li><a href="#matches" data-toggle="tab" data-tab-id="matches" onclick="getContent('matches')">Oyunlar</a></li>
+                    <li><a href="#tournament-calendar" data-toggle="tab" data-tab-id="tournament-calendar" onclick="getContent('tournament-calendar')">Turnir cədvəli(klublar üzrə)</a></li>
+                    <li><a href="#tournament-player-calendar" data-toggle="tab" data-tab-id="tournament-player-calendar" onclick="getContent('tournament-player-calendar')">Bombardirlər</a></li>
+                    <li><a href="#card-statistics" data-toggle="tab" data-tab-id="card-statistics" onclick="getContent('card-statistics')">Kart statistikası</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane" id="clubs">
+
+                        @*@Html.Action("Clubs", "Tournaments", new {tournamentId = Model.Id})*@
+                    </div>
+
+                    <div class="tab-pane" id="matches">
+
+                    </div>
+                    <div class="tab-pane" id="tournament-calendar">
+
+                    </div>
+                    <div class="tab-pane" id="tournament-player-calendar">
+
+                    </div>
+                    <div class="tab-pane" id="card-statistics">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="tournament-id" value="@Model.Id" />
+
+@section footer{
+    <script src="/assets/js/sweetalert.min.js">
+    </script>
+    <script>
+
+        var tournamentId = @Model.Id;
+
+        function getContent(label) {
+
+            var _url;
+            switch (label) {
+            case 'clubs':
+                _url = "/Tournaments/Clubs?tournamentId=" + tournamentId;
+                window.location.hash = "#clubs";
+                break;
+            case 'matches':
+                _url = "/Tournaments/Tours?tournamentId=" + tournamentId;
+                window.location.hash = "#matches";
+                break;
+            case 'tournament-calendar':
+                _url = "/Tournaments/Table?tournamentId=" + tournamentId;
+                window.location.hash = "#tournament-calendar";
+                break;
+            case 'tournament-player-calendar':
+                _url = "/Tournaments/PlayerTable?tournamentId=" + tournamentId;
+                window.location.hash = "#tournament-player-calendar";
+                break;
+            case 'card-statistics':
+                _url = "/Tournaments/CardStatistics?tournamentId=" + tournamentId;
+                window.location.hash = "#card-statistics";
+                break;
+            default:
+                return;
+            }
+
+            $.ajax({
+                url: _url,
+                method: "GET",
+                success: function(data) {
+                    $("#" + label).html(data);
+                }
+            });
+        }
+
+        setTimeout(function() {
+                var activeTab = window.location.href.split('#')[1];
+                var tab;
+                if (activeTab) {
+                    tab = $("li").find("[data-tab-id='" + activeTab + "']");
+
+                    if (tab.length === 0) {
+                        tab = $("li").find("[data-tab-id='clubs']");
+                    }
+                } else {
+                    tab = $("li").find("[data-tab-id='clubs']");
+                }
+
+                tab.click();
+            },
+            100);
+
+    </script>
+}

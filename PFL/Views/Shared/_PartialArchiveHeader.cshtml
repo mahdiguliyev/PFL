@@ -1,0 +1,59 @@
+﻿@{
+    int seasonId = ViewBag.SeasonId ?? 22;
+}
+
+<div class="panel-heading">
+    <div class="heading-elements col-md-2">
+        <div class="form-group">
+            <select class="form-control select" id="season-id">
+                <optgroup label="CARİ SEZON">
+                    <option value="25" @(seasonId == 25 ? "selected='selected'" : "")>2023-2024 mövsümü</option>
+                </optgroup>
+                <optgroup label="ARXİV">
+                    <option value="24" @(seasonId == 24 ? "selected='selected'" : "")>2022-2023 mövsümü</option>
+                    <option value="23" @(seasonId == 23 ? "selected='selected'" : "")>2021-2022 mövsümü</option>
+                    <option value="22" @(seasonId == 22 ? "selected='selected'" : "")>2020-2021 mövsümü</option>
+                    @*<option value="21" @(seasonId == 21 ? "selected='selected'" : "")>2019-2020 mövsümü</option>*@
+                </optgroup>
+            </select>
+        </div>
+    </div>
+</div>
+<hr />
+
+
+
+<script>
+    var urlParams = [];
+
+    $("#season-id").on('change',
+        function () {
+
+            window.location.href = window.location.pathname + "?seasonId=" + $(this).val();
+
+            @*
+                //urlParams = window.location.search.replace('?', '').split('&');
+
+            //urlParams.forEach(function (item, index) {
+            //    if (item.includes('seasonId=')) {
+            //        urlParams.slice(index, 1);
+            //    }
+            //});
+
+            //var newHrefSearch = "?seasonId=" + $(this).val();
+            //urlParams.forEach(function (item, index) {
+            //    console.log(item);
+            //    newHrefSearch = newHrefSearch +"&" + item;
+            //});
+
+            //window.location.search = newHrefSearch;
+
+
+
+
+            //var urlSeparator = window.location.href.includes('?') ? "&" : "?";
+            //window.location.href = window.location.href + urlSeparator + "seasonId=" + $(this).val();
+                *@
+        });
+
+</script>

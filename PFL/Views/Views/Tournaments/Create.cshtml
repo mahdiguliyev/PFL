@@ -1,0 +1,171 @@
+﻿@model PFL.Entities.EntityModels.Tournament
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string action = ViewBag.Action;
+    string baseUrl = ViewBag.BaseUrl;
+}
+
+
+@section before_app_scripts
+{
+    <script type="text/javascript" src="/ckeditor/ckeditor.js"></script>
+}
+@section after_app_scripts
+{
+    @*<script type="text/javascript" src="/assets/js/pages/editor_ckeditor.js"></script>*@
+    <script>
+        $(function () {
+
+            // Full featured editor
+            CKEDITOR.replace('Note',
+                {
+                    height: '400px',
+                    extraPlugins: 'forms'
+                });
+        });
+    </script>
+}
+
+<div class="panel panel-flat">
+
+    @FormHelper.CreateFormHeader("Yeni turnirin əlavə edilməsi")
+
+    <div class="panel-body">
+        @*<p class="content-group-lg">Yeni turnirin əlavə edilməsi</p>*@
+
+        @using (Html.BeginForm(action, baseUrl, FormMethod.Post,
+            new { @class = "form-horizontal" }))
+        {
+            <fieldset class="content-group">
+
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="Id" value="@(Model?.Id??0)" />
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.Label("Name", "Turnirin adı", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("TournamentTypeId", "Turnirin tipi", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.DropDownList("TournamentTypeId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TournamentTypeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("SeasonStartYear", "Mövsum", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-4">
+                        <div style="width: 20%; float: left">
+                            @Html.EditorFor(model => model.SeasonStartYear, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SeasonStartYear, "", new { @class = "text-danger" })
+                        </div>
+                        <div style="width: 5%; float: left; text-align: center; font-size: 21px;">
+                            <i class="icon-dash"></i>
+                        </div>
+                        <div style="width: 20%; float: right; margin-right: 55%;">
+                            @Html.EditorFor(model => model.SeasonEndYear, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.SeasonEndYear, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("YellowCardLimit", "Sarı kart limiti", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.YellowCardLimit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YellowCardLimit, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("YoungPlayerAgeLimit", "Gənc oyunçu(21) yaş limiti (təvəllüd)", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.YoungPlayerAge21Limit, new { htmlAttributes = new { @class = "form-control", value="5" } })
+                        @Html.ValidationMessageFor(model => model.YoungPlayerAge21Limit, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.Label("YoungPlayerAgeLimit", "Gənc oyunçu(21) yaş limiti (say)", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.YoungPlayerAge21Count, new { htmlAttributes = new { @class = "form-control", value="5" } })
+                        @Html.ValidationMessageFor(model => model.YoungPlayerAge21Count, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("YoungPlayerAgeLimit", "Gənc oyunçu(19) yaş limiti (təvəllüd)", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.YoungPlayerAge19Limit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YoungPlayerAge19Limit, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    @Html.Label("YoungPlayerAgeLimit", "Gənc oyunçu(19) yaş limiti (say)", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.YoungPlayerAge19Count, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.YoungPlayerAge19Count, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("PlayerCount", "Oyundakı futbolçu sayı", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.PlayerCount, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.PlayerCount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("ReservePlayerCount", "Ehtiyat oyunçular skamyası", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ReservePlayerCount, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReservePlayerCount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Period", "Dövrə", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Period, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Period, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                    @Html.Label("Status", "Status", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+                @*<div class="form-group">
+                    @Html.Label("Note", "Qeyd", htmlAttributes: new { @class = "control-label col-md-2 col-md-offset-3" })
+                    <div class="col-md-4">
+                        @Html.TextAreaFor(model => model.Note, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Note, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+                
+                <hr class="col-md-offset-2 col-md-7"/>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-5">
+                        <input type="submit" value="Yadda saxla" class="btn btn-primary col-md-12" />
+                    </div>
+                </div>
+
+            </fieldset>
+        }
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@model PFL.Models.DTO.ClubDocumentDto
+@{
+    Layout = null;
+}
+
+<tr id="document-name-row-@(Model.DocumentNameId)">
+    <td class="col-md-3">@Model.DocumentName</td>
+    <td class="col-md-1">
+        @if (string.IsNullOrEmpty(Model.FilePath))
+        {
+            <span class="label label-danger">ƏLAVƏ EDİLMƏYİB</span>
+        }
+        else if (Model.ClubConfirm.Value && !Model.OperatorConfirm.Value && !Model.Rejected.Value)
+        {
+            <span class="label label-warning">TƏSDİQƏ GÖNDƏRİLİB</span>
+        }
+        else if (Model.ClubConfirm.Value && Model.OperatorConfirm.Value && !Model.Rejected.Value)
+        {
+            <span class="label label-success">TƏSDİQLƏNİB</span>
+        }
+        else if (!Model.ClubConfirm.Value && !Model.OperatorConfirm.Value && Model.Rejected.Value)
+        {
+            <span class="label label-danger">İMTİNA EDİLİB</span>
+        }
+    </td>
+    <td class="col-md-1">
+        @if (!string.IsNullOrEmpty(Model.FilePath))
+        {
+            <a href="@Model.FilePath" target="_blank">@(Model.FileName)</a>
+        }
+    </td>
+    <td class="col-md-6">
+        @Html.TextBox(Model.Label, null, new { @class = "", type = "file", name = "Files", data_show_preview = "false", data_file_id = 5, data_document_name_id = Model.DocumentNameId, data_document_id = Model.DocumentId })
+    </td>
+    <td class="col-md-1"></td>
+</tr>
+
+<script>
+
+                var fileUploadUrlOne = "/ClubDocuments/UploadDocument?documentNameId=" + $("#@(Model.Label)").data('document-name-id');
+
+            @if (Model.DocumentId != null) {
+                <text>
+                    fileUploadUrlOne +='&documentId='+@Model.DocumentId;
+                </text>
+            }
+
+
+
+                $("#@(Model.Label)").fileinput({
+                    browseLabel: 'Seçim edin',
+                    browseIcon: '<i class="icon-file-plus"></i>',
+                    uploadUrl: fileUploadUrlOne,
+                    uploadIcon: '<i class="icon-file-upload2"></i>',
+                    removeLabel: 'Ləğv et',
+                    removeIcon: '<i class="icon-cross3"></i>',
+                    layoutTemplates: {
+                        icon: '<i class="icon-file-check"></i>'
+                    },
+                    uploadLabel: 'Yüklə və göndər',
+                    uploadTitle: 'Seçilmiş faylı təsdiqə göndər',
+                    initialCaption: "Fayl seçilməyib",
+                    maxFilesNum: 10,
+                    maxFileSize: 25000,
+                    allowedFileExtensions: ["jpg", "png", "pdf"]
+        });
+
+
+                $("#@(Model.Label)").on('click',
+                    function() {
+                        //call row action with ajax to update row
+
+                    });
+
+
+
+</script>
